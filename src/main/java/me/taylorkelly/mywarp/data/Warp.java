@@ -45,19 +45,7 @@ public class Warp {
     }
 
     public Warp(String name, Player creator) {
-        this.index = nextIndex;
-        nextIndex++;
-        this.name = name;
-        this.creator = creator.getName();
-        this.world = creator.getWorld().getName();
-        this.x = creator.getLocation().getX();
-        this.y = creator.getLocation().getBlockY();
-        this.z = creator.getLocation().getZ();
-        this.yaw = Math.round(creator.getLocation().getYaw()) % 360;
-        this.pitch = Math.round(creator.getLocation().getPitch()) % 360;
-        this.publicAll = true;
-        this.permissions = new ArrayList<String>();
-        this.welcomeMessage = "Welcome to '" + name + "'";
+        this(name, creator, true);
     }
 
     public Warp(String name, Location location) {

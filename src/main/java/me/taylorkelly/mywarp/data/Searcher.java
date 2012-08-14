@@ -32,6 +32,24 @@ public class Searcher {
 
 	}
 
+	public void sendWarpMatches(ArrayList<Warp> warps) {
+        for (Warp warp : warps) {
+            String color;
+            if (warp.playerIsCreator(player.getName())) {
+                color = ChatColor.AQUA.toString();
+            } else if (warp.publicAll) {
+                color = ChatColor.GREEN.toString();
+            } else {
+                color = ChatColor.RED.toString();
+            }
+            String creator = (warp.creator.equalsIgnoreCase(player.getName())) ? "you" : warp.creator;
+            int x = (int) Math.round(warp.x);
+            int y = warp.y;
+            int z = (int) Math.round(warp.z);
+            player.sendMessage(color + "'" + warp.name + "'" + ChatColor.WHITE + " by " + creator + " @(" + x + ", " + y + ", " + z + ")");
+        }
+	}
+
 	public void search() {
 
 		if (exactMatches.size() == 0 && matches.size() == 0) {
@@ -39,39 +57,11 @@ public class Searcher {
 		} else {
 			if (exactMatches.size() > 0) {
 				player.sendMessage(ChatColor.YELLOW + "Exact matches for search: " + ChatColor.GRAY + query);
-				for (Warp warp : exactMatches) {
-					String color;
-					if (warp.playerIsCreator(player.getName())) {
-						color = ChatColor.AQUA.toString();
-					} else if (warp.publicAll) {
-						color = ChatColor.GREEN.toString();
-					} else {
-						color = ChatColor.RED.toString();
-					}
-					String creator = (warp.creator.equalsIgnoreCase(player.getName())) ? "you" : warp.creator;
-					int x = (int) Math.round(warp.x);
-					int y = warp.y;
-					int z = (int) Math.round(warp.z);
-					player.sendMessage(color + "'" + warp.name + "'" + ChatColor.WHITE + " by " + creator + " @(" + x + ", " + y + ", " + z + ")");
-				}
+				sendWarpMatches(exactMatches);
 			}
 			if (matches.size() > 0) {
 				player.sendMessage(ChatColor.YELLOW + "Partial matches for search: " + ChatColor.GRAY + query);
-				for (Warp warp : matches) {
-					String color;
-					if (warp.playerIsCreator(player.getName())) {
-						color = ChatColor.AQUA.toString();
-					} else if (warp.publicAll) {
-						color = ChatColor.GREEN.toString();
-					} else {
-						color = ChatColor.RED.toString();
-					}
-					String creator = (warp.creator.equalsIgnoreCase(player.getName())) ? "you" : warp.creator;
-                    int x = (int) Math.round(warp.x);
-                    int y = warp.y;
-                    int z = (int) Math.round(warp.z);
-					player.sendMessage(color + "'" + warp.name + "'" + ChatColor.WHITE + " by " + creator + " @(" + x + ", " + y + ", " + z + ")");
-				}
+				sendWarpMatches(matches);
 			}
 		}
 	}
