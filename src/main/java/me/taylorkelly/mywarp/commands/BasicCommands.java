@@ -167,6 +167,7 @@ public class BasicCommands {
                 StringBuilder last = new StringBuilder();
                 last.append(ChatColor.RESET);
                 last.append("@(");
+                last.append(warp.getWorld() + ", ");
                 last.append(Math.round(warp.getX()));
                 last.append(", ");
                 last.append(warp.getY());
