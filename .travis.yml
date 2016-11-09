@@ -3,10 +3,10 @@ notifications:
   email: false
 jdk:
 - oraclejdk8
-env:
-  global:
-  - secure: "QAWiPamdQhDz66ThCL91EVBg9nZGXkBY/0IG4x5lG9xh3hkhobMC2727O9cqf2p4+Dbf9XZqZs6Ry/pN/bcPoxJUQKuH7oo3iRaM/dQINMjlBBSVuUDq81lSNjXvckg7ru5hbl11ZhyokKDd3/QPM6fSrWQv8bLDjwy08rFE49A="
 before_install:
 - chmod +x gradlew
 - chmod +x config/publish-javadoc.sh
 after_success: config/publish-javadoc.sh
+env:
+  global:
+    secure: OLzkuZu/1pE/xvzH0/SzKyHvHxwhc/2+MgrUpJoS77JDhOrMWhf2qtIGLrg9RIdVIlvLCbx6oUITvKK9amU97BzYdcUlb81LXvg8r1aelqWXkHcyeoHf1uqNi0ok5V4T8bG0Q2xv+a9O9xpI2/MQZDUjd7mHz1IOGS34iZgxnCI=
