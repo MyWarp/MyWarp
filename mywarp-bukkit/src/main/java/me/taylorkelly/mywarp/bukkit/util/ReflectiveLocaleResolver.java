@@ -21,7 +21,6 @@ package me.taylorkelly.mywarp.bukkit.util;
 
 import me.taylorkelly.mywarp.util.MyWarpLogger;
 
-import org.apache.commons.lang.LocaleUtils;
 import org.bukkit.entity.Player;
 import org.slf4j.Logger;
 
@@ -97,10 +96,15 @@ public enum ReflectiveLocaleResolver {
       throw new UnresolvableLocaleException(e);
     }
 
+    if (rawLocale == null) {
+      log.debug("Failed to resolve the locale, 'rawLocale' is null.");
+      throw new UnresolvableLocaleException(new NullPointerException("rawLocale"));
+    }
+
     Locale locale = cache.get(rawLocale);
     if (locale == null) {
       try {
-        locale = LocaleUtils.toLocale(rawLocale);
+        locale = LocaleUtil.toLocaleCaseInsensitive(rawLocale);
       } catch (IllegalArgumentException e) {
         throw new UnresolvableLocaleException(e);
       }
@@ -114,11 +118,6 @@ public enum ReflectiveLocaleResolver {
    */
   public class UnresolvableLocaleException extends Exception {
 
-    /**
-     * Constructs an instance.
-     *
-     * @param e the exception that rendered the Locale unresolvable
-     */
     private UnresolvableLocaleException(Exception e) {
       super(e);
     }
