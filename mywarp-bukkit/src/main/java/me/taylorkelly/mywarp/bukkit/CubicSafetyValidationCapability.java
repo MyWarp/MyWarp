@@ -39,7 +39,7 @@ public class CubicSafetyValidationCapability implements PositionValidationCapabi
    *
    * @param searchRadius the radius within safe positions are searched
    */
-  public CubicSafetyValidationCapability(int searchRadius) {
+  CubicSafetyValidationCapability(int searchRadius) {
     this.searchRadius = searchRadius;
   }
 
@@ -173,10 +173,7 @@ public class CubicSafetyValidationCapability implements PositionValidationCapabi
     if (!MaterialInfo.canEntitySafelyStandWithin(getMaterial(world, position.toInt()))) {
       return false;
     }
-    if (!MaterialInfo.canEntitySafelyStandOn(getMaterial(world, position.add(0, -1, 0).toInt()))) {
-      return false;
-    }
-    return true;
+    return MaterialInfo.canEntitySafelyStandOn(getMaterial(world, position.sub(0, 1, 0).toInt()));
   }
 
   /**

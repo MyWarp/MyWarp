@@ -85,8 +85,8 @@ public class DynmapMarker {
    * @param filter   the filter warps must matched in order to be displayed
    * @param game     the running game
    */
-  public DynmapMarker(DynmapCommonAPI dynmap, MyWarpPlugin plugin, BukkitSettings settings, Predicate<Warp> filter,
-                      Game game) {
+  DynmapMarker(DynmapCommonAPI dynmap, MyWarpPlugin plugin, BukkitSettings settings, Predicate<Warp> filter,
+               Game game) {
     this.plugin = plugin;
     this.game = game;
     this.api = dynmap.getMarkerAPI();

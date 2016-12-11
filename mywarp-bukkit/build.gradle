@@ -3,7 +3,7 @@ plugins {
 }
 
 repositories {
-    maven { url "http://repo.bukkit.org/content/groups/public/" }
+    maven { url "https://hub.spigotmc.org/nexus/content/groups/public/" }
     maven { url "http://maven.sk89q.com/repo/" }
     maven { url "http://repo.mikeprimm.com" }
     maven { url "http://repository-thee140.forge.cloudbees.com/release/" }
@@ -13,7 +13,7 @@ repositories {
 
 dependencies {
     compile project(':mywarp-core')
-    compile 'org.bukkit:bukkit:1.7.9-R0.2'
+    compile 'org.bukkit:bukkit:1.11-R0.1-SNAPSHOT'
 
     compile 'com.h2database:h2:1.3.176'
     compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.0-beta9'
