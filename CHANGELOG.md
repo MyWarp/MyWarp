@@ -27,6 +27,9 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 * Remove Profiles, player UUIDs need to be converted to names by using the cache directly
 * Players are informed about invitations, including group invitations, via events (can be turned of in the configuration)
 * [Bukkit] Use the new official Vault repository
+* Move population and depopulation from WarpManager into a separated (hidden) interface
+* [[#93](https://github.com/TheE/MyWarp/issues/93)] - Allow interactions (e.g. updating, deleting, listing) with warps positioned on non existing worlds
+* [Bukkit] [[#117](https://github.com/TheE/MyWarp/issues/117)] - Update warp safety with Materials added in Minecraft 1.8, 1.9, 1.10 and 1.11
 
 
 ### Added:
@@ -48,6 +51,7 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 * `/warp assets` does not display limits of zero
 * [[#92](https://github.com/TheE/MyWarp/issues/92)] - Insufficient permissions for the `/warp` command
 * [Bukkit] [[#105](https://github.com/TheE/MyWarp/issues/105)] - Warps only shown on DynMap until restart
+* [Bukkit] [[#116](https://github.com/TheE/MyWarp/issues/116)] - Player locales are parsed incorrectly when running on Minecraft 1.11
 
 ### Removed:
 * [Bukkit] Chunk pre-loading can no longer be disabled
