@@ -96,8 +96,12 @@ public enum ReflectiveLocaleResolver {
       throw new UnresolvableLocaleException(e);
     }
 
+    return parseLocale(rawLocale);
+  }
+
+  private Locale parseLocale(String rawLocale) throws UnresolvableLocaleException {
     if (rawLocale == null) {
-      log.debug("Failed to resolve the locale, 'rawLocale' is null.");
+      log.debug("Failed to parse the locale because 'rawLocale' is null.");
       throw new UnresolvableLocaleException(new NullPointerException("rawLocale"));
     }
 
