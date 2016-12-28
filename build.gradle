@@ -105,13 +105,14 @@ subprojects {
         processResources.dependsOn(crowdinDownload)
     }
 
-    // create the default fallback file (for all localizations) from the english localization
+    // create the English localization files from the fallback files
     task createDefaultLocalizations(type: Copy) {
         def bundleFolder = 'me/taylorkelly/mywarp/lang'
         from('src/main/resources/' + bundleFolder)
         into(new File(sourceSets.main.output.resourcesDir, bundleFolder))
-        include('*_en.properties')
-        rename { fileName -> fileName.replace('_en', '') }
+        include('*.properties')
+        exclude('*_*.properties')
+        rename { fileName -> fileName.replace('.', '_en.') }
     }
     processResources.dependsOn(createDefaultLocalizations)
 
