@@ -42,6 +42,8 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 
 /**
@@ -113,10 +115,20 @@ class SquirrelIdPlayerNameResolver extends AbstractListener implements PlayerNam
 
   @Override
   public ImmutableMap<String, UUID> getByName(Iterable<String> names) {
+    Set<String> lookup = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+
+    for (String name : names) {
+      // 'names' can contain duplicates as well as the same name with different cases.
+      // User names in Minecraft are case-insensitive so we do not need to lookup these duplicates.
+      if (!lookup.contains(name)) {
+        lookup.add(name);
+      }
+    }
+
     final ImmutableMap.Builder<String, UUID> builder = ImmutableSortedMap.orderedBy(String.CASE_INSENSITIVE_ORDER);
 
     try {
-      resolver.findAllByName(names, new Predicate<Profile>() {
+      resolver.findAllByName(lookup, new Predicate<Profile>() {
         @Override
         public boolean apply(Profile input) {
           builder.put(input.getName(), input.getUniqueId());
