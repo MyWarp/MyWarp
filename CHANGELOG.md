@@ -30,6 +30,7 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 * Move population and depopulation from WarpManager into a separated (hidden) interface
 * [[#93](https://github.com/TheE/MyWarp/issues/93)] - Allow interactions (e.g. updating, deleting, listing) with warps positioned on non existing worlds
 * [Bukkit] [[#117](https://github.com/TheE/MyWarp/issues/117)] - Update warp safety with Materials added in Minecraft 1.8, 1.9, 1.10 and 1.11
+* Update Gradle to 3.3 and use up-to-date versions of all plugins used in the build process
 
 
 ### Added:
@@ -52,6 +53,8 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 * [[#92](https://github.com/TheE/MyWarp/issues/92)] - Insufficient permissions for the `/warp` command
 * [Bukkit] [[#105](https://github.com/TheE/MyWarp/issues/105)] - Warps only shown on DynMap until restart
 * [Bukkit] [[#116](https://github.com/TheE/MyWarp/issues/116)] - Player locales are parsed incorrectly when running on Minecraft 1.11
+* [Bukkit] [[#130](https://github.com/TheE/MyWarp/issues/130)] - Player name to UUID conversion fails if a name is requested twice
+* [[#132](https://github.com/TheE/MyWarp/issues/132)] - CI builds are missing translations from crowdin
 
 ### Removed:
 * [Bukkit] Chunk pre-loading can no longer be disabled
