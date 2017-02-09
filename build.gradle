@@ -60,6 +60,10 @@ subprojects {
             "Implementation-Version": internalVersion,
             "Implementation-Vendor": url)
 
+    jar {
+        from new File(rootProject.projectDir, "LICENSE.txt")
+    }
+
     task sourcesJar(type: Jar, dependsOn: classes) {
         classifier = "sources"
         from sourceSets.main.allSource
