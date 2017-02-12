@@ -19,6 +19,8 @@
 
 package me.taylorkelly.mywarp.bukkit.util;
 
+import com.google.common.base.Optional;
+
 import me.taylorkelly.mywarp.util.MyWarpLogger;
 
 import org.bukkit.entity.Player;
@@ -27,9 +29,7 @@ import org.slf4j.Logger;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -51,7 +51,6 @@ public enum ReflectiveLocaleResolver {
 
   private static final Logger log = MyWarpLogger.getLogger(ReflectiveLocaleResolver.class);
 
-  private final Map<String, Locale> cache = new HashMap<String, Locale>();
   @Nullable
   private Method handleMethod;
   @Nullable
@@ -96,31 +95,22 @@ public enum ReflectiveLocaleResolver {
       throw new UnresolvableLocaleException(e);
     }
 
-    return parseLocale(rawLocale);
-  }
-
-  private Locale parseLocale(String rawLocale) throws UnresolvableLocaleException {
-    if (rawLocale == null) {
-      log.debug("Failed to parse the locale because 'rawLocale' is null.");
-      throw new UnresolvableLocaleException(new NullPointerException("rawLocale"));
+    Optional<Locale> parsedLocale = MinecraftLocaleParser.parseLocale(rawLocale);
+    if (parsedLocale.isPresent()) {
+      return parsedLocale.get();
     }
-
-    Locale locale = cache.get(rawLocale);
-    if (locale == null) {
-      try {
-        locale = LocaleUtil.toLocaleCaseInsensitive(rawLocale);
-      } catch (IllegalArgumentException e) {
-        throw new UnresolvableLocaleException(e);
-      }
-      cache.put(rawLocale, locale);
-    }
-    return locale;
+    log.debug("Failed to parse the locale from String due to an invalid format: {}", rawLocale);
+    throw new UnresolvableLocaleException();
   }
 
   /**
    * Indicates that a Locale cannot be resolved.
    */
   public class UnresolvableLocaleException extends Exception {
+
+    private UnresolvableLocaleException() {
+      super();
+    }
 
     private UnresolvableLocaleException(Exception e) {
       super(e);

@@ -21,16 +21,42 @@ package me.taylorkelly.mywarp.bukkit.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.Optional;
+
 import org.apache.commons.lang.StringUtils;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
- * Utilities for working with Locales.
+ * Parses Strings in Minecraft's locale format into {@link Locale} objects.
  */
-class LocaleUtil {
+class MinecraftLocaleParser {
 
-  private LocaleUtil() {
+  //REVIEW use GUAVA cache?
+  private static final Map<String, Locale> cache = new HashMap<String, Locale>();
+
+  /**
+   * Parses the given String into a Locale.
+   *
+   * <p>Returns an Optional with the resulting Locale or Optional.absent() if the
+   * String cannot be parsed into a Locale.</p>
+   *
+   * @param rawLocale the String to convert
+   * @return an Optional with the parsed Locale
+   */
+  static Optional<Locale> parseLocale(String rawLocale) {
+    Locale locale = cache.get(rawLocale);
+    if (locale == null) {
+      try {
+        locale = toLocaleCaseInsensitive(rawLocale);
+      } catch (RuntimeException e) {
+        return Optional.absent();
+      }
+      cache.put(rawLocale, locale);
+    }
+    return Optional.fromNullable(locale);
   }
 
   /**
@@ -40,10 +66,10 @@ class LocaleUtil {
    * locale object from it.</p>
    *
    * <pre>
-   *   LocaleUtils.toLocale("")           = new Locale("", "")
-   *   LocaleUtils.toLocale("en")         = new Locale("en", "")
-   *   LocaleUtils.toLocale("en_GB")      = new Locale("en", "GB")
-   *   LocaleUtils.toLocale("en_GB_xxx")  = new Locale("en", "GB", "xyz")   (#)
+   *   toLocaleCaseInsensitive("")           = new Locale("", "")
+   *   toLocaleCaseInsensitive("en")         = new Locale("en", "")
+   *   toLocaleCaseInsensitive("en_GB")      = new Locale("en", "GB")
+   *   toLocaleCaseInsensitive("en_GB_xxx")  = new Locale("en", "GB", "xyz")   (#)
    * </pre>
    *
    * <p>(#) The behaviour of the JDK variant constructor changed between JDK1.3 and JDK1.4.
@@ -63,7 +89,7 @@ class LocaleUtil {
    * @see Locale#forLanguageTag(String)
    */
   //Note: this implementation is adapted from Apache Commons 2.6
-  static Locale toLocaleCaseInsensitive(final String str) {
+  private static Locale toLocaleCaseInsensitive(final String str) {
     checkNotNull(str);
 
     if (str.isEmpty()) { //JDK 8 introduced an empty locale where all fields are blank which we do not support
@@ -127,5 +153,4 @@ class LocaleUtil {
         throw new IllegalArgumentException("Invalid locale format: " + str);
     }
   }
-
 }
