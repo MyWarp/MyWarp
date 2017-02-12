@@ -30,7 +30,6 @@ import me.taylorkelly.mywarp.platform.Actor;
 import me.taylorkelly.mywarp.platform.Game;
 import me.taylorkelly.mywarp.platform.LocalEntity;
 import me.taylorkelly.mywarp.platform.LocalWorld;
-import me.taylorkelly.mywarp.util.WarpUtils;
 import me.taylorkelly.mywarp.util.i18n.DynamicMessages;
 import me.taylorkelly.mywarp.util.teleport.TeleportHandler;
 
@@ -94,7 +93,8 @@ class SimpleWarp extends AbstractWarp {
   }
 
   @Override
-  public TeleportHandler.TeleportStatus visit(LocalEntity entity, Game game, TeleportHandler handler) {
+  public TeleportHandler.TeleportStatus visit(LocalEntity entity, Game game, TeleportHandler handler,
+                                              PlaceholderResolver resolver) {
     Optional<LocalWorld> worldOptional = game.getWorld(worldIdentifier);
 
     //cancel if this warp's world is not present
@@ -119,7 +119,7 @@ class SimpleWarp extends AbstractWarp {
         case ORIGINAL:
           String welcomeMsg = getWelcomeMessage();
           if (!welcomeMsg.isEmpty()) {
-            actor.sendMessage(WarpUtils.replaceTokens(welcomeMsg, this, actor));
+            actor.sendMessage(resolver.values(this, actor).resolvePlaceholders(welcomeMsg));
           }
           break;
         case MODIFIED:
@@ -237,8 +237,8 @@ class SimpleWarp extends AbstractWarp {
   @Override
   public String toString() {
     return "SimpleWarp{" + "name='" + name + '\'' + ", creationDate=" + creationDate + ", invitedPlayers="
-            + invitedPlayers + ", invitedGroups=" + invitedGroups + ", creator=" + creator + ", type=" + type
-            + ", worldIdentifier=" + worldIdentifier + ", position=" + position + ", rotation=" + rotation + ", visits="
-            + visits + ", welcomeMessage='" + welcomeMessage + '\'' + '}';
+           + invitedPlayers + ", invitedGroups=" + invitedGroups + ", creator=" + creator + ", type=" + type
+           + ", worldIdentifier=" + worldIdentifier + ", position=" + position + ", rotation=" + rotation + ", visits="
+           + visits + ", welcomeMessage='" + welcomeMessage + '\'' + '}';
   }
 }

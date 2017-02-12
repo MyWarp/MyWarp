@@ -28,6 +28,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import me.taylorkelly.mywarp.command.CommandHandler;
 import me.taylorkelly.mywarp.platform.Game;
 import me.taylorkelly.mywarp.platform.Platform;
+import me.taylorkelly.mywarp.platform.PlayerNameResolver;
 import me.taylorkelly.mywarp.platform.Settings;
 import me.taylorkelly.mywarp.platform.capability.EconomyCapability;
 import me.taylorkelly.mywarp.platform.capability.PositionValidationCapability;
@@ -111,22 +112,23 @@ public final class MyWarp {
     WarpStorage warpStorage;
 
     warpStorage =
-            new AsyncWritingWarpStorage(
-                    WarpStorageFactory.createInitialized(dataService.getDataSource(), connectionConfiguration),
-                    dataService.getExecutorService());
+        new AsyncWritingWarpStorage(
+            WarpStorageFactory.createInitialized(dataService.getDataSource(), connectionConfiguration),
+            dataService.getExecutorService());
 
     EventBus eventBus = new EventBus();
 
     PopulatableWarpManager
-            warpManager =
-            new EventfulPopulatableWarpManager(
-                    new StoragePopulatableWarpManager(new MemoryPopulatableWarpManager(), warpStorage), eventBus);
+        warpManager =
+        new EventfulPopulatableWarpManager(
+            new StoragePopulatableWarpManager(new MemoryPopulatableWarpManager(), warpStorage), eventBus);
 
     //REVIEW can we use the WorldAccessAuthorizationStrategy only if it enabled in the config?
     AuthorizationResolver
-            authorizationResolver =
-            new AuthorizationResolver(new PermissionAuthorizationStrategy(new WorldAccessAuthorizationStrategy(
-                    new WarpPropertiesAuthorizationStrategy(), platform.getGame(), platform.getSettings())));
+        authorizationResolver =
+        new AuthorizationResolver(new PermissionAuthorizationStrategy(
+            new WorldAccessAuthorizationStrategy(new WarpPropertiesAuthorizationStrategy(), platform.getGame(),
+                                                 platform.getSettings())));
 
     MyWarp myWarp = new MyWarp(platform, dataService, warpStorage, warpManager, eventBus, authorizationResolver);
     myWarp.initializeMutableFields();
@@ -223,6 +225,15 @@ public final class MyWarp {
   }
 
   /**
+   * Gets the PlayerNameResolver instance of this MyWarp instance.
+   *
+   * @return the PlayerNameResolver
+   */
+  public PlayerNameResolver getPlayerNameResolver() {
+    return platform.getPlayerNameResolver();
+  }
+
+  /**
    * Gets the TeleportHandler instance of this MyWarp instance.
    *
    * @return the teleportHandler
@@ -237,16 +248,16 @@ public final class MyWarp {
    * @return a new WarpSign instance
    */
   public WarpSignHandler createWarpSignHandler() {
-    return new WarpSignHandler(getSettings().getWarpSignsIdentifiers(), warpManager, authorizationResolver, getGame(),
-            teleportHandler, platform.getCapability(EconomyCapability.class).orNull());
+    return new WarpSignHandler(getSettings().getWarpSignsIdentifiers(), this,
+                               platform.getCapability(EconomyCapability.class).orNull());
   }
 
   private void initializeMutableFields() {
     List<PositionValidationCapability> validationStrategies = new ArrayList<PositionValidationCapability>();
     validationStrategies.add(new LegacyPositionCorrectionCapability());
     Optional<PositionValidationCapability>
-            validationStrategyOptional =
-            platform.getCapability(PositionValidationCapability.class);
+        validationStrategyOptional =
+        platform.getCapability(PositionValidationCapability.class);
     if (validationStrategyOptional.isPresent()) {
       validationStrategies.add(validationStrategyOptional.get());
     }

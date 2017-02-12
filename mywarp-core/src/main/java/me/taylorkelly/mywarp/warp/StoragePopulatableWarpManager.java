@@ -100,8 +100,8 @@ public class StoragePopulatableWarpManager extends ForwardingPopulatableWarpMana
     }
 
     @Override
-    public TeleportStatus visit(LocalEntity entity, Game game, TeleportHandler handler) {
-      TeleportStatus status = delegate().visit(entity, game, handler);
+    public TeleportStatus visit(LocalEntity entity, Game game, TeleportHandler handler, PlaceholderResolver resolver) {
+      TeleportStatus status = delegate().visit(entity, game, handler, resolver);
 
       if (status.isPositionModified()) {
         storage.updateVisits(delegate());

@@ -182,9 +182,7 @@ public final class MyWarpPlugin extends JavaPlugin {
     if (getSettings().isDynmapEnabled()) {
       Plugin dynmap = getServer().getPluginManager().getPlugin("dynmap");
       if (dynmap != null && dynmap.isEnabled() && dynmap instanceof DynmapCommonAPI) {
-        marker =
-                new DynmapMarker((DynmapCommonAPI) dynmap, this, getSettings(), WarpUtils.isType(Warp.Type.PUBLIC),
-                        platform.getGame());
+        marker = new DynmapMarker((DynmapCommonAPI) dynmap, this, platform, WarpUtils.isType(Warp.Type.PUBLIC));
         marker.addMarker(myWarp.getWarpManager().getAll(Predicates.<Warp>alwaysTrue()));
         myWarp.getEventBus().register(marker);
       } else {

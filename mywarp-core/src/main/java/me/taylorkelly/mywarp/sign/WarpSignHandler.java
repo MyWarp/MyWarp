@@ -23,7 +23,7 @@ import com.flowpowered.math.vector.Vector3i;
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 
-import me.taylorkelly.mywarp.platform.Game;
+import me.taylorkelly.mywarp.MyWarp;
 import me.taylorkelly.mywarp.platform.LocalPlayer;
 import me.taylorkelly.mywarp.platform.LocalWorld;
 import me.taylorkelly.mywarp.platform.Sign;
@@ -36,7 +36,6 @@ import me.taylorkelly.mywarp.service.teleport.TeleportService;
 import me.taylorkelly.mywarp.util.BlockFace;
 import me.taylorkelly.mywarp.util.i18n.DynamicMessages;
 import me.taylorkelly.mywarp.util.i18n.LocaleManager;
-import me.taylorkelly.mywarp.util.teleport.TeleportHandler;
 import me.taylorkelly.mywarp.warp.Warp;
 import me.taylorkelly.mywarp.warp.WarpManager;
 import me.taylorkelly.mywarp.warp.authorization.AuthorizationResolver;
@@ -71,52 +70,42 @@ public class WarpSignHandler {
   private final EconomyService economyService;
 
   /**
-   * Creates an instance.
+   * Creates a new WarpSignHandler that identifies warp signs with the given iterable of identifiers.
    *
-   * @param identifiers           the identifiers to identify a valid warp sign
-   * @param warpManager           the WarpManager this manager will act on
-   * @param authorizationResolver the AuthorizationResolver used to resolve authorizations
-   * @param game                  the game within which this instance acts
-   * @param handler               the TeleportHandler that handles teleports
+   * @param identifiers       the identifiers of warp signs
+   * @param myWarp            the MyWarp instance
+   * @param economyCapability the EconomyCapability used by this instance - can be null if no economy should be used
    */
-  public WarpSignHandler(Iterable<String> identifiers, WarpManager warpManager,
-                         AuthorizationResolver authorizationResolver, Game game, TeleportHandler handler) {
-    this(identifiers, warpManager, authorizationResolver, game, handler, null);
+  public WarpSignHandler(Iterable<String> identifiers, MyWarp myWarp, @Nullable EconomyCapability economyCapability) {
+    this(identifiers, myWarp.getAuthorizationResolver(), createEconomyService(economyCapability),
+         createTeleportService(myWarp, economyCapability), myWarp.getWarpManager());
   }
 
-  /**
-   * Creates an instance.
-   *
-   * @param identifiers           the identifiers to identify a valid warp sign
-   * @param warpManager           the WarpManager this manager will act on
-   * @param authorizationResolver the AuthorizationResolver used to resolve authorizations
-   * @param game                  the game within which this instance acts
-   * @param handler               the TeleportHandler that handles teleports
-   * @param economyCapability     the platform's capability to provide economical functionality (may be {@code null} if
-   *                              the plattform does not provide an economy capability)
-   */
-  public WarpSignHandler(Iterable<String> identifiers, WarpManager warpManager,
-                         AuthorizationResolver authorizationResolver, Game game, TeleportHandler handler,
-                         @Nullable EconomyCapability economyCapability) {
+  private WarpSignHandler(Iterable<String> identifiers, AuthorizationResolver authorizationResolver,
+                          @Nullable EconomyService economyService, TeleportService teleportService,
+                          WarpManager warpManager) {
     Iterables.addAll(this.identifiers, identifiers);
-
-    this.warpManager = warpManager;
     this.authorizationResolver = authorizationResolver;
-
-    if (economyCapability != null) {
-      this.economyService = new EconomyService(economyCapability);
-    } else {
-      this.economyService = null;
-    }
-    this.teleportService = createTeleportService(game, handler, economyCapability);
+    this.economyService = economyService;
+    this.teleportService = teleportService;
+    this.warpManager = warpManager;
   }
 
-  private TeleportService createTeleportService(Game game, TeleportHandler handler,
-                                                @Nullable EconomyCapability economyCapability) {
-    TeleportService ret = new HandlerTeleportService(handler, game);
+  @Nullable
+  private static EconomyService createEconomyService(@Nullable EconomyCapability economyCapability) {
+    if (economyCapability != null) {
+      return new EconomyService(economyCapability);
+    }
+    return null;
+  }
+
+  private static TeleportService createTeleportService(MyWarp myWarp, @Nullable EconomyCapability economyCapability) {
+    TeleportService
+        ret =
+        new HandlerTeleportService(myWarp.getTeleportHandler(), myWarp.getGame(), myWarp.getPlayerNameResolver());
 
     if (economyCapability != null) {
-      ret = new EconomyTeleportService(ret, new EconomyService(economyCapability), FeeType.WARP_SIGN_USE);
+      ret = new EconomyTeleportService(ret, createEconomyService(economyCapability), FeeType.WARP_SIGN_USE);
     }
     return ret;
   }

@@ -31,8 +31,8 @@ import me.taylorkelly.mywarp.bukkit.settings.BukkitSettings;
 import me.taylorkelly.mywarp.platform.Game;
 import me.taylorkelly.mywarp.platform.LocalWorld;
 import me.taylorkelly.mywarp.util.MyWarpLogger;
-import me.taylorkelly.mywarp.util.WarpUtils;
 import me.taylorkelly.mywarp.util.i18n.DynamicMessages;
+import me.taylorkelly.mywarp.warp.PlaceholderResolver;
 import me.taylorkelly.mywarp.warp.Warp;
 import me.taylorkelly.mywarp.warp.event.WarpAdditionEvent;
 import me.taylorkelly.mywarp.warp.event.WarpDeletionEvent;
@@ -74,6 +74,7 @@ public class DynmapMarker {
   private final Plugin plugin;
   private final MarkerAPI api;
   private final Predicate<Warp> filter;
+  private final PlaceholderResolver tokenizer;
 
   /**
    * Creates an instance that works on the given {@code DynmapCommonAPI} implementation, uses the given {@code
@@ -81,16 +82,21 @@ public class DynmapMarker {
    *
    * @param dynmap   the {@code DynmapCommonAPI} implementation of the running Dynmap instance
    * @param plugin   MyWarp's plugin instance
-   * @param settings the configured settings
+   * @param platform the Bukkit platform MyWarp runs on
    * @param filter   the filter warps must matched in order to be displayed
-   * @param game     the running game
    */
-  DynmapMarker(DynmapCommonAPI dynmap, MyWarpPlugin plugin, BukkitSettings settings, Predicate<Warp> filter,
-               Game game) {
+  DynmapMarker(DynmapCommonAPI dynmap, MyWarpPlugin plugin, BukkitPlatform platform, Predicate<Warp> filter) {
+    this(dynmap.getMarkerAPI(), plugin, platform.getSettings(), platform.getGame(),
+         new PlaceholderResolver(platform.getPlayerNameResolver()), filter);
+  }
+
+  private DynmapMarker(MarkerAPI api, MyWarpPlugin plugin, BukkitSettings settings, Game game,
+                       PlaceholderResolver tokenizer, Predicate<Warp> filter) {
+    this.api = api;
     this.plugin = plugin;
     this.game = game;
-    this.api = dynmap.getMarkerAPI();
     this.settings = settings;
+    this.tokenizer = tokenizer;
     this.filter = filter;
   }
 
@@ -219,9 +225,8 @@ public class DynmapMarker {
 
     if (ret == null) {
       ret =
-              api.createMarkerSet(DEFAULT_SET_ID, settings.getDynmapLayerDisplayName(),
-                      ImmutableSet.of(getOrCreateIcon()),
-                      false);
+          api.createMarkerSet(DEFAULT_SET_ID, settings.getDynmapLayerDisplayName(), ImmutableSet.of(getOrCreateIcon()),
+                              false);
       Preconditions.checkState(ret != null, "Failed to create MarkerSet '%s', Dynmap returns null.", DEFAULT_SET_ID);
 
       ret.setMarkerSetLabel(settings.getDynmapLayerDisplayName());
@@ -285,11 +290,10 @@ public class DynmapMarker {
       return null;
     }
     Marker
-            ret =
-            getOrCreateSet()
-                    .createMarker(identifier(warp), label(warp), true, worldOptional.get().getName(),
-                            warp.getPosition().getX(),
-                            warp.getPosition().getY(), warp.getPosition().getZ(), getOrCreateIcon(), false);
+        ret =
+        getOrCreateSet()
+            .createMarker(identifier(warp), label(warp), true, worldOptional.get().getName(), warp.getPosition().getX(),
+                          warp.getPosition().getY(), warp.getPosition().getZ(), getOrCreateIcon(), false);
     Preconditions.checkState(ret != null, "Failed to create Marker for %s, Dynmap returns null.", warp);
 
     return ret;
@@ -313,7 +317,8 @@ public class DynmapMarker {
    * @see Marker#getLabel()
    */
   private String label(Warp warp) {
-    return WarpUtils.replaceTokens(MESSAGES.getString("marker.label", settings.getLocalizationDefaultLocale()), warp);
+    return tokenizer.values(warp)
+        .resolvePlaceholders(MESSAGES.getString("marker.label", settings.getLocalizationDefaultLocale()));
   }
 
   /**

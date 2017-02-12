@@ -21,7 +21,9 @@ package me.taylorkelly.mywarp.service.teleport;
 
 import me.taylorkelly.mywarp.platform.Game;
 import me.taylorkelly.mywarp.platform.LocalEntity;
+import me.taylorkelly.mywarp.platform.PlayerNameResolver;
 import me.taylorkelly.mywarp.util.teleport.TeleportHandler;
+import me.taylorkelly.mywarp.warp.PlaceholderResolver;
 import me.taylorkelly.mywarp.warp.Warp;
 
 /**
@@ -31,21 +33,24 @@ public class HandlerTeleportService implements TeleportService {
 
   private final TeleportHandler handler;
   private final Game game;
+  private final PlaceholderResolver resolver;
 
   /**
    * Creates an instance that delegates calls to the given {@code handler}. Warp positions are pared against the given
-   * {@code game}.
+   * {@code game}, player names in messageys are resolved with the given {@code playerNameResolver}.
    *
-   * @param handler the handler
-   * @param game    the game
+   * @param handler            the handler
+   * @param game               the game
+   * @param playerNameResolver the playerNameResolver
    */
-  public HandlerTeleportService(TeleportHandler handler, Game game) {
+  public HandlerTeleportService(TeleportHandler handler, Game game, PlayerNameResolver playerNameResolver) {
     this.handler = handler;
     this.game = game;
+    this.resolver = new PlaceholderResolver(playerNameResolver);
   }
 
   @Override
   public TeleportHandler.TeleportStatus teleport(LocalEntity entity, Warp warp) {
-    return warp.visit(entity, game, handler);
+    return warp.visit(entity, game, handler, resolver);
   }
 }

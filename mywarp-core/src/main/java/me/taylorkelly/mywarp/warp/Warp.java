@@ -23,7 +23,6 @@ import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.ComparisonChain;
 
-import me.taylorkelly.mywarp.platform.Actor;
 import me.taylorkelly.mywarp.platform.Game;
 import me.taylorkelly.mywarp.platform.LocalEntity;
 import me.taylorkelly.mywarp.platform.LocalWorld;
@@ -46,12 +45,14 @@ public interface Warp extends Comparable<Warp> {
   /**
    * Teleports the given {@code entity} to this Warp with the given TeleportHandler.
    *
-   * @param entity  the entity that attempted the teleport
-   * @param game    the game within which the teleport occurs
-   * @param handler the TeleportHandler that handles the teleport
+   * @param entity   the entity that attempted the teleport
+   * @param game     the game within which the teleport occurs
+   * @param handler  the TeleportHandler that handles the teleport
+   * @param resolver the resolver to use for values in the warp's welcome message
    * @return the status of the teleport
    */
-  TeleportHandler.TeleportStatus visit(LocalEntity entity, Game game, TeleportHandler handler);
+  TeleportHandler.TeleportStatus visit(LocalEntity entity, Game game, TeleportHandler handler,
+                                       PlaceholderResolver resolver);
 
   /**
    * Returns whether the unique identifier is equal to the identifier of the player who created this Warp.
@@ -208,8 +209,8 @@ public interface Warp extends Comparable<Warp> {
   /**
    * Gets this Warp's welcome message.
    *
-   * <p>The returned message may still contain warp variables that can be replaced using {@link
-   * me.taylorkelly.mywarp.util.WarpUtils#replaceTokens(String, Warp, Actor)}.</p>
+   * <p>The returned message may still contain warp variables that can be replaced using a
+   * {@link PlaceholderResolver}</p>
    *
    * @return the raw welcome message of this Warp
    */
@@ -258,8 +259,8 @@ public interface Warp extends Comparable<Warp> {
     @Override
     public int compare(Warp w1, Warp w2) {
       return ComparisonChain.start().compare(popularityScore(w2), popularityScore(w1))
-              .compare(w2.getCreationDate().getTime(), w1.getCreationDate().getTime())
-              .compare(w1.getName(), w2.getName()).result();
+          .compare(w2.getCreationDate().getTime(), w1.getCreationDate().getTime()).compare(w1.getName(), w2.getName())
+          .result();
     }
 
     /**

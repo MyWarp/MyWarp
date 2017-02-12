@@ -112,8 +112,8 @@ public class EventfulPopulatableWarpManager extends ForwardingPopulatableWarpMan
     }
 
     @Override
-    public TeleportStatus visit(LocalEntity entity, Game game, TeleportHandler handler) {
-      TeleportStatus status = delegate().visit(entity, game, handler);
+    public TeleportStatus visit(LocalEntity entity, Game game, TeleportHandler handler, PlaceholderResolver resolver) {
+      TeleportStatus status = delegate().visit(entity, game, handler, resolver);
 
       if (status.isPositionModified()) {
         eventBus.post(new WarpUpdateEvent(this, WarpUpdateEvent.UpdateType.VISITS));

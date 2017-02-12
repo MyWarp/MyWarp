@@ -104,8 +104,8 @@ abstract class ForwardingPopulatableWarpManager extends ForwardingObject impleme
   abstract class ForwardingWarp extends ForwardingObject implements Warp {
 
     @Override
-    public TeleportStatus visit(LocalEntity entity, Game game, TeleportHandler handler) {
-      return delegate().visit(entity, game, handler);
+    public TeleportStatus visit(LocalEntity entity, Game game, TeleportHandler handler, PlaceholderResolver resolver) {
+      return delegate().visit(entity, game, handler, resolver);
     }
 
     @Override
