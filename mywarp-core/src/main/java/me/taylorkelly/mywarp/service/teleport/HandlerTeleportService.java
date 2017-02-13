@@ -19,38 +19,66 @@
 
 package me.taylorkelly.mywarp.service.teleport;
 
-import me.taylorkelly.mywarp.platform.Game;
+import me.taylorkelly.mywarp.platform.Actor;
 import me.taylorkelly.mywarp.platform.LocalEntity;
 import me.taylorkelly.mywarp.platform.PlayerNameResolver;
+import me.taylorkelly.mywarp.util.i18n.DynamicMessages;
 import me.taylorkelly.mywarp.util.teleport.TeleportHandler;
 import me.taylorkelly.mywarp.warp.PlaceholderResolver;
 import me.taylorkelly.mywarp.warp.Warp;
 
 /**
  * Delegates teleport requests to a {@link TeleportHandler}.
+ *
+ * <p>The TeleportHandler executes the teleport and returns a {@link TeleportHandler.TeleportStatus} with the status of
+ * the teleport. This service will then send a message corresponding with the teleport's status to the teleported entity
+ * if this entity is an Actor.</p>
  */
 public class HandlerTeleportService implements TeleportService {
 
+  //REVIEW move resources into dedicated bundle?
+  private static final DynamicMessages msg = new DynamicMessages(Warp.RESOURCE_BUNDLE_NAME);
+
   private final TeleportHandler handler;
-  private final Game game;
   private final PlaceholderResolver resolver;
 
   /**
-   * Creates an instance that delegates calls to the given {@code handler}. Warp positions are pared against the given
-   * {@code game}, player names in messageys are resolved with the given {@code playerNameResolver}.
+   * Creates an instance that delegates calls to the given {@code handler}.
    *
-   * @param handler            the handler
-   * @param game               the game
-   * @param playerNameResolver the playerNameResolver
+   * @param handler            the handler to handle teleports
+   * @param playerNameResolver the playerNameResolver used to resolve player names in messages send by this service
    */
-  public HandlerTeleportService(TeleportHandler handler, Game game, PlayerNameResolver playerNameResolver) {
+  public HandlerTeleportService(TeleportHandler handler, PlayerNameResolver playerNameResolver) {
     this.handler = handler;
-    this.game = game;
     this.resolver = new PlaceholderResolver(playerNameResolver);
   }
 
   @Override
   public TeleportHandler.TeleportStatus teleport(LocalEntity entity, Warp warp) {
-    return warp.visit(entity, game, handler, resolver);
+    TeleportHandler.TeleportStatus status = warp.visit(entity, handler);
+
+    if (entity instanceof Actor) {
+      Actor actor = (Actor) entity;
+      switch (status) {
+        case ORIGINAL:
+          String welcomeMsg = warp.getWelcomeMessage();
+          if (!welcomeMsg.isEmpty()) {
+            actor.sendMessage(resolver.values(warp, actor).resolvePlaceholders(welcomeMsg));
+          }
+          break;
+        case MODIFIED:
+          actor.sendError(msg.getString("unsafe-location.closest", warp.getName()));
+          break;
+        case NONE:
+          actor.sendError(msg.getString("unsafe-location.no-teleport", warp.getName()));
+          break;
+        case NO_SUCH_WORLD:
+          actor.sendError(msg.getString("no-such-world", warp.getName(), warp.getWorldIdentifier()));
+          break;
+        default:
+          assert false : status;
+      }
+    }
+    return status;
   }
 }

@@ -25,7 +25,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.eventbus.EventBus;
 
-import me.taylorkelly.mywarp.platform.Game;
 import me.taylorkelly.mywarp.platform.LocalEntity;
 import me.taylorkelly.mywarp.platform.LocalWorld;
 import me.taylorkelly.mywarp.util.teleport.TeleportHandler;
@@ -112,8 +111,8 @@ public class EventfulPopulatableWarpManager extends ForwardingPopulatableWarpMan
     }
 
     @Override
-    public TeleportStatus visit(LocalEntity entity, Game game, TeleportHandler handler, PlaceholderResolver resolver) {
-      TeleportStatus status = delegate().visit(entity, game, handler, resolver);
+    public TeleportStatus visit(LocalEntity entity, TeleportHandler handler) {
+      TeleportStatus status = delegate().visit(entity, handler);
 
       if (status.isPositionModified()) {
         eventBus.post(new WarpUpdateEvent(this, WarpUpdateEvent.UpdateType.VISITS));

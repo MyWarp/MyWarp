@@ -138,7 +138,7 @@ public final class CommandHandler {
     //create services...
 
     //...basic TeleportService used by '/warp player <player> <warp>'
-    TeleportService basic = new HandlerTeleportService(teleportHandler, game, playerNameResolver);
+    TeleportService basic = new HandlerTeleportService(teleportHandler, playerNameResolver);
 
     //...usage service used by '/warp <warp>'
     TeleportService usageService = basic;

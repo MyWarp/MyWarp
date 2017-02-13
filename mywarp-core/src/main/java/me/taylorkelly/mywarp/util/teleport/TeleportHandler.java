@@ -23,7 +23,8 @@ import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
 
 import me.taylorkelly.mywarp.platform.LocalEntity;
-import me.taylorkelly.mywarp.platform.LocalWorld;
+
+import java.util.UUID;
 
 /**
  * Handles entity teleports.
@@ -31,22 +32,25 @@ import me.taylorkelly.mywarp.platform.LocalWorld;
 public interface TeleportHandler {
 
   /**
-   * Teleports the given {@code entity} to the given {@code position} on the given {@code world} with the given {@code
-   * rotation} and returns an appropriate status.
+   * Teleports the given {@code entity} to the given {@code position} on the world identified by the given {@code
+   * worldIdentifier} with the given {@code rotation} and returns an appropriate status.
    *
-   * @param entity   the entity to teleport
-   * @param world    the world to teleport to
-   * @param position the position to teleport to
-   * @param rotation the rotation
+   * @param entity          the entity to teleport
+   * @param worldIdentifier the identifier of the world to teleport to
+   * @param position        the position to teleport to
+   * @param rotation        the rotation
    * @return the status of the teleport
    */
-  TeleportStatus teleport(LocalEntity entity, LocalWorld world, Vector3d position, Vector2f rotation);
+  TeleportStatus teleport(LocalEntity entity, UUID worldIdentifier, Vector3d position, Vector2f rotation);
 
   /**
    * The status of a finished teleport.
    */
   enum TeleportStatus {
     /**
+     * The teleport was not executed as the requested world does not exist.
+     */
+    NO_SUCH_WORLD(false), /**
      * The entity has not been teleported.
      */
     NONE(false), /**

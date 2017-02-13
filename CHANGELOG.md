@@ -55,6 +55,7 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 * [Bukkit] [[#116](https://github.com/TheE/MyWarp/issues/116)] - Player locales are parsed incorrectly when running on Minecraft 1.11
 * [Bukkit] [[#130](https://github.com/TheE/MyWarp/issues/130)] - Player name to UUID conversion fails if a name is requested twice
 * [[#132](https://github.com/TheE/MyWarp/issues/132)] - CI builds are missing translations from crowdin
+* [Bukkit] [[#136](https://github.com/TheE/MyWarp/issues/136)] - Warp labels on Dynmap display the creators UUID instead of the name
 
 ### Removed:
 * [Bukkit] Chunk pre-loading can no longer be disabled

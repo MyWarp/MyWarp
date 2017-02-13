@@ -24,13 +24,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
-import com.google.common.base.Optional;
 
-import me.taylorkelly.mywarp.platform.Actor;
-import me.taylorkelly.mywarp.platform.Game;
 import me.taylorkelly.mywarp.platform.LocalEntity;
 import me.taylorkelly.mywarp.platform.LocalWorld;
-import me.taylorkelly.mywarp.util.i18n.DynamicMessages;
 import me.taylorkelly.mywarp.util.teleport.TeleportHandler;
 
 import java.util.Collections;
@@ -42,8 +38,6 @@ import java.util.UUID;
  * A simple implementation that natively stores its properties.
  */
 class SimpleWarp extends AbstractWarp {
-
-  private static final DynamicMessages msg = new DynamicMessages(Warp.RESOURCE_BUNDLE_NAME);
 
   private final String name;
   private final Date creationDate;
@@ -93,44 +87,11 @@ class SimpleWarp extends AbstractWarp {
   }
 
   @Override
-  public TeleportHandler.TeleportStatus visit(LocalEntity entity, Game game, TeleportHandler handler,
-                                              PlaceholderResolver resolver) {
-    Optional<LocalWorld> worldOptional = game.getWorld(worldIdentifier);
+  public TeleportHandler.TeleportStatus visit(LocalEntity entity, TeleportHandler handler) {
+    TeleportHandler.TeleportStatus status = handler.teleport(entity, worldIdentifier, getPosition(), getRotation());
 
-    //cancel if this warp's world is not present
-    if (!worldOptional.isPresent()) {
-      if (entity instanceof Actor) {
-        ((Actor) entity).sendError(msg.getString("no-such-world", name, worldIdentifier));
-      }
-      return TeleportHandler.TeleportStatus.NONE;
-    }
-
-    TeleportHandler.TeleportStatus status = handler.teleport(entity, worldOptional.get(), getPosition(), getRotation());
-
-    //visit counter
     if (status.isPositionModified()) {
       visits++;
-    }
-
-    // messages (if any)
-    if (entity instanceof Actor) {
-      Actor actor = (Actor) entity;
-      switch (status) {
-        case ORIGINAL:
-          String welcomeMsg = getWelcomeMessage();
-          if (!welcomeMsg.isEmpty()) {
-            actor.sendMessage(resolver.values(this, actor).resolvePlaceholders(welcomeMsg));
-          }
-          break;
-        case MODIFIED:
-          actor.sendError(msg.getString("unsafe-location.closest", getName()));
-          break;
-        case NONE:
-          actor.sendError(msg.getString("unsafe-location.no-teleport", getName()));
-          break;
-        default:
-          assert false : status;
-      }
     }
     return status;
   }
@@ -148,7 +109,6 @@ class SimpleWarp extends AbstractWarp {
   @Override
   public void uninviteGroup(String groupId) {
     invitedGroups.remove(groupId);
-
   }
 
   @Override

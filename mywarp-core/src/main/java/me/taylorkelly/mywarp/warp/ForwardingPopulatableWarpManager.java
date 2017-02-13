@@ -25,7 +25,6 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ForwardingObject;
 
-import me.taylorkelly.mywarp.platform.Game;
 import me.taylorkelly.mywarp.platform.LocalEntity;
 import me.taylorkelly.mywarp.platform.LocalWorld;
 import me.taylorkelly.mywarp.util.teleport.TeleportHandler;
@@ -104,8 +103,8 @@ abstract class ForwardingPopulatableWarpManager extends ForwardingObject impleme
   abstract class ForwardingWarp extends ForwardingObject implements Warp {
 
     @Override
-    public TeleportStatus visit(LocalEntity entity, Game game, TeleportHandler handler, PlaceholderResolver resolver) {
-      return delegate().visit(entity, game, handler, resolver);
+    public TeleportStatus visit(LocalEntity entity, TeleportHandler handler) {
+      return delegate().visit(entity, handler);
     }
 
     @Override

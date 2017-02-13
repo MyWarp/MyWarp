@@ -85,7 +85,7 @@ public class PlaceholderResolver {
    * @param actor the Actor
    * @return a usable resolver
    */
-  ConfiguredPlaceholderResolver values(Warp warp, Actor actor) {
+  public ConfiguredPlaceholderResolver values(Warp warp, Actor actor) {
     return new ConfiguredPlaceholderResolver(tokens(resolver, actor), warp);
   }
 

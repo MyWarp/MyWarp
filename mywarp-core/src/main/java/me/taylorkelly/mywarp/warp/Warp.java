@@ -45,14 +45,11 @@ public interface Warp extends Comparable<Warp> {
   /**
    * Teleports the given {@code entity} to this Warp with the given TeleportHandler.
    *
-   * @param entity   the entity that attempted the teleport
-   * @param game     the game within which the teleport occurs
-   * @param handler  the TeleportHandler that handles the teleport
-   * @param resolver the resolver to use for values in the warp's welcome message
+   * @param entity  the entity to teleport
+   * @param handler the TeleportHandler that handles the teleport
    * @return the status of the teleport
    */
-  TeleportHandler.TeleportStatus visit(LocalEntity entity, Game game, TeleportHandler handler,
-                                       PlaceholderResolver resolver);
+  TeleportHandler.TeleportStatus visit(LocalEntity entity, TeleportHandler handler);
 
   /**
    * Returns whether the unique identifier is equal to the identifier of the player who created this Warp.

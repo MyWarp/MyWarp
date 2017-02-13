@@ -261,7 +261,7 @@ public final class MyWarp {
     if (validationStrategyOptional.isPresent()) {
       validationStrategies.add(validationStrategyOptional.get());
     }
-    teleportHandler = new StrategicTeleportHandler(getSettings(), validationStrategies);
+    teleportHandler = new StrategicTeleportHandler(getSettings(), getGame(), validationStrategies);
 
     commandHandler = new CommandHandler(this, platform);
 

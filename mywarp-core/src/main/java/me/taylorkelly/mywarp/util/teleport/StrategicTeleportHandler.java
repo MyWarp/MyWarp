@@ -24,10 +24,15 @@ import com.flowpowered.math.vector.Vector3d;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
+import me.taylorkelly.mywarp.platform.Game;
 import me.taylorkelly.mywarp.platform.LocalEntity;
 import me.taylorkelly.mywarp.platform.LocalWorld;
 import me.taylorkelly.mywarp.platform.Settings;
 import me.taylorkelly.mywarp.platform.capability.PositionValidationCapability;
+import me.taylorkelly.mywarp.util.i18n.DynamicMessages;
+import me.taylorkelly.mywarp.warp.Warp;
+
+import java.util.UUID;
 
 /**
  * Parses teleport positions against a {@link PositionValidationCapability}. If a valid position exists, the entity is
@@ -35,8 +40,11 @@ import me.taylorkelly.mywarp.platform.capability.PositionValidationCapability;
  */
 public class StrategicTeleportHandler implements TeleportHandler {
 
+  private static final DynamicMessages msg = new DynamicMessages(Warp.RESOURCE_BUNDLE_NAME);
+
   private final Iterable<PositionValidationCapability> strategies;
   private final Settings settings;
+  private final Game game;
 
 
   /**
@@ -47,10 +55,11 @@ public class StrategicTeleportHandler implements TeleportHandler {
    * strategies will check this position opposed to the original one. </p>
    *
    * @param settings   the settings instance to use
+   * @param game       the game instance to use
    * @param strategies the strategies to use
    */
-  public StrategicTeleportHandler(Settings settings, PositionValidationCapability... strategies) {
-    this(settings, Lists.newArrayList(strategies));
+  public StrategicTeleportHandler(Settings settings, Game game, PositionValidationCapability... strategies) {
+    this(settings, game, Lists.newArrayList(strategies));
   }
 
   /**
@@ -61,15 +70,24 @@ public class StrategicTeleportHandler implements TeleportHandler {
    * following strategies will check this position opposed to the original one. </p>
    *
    * @param settings   the settings instance to use
+   * @param game       the game instance to use
    * @param strategies the strategies to use
    */
-  public StrategicTeleportHandler(Settings settings, Iterable<PositionValidationCapability> strategies) {
+  public StrategicTeleportHandler(Settings settings, Game game, Iterable<PositionValidationCapability> strategies) {
     this.strategies = strategies;
     this.settings = settings;
+    this.game = game;
   }
 
   @Override
-  public TeleportStatus teleport(LocalEntity entity, LocalWorld world, Vector3d position, Vector2f rotation) {
+  public TeleportStatus teleport(LocalEntity entity, UUID worldIdentifier, Vector3d position, Vector2f rotation) {
+    Optional<LocalWorld> worldOptional = game.getWorld(worldIdentifier);
+
+    if (!worldOptional.isPresent()) {
+      return TeleportStatus.NO_SUCH_WORLD;
+    }
+    LocalWorld world = worldOptional.get();
+
     Optional<Vector3d> optional = getValidPosition(world, position);
 
     if (!optional.isPresent()) {
