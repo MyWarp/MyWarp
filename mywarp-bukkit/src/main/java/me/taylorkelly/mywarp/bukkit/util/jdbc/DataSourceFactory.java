@@ -53,7 +53,7 @@ public final class DataSourceFactory {
       try {
         Class.forName("org.h2.Driver");
       } catch (ClassNotFoundException e) {
-        //REVIEW throw SQLException?
+        //H2 is bundled on Bukkit so this should never happen.
         throw new IllegalStateException("H2 driver class not found.", e);
       }
       properties.setProperty("user", config.getUser());
