@@ -28,10 +28,12 @@ import me.taylorkelly.mywarp.bukkit.BukkitAdapter;
 import me.taylorkelly.mywarp.bukkit.util.permission.ValueBundle;
 import me.taylorkelly.mywarp.platform.LocalWorld;
 import me.taylorkelly.mywarp.service.limit.Limit;
+import me.taylorkelly.mywarp.util.MyWarpLogger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.slf4j.Logger;
 
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -43,6 +45,8 @@ import java.util.UUID;
  * A ValueBundle that bundles warp creation limits.
  */
 public class LimitBundle extends ValueBundle implements Limit {
+
+  private static final Logger log = MyWarpLogger.getLogger(LimitBundle.class);
 
   private static final String WORLD_KEY = "affectedWorlds";
 
@@ -71,7 +75,8 @@ public class LimitBundle extends ValueBundle implements Limit {
       for (String name : values.getStringList(WORLD_KEY)) {
         World world = Bukkit.getWorld(name);
         if (world == null) {
-          //REVIEW warn?
+          log.warn("The limit bundle '{}' is configured to affect the world '{}' which does NOT exist. The bundle is "
+                   + "active, but the configuration for this world is ignored.", identifier, name);
           continue;
         }
         worlds.add(world.getUID());

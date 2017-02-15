@@ -50,7 +50,7 @@ public class ConnectionConfiguration {
    */
   public ConnectionConfiguration(String url) {
     this.url = checkNotNull(url);
-    this.dialect = JDBCUtils.dialect(url); //REVIEW throw exception on DEFAULT?
+    this.dialect = JDBCUtils.dialect(url);
   }
 
   /**

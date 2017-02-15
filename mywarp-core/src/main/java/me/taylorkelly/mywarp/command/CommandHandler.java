@@ -273,7 +273,7 @@ public final class CommandHandler {
    * @param forWhom the Actor for whom the returned commands should be usable
    * @return all usable commands as strings
    */
-  protected Set<String> getUsableCommands(Actor forWhom) {
+  Set<String> getUsableCommands(Actor forWhom) {
     Set<String> usableCommands = new TreeSet<String>();
 
     flattenCommands(usableCommands, createNamespace(forWhom), "", dispatcher);

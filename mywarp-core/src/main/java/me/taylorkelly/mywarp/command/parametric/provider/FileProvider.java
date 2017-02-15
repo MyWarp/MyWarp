@@ -65,19 +65,20 @@ class FileProvider implements Provider<File> {
 
   @Override
   public List<String> getSuggestions(String prefix, Namespace namespace) {
-    //REVIEW Does this REALLY to what it should?
+    //TODO this does not work well for folders
     final File specified = new File(base, prefix);
-    if (!specified.getParentFile().exists()) {
+
+    File searchFolder = specified.getParentFile();
+    if (searchFolder == null || !searchFolder.exists()) {
       return Collections.emptyList();
     }
 
-    File searchFolder = specified.getParentFile();
-    return Arrays.asList(searchFolder.list(new FilenameFilter() {
+    String[] list = searchFolder.list(new FilenameFilter() {
       @Override
       public boolean accept(File file, String name) {
         return name.startsWith(specified.getName());
       }
-    }));
+    });
+    return list != null ? Arrays.asList(list) : Collections.<String>emptyList();
   }
-
 }

@@ -474,7 +474,7 @@ class RelationalWarpStorage implements WarpStorage {
   private <R extends Record, T> Insert<R> insertOrIgnore(Configuration configuration, Table<R> table,
                                                          TableField<R, T> uniqueField, T value) {
     // @formatter:off
-    //XXX use onDuplicateKeyIgnore() in JOOQ 3.7
+    //XXX Use onDuplicateKeyIgnore() once we updated to JOOQ 3.7
     return create(configuration)
         .insertInto(table)
         .columns(uniqueField)
