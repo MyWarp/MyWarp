@@ -20,33 +20,20 @@
 package me.taylorkelly.mywarp.service.limit;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 
 import me.taylorkelly.mywarp.platform.LocalPlayer;
 import me.taylorkelly.mywarp.platform.LocalWorld;
-import me.taylorkelly.mywarp.util.WarpUtils;
 import me.taylorkelly.mywarp.warp.Warp;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.EnumSet;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
-
 /**
- * A creation limit for warps. Implementations are expected to provide the limit for each {@link Type} and a way to
+ * A creation limit for warps. Implementations are expected to provide the limit for each {@link Value} and a way to
  * resolve these limit per world.
  */
 public interface Limit {
-
-  /**
-   * Gets the maximum number of warps a user can create under the given Limit.Type.
-   *
-   * @param type the type of limit
-   * @return the maximum number of warps
-   */
-  int getLimit(Type type);
 
   /**
    * Gets a list of all worlds that are affected by this Limit.
@@ -64,75 +51,56 @@ public interface Limit {
   boolean isAffectedWorld(UUID worldIdentifier);
 
   /**
+   * Gets the maximum number of warps a user can create under the given Limit.Value.
+   *
+   * @param value the value of limit
+   * @return the maximum number of warps
+   */
+  int get(Value value);
+
+  /**
    * The different types limit.
    */
-  enum Type {
+  enum Value {
     /**
      * The total limit (accounts all warps).
      */
-    TOTAL(null, Predicates.<Warp>alwaysTrue()), /**
+    TOTAL(EnumSet.allOf(Warp.Type.class)), /**
      * The private limit (accounts only private warps).
      */
-    PRIVATE(TOTAL, WarpUtils.isType(Warp.Type.PRIVATE)), /**
+    PRIVATE(Warp.Type.PRIVATE), /**
      * The public limit (accounts only public warps).
      */
-    PUBLIC(TOTAL, WarpUtils.isType(Warp.Type.PUBLIC));
+    PUBLIC(Warp.Type.PUBLIC);
 
-    @Nullable
-    private final Type parent;
-    private final Predicate<Warp> condition;
+    private final EnumSet<Warp.Type> warpTypes;
 
-    /**
-     * Initializes this Limit.
-     *
-     * @param parent    the parent of this Type. The parent must count all warps that are counted by this limit. Can be
-     *                  {@code null} if this Type has no parent.
-     * @param condition the condition a warp must fulfill to be counted under this limit
-     */
-    Type(@Nullable Type parent, Predicate<Warp> condition) {
-      this.parent = parent;
-      this.condition = condition;
+    Value(Warp.Type type) {
+      this(EnumSet.of(type));
+    }
+
+    Value(EnumSet<Warp.Type> warpTypes) {
+      this.warpTypes = warpTypes;
     }
 
     /**
-     * Gets the condition of this Type.
+     * Gets the condition of this Value.
      *
      * @return the condition
      */
-    public Predicate<Warp> getCondition() {
-      return condition;
+    Predicate<Warp> getCondition() {
+      return new Predicate<Warp>() {
+        @Override
+        public boolean apply(Warp input) {
+          return warpTypes.contains(input.getType());
+        }
+      };
     }
 
     /**
-     * Gets the parent of this Type. May return {@code null} if this Type has no parent.
+     * Gets the name of this Value in lower case.
      *
-     * @return the parent
-     */
-    @Nullable
-    public Type getParent() {
-      return parent;
-    }
-
-    /**
-     * Gets the parents of this type recursively. The last entry in the returned Deque is the parent of this Type, the
-     * second will be the parent of the parent of this Type and so one.
-     *
-     * @return the parents, recursively
-     */
-    public Deque<Type> getParentsRecusive() {
-      Deque<Limit.Type> ret = new ArrayDeque<Limit.Type>();
-      Limit.Type parent = this.getParent();
-      do {
-        ret.addFirst(parent);
-        parent = parent.getParent();
-      } while (parent != null);
-      return ret;
-    }
-
-    /**
-     * Gets the name of this Type in lower case.
-     *
-     * @return this Type's name in lowercase
+     * @return this Value's name in lowercase
      * @see #name()
      */
     public String lowerCaseName() {
@@ -140,26 +108,29 @@ public interface Limit {
     }
 
     /**
-     * Returns whether the given player can disobey any limit of this Type on the given world.
+     * Returns whether the given player can disobey any limit of this Value on the given world.
      *
      * @param player the player
      * @param world  the world
-     * @return {@code true} if the player can disobey any limit of this Type
+     * @return {@code true} if the player can disobey any limit of this Value
      */
-    public boolean canDisobey(LocalPlayer player, LocalWorld world) {
+    boolean canDisobey(LocalPlayer player, LocalWorld world) {
       String perm = "mywarp.limit.disobey." + world.getName() + "." + lowerCaseName();
       return player.hasPermission(perm);
     }
 
-    public static Type valueOf(Warp.Type type) {
-      switch (type) {
-        case PRIVATE:
-          return PRIVATE;
-        case PUBLIC:
-          return PUBLIC;
-        default:
-          return TOTAL;
+    static EnumSet<Value> getApplicableValues(Warp.Type warpType) {
+      EnumSet<Value> ret = EnumSet.noneOf(Value.class);
+      for (Value value : values()) {
+        if (value.warpTypes.contains(warpType)) {
+          ret.add(value);
+        }
       }
+      return ret;
+    }
+
+    EnumSet<Warp.Type> getWarpTypes() {
+      return warpTypes;
     }
   }
 

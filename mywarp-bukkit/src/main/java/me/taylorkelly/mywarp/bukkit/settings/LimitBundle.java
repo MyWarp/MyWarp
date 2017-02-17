@@ -50,7 +50,7 @@ public class LimitBundle extends ValueBundle implements Limit {
 
   private static final String WORLD_KEY = "affectedWorlds";
 
-  private final Map<Type, Integer> limitMap;
+  private final Map<Value, Integer> limitMap;
   private final WorldHolder worldHolder;
 
   /**
@@ -107,23 +107,23 @@ public class LimitBundle extends ValueBundle implements Limit {
     return !values.contains(WORLD_KEY);
   }
 
-  private static EnumMap<Limit.Type, Integer> createMap(ConfigurationSection values) {
-    EnumMap<Type, Integer> ret = new EnumMap<Limit.Type, Integer>(Type.class);
-    ret.put(Type.TOTAL, values.getInt("totalLimit"));
-    ret.put(Type.PUBLIC, values.getInt("publicLimit"));
-    ret.put(Type.PRIVATE, values.getInt("privateLimit"));
+  private static EnumMap<Value, Integer> createMap(ConfigurationSection values) {
+    EnumMap<Value, Integer> ret = new EnumMap<Value, Integer>(Value.class);
+    ret.put(Value.TOTAL, values.getInt("totalLimit"));
+    ret.put(Value.PUBLIC, values.getInt("publicLimit"));
+    ret.put(Value.PRIVATE, values.getInt("privateLimit"));
     return ret;
   }
 
-  private LimitBundle(String identifier, EnumMap<Type, Integer> limitMap, WorldHolder worldHolder) {
+  private LimitBundle(String identifier, EnumMap<Value, Integer> limitMap, WorldHolder worldHolder) {
     super(identifier, "mywarp.limit");
     this.limitMap = limitMap;
     this.worldHolder = worldHolder;
   }
 
   @Override
-  public int getLimit(Type type) {
-    return limitMap.get(type);
+  public int get(Value value) {
+    return limitMap.get(value);
   }
 
   @Override
@@ -163,6 +163,10 @@ public class LimitBundle extends ValueBundle implements Limit {
       return builder.build();
     }
 
+    @Override
+    public String toString() {
+      return "WorldHolder{}";
+    }
   }
 
   /**
@@ -185,6 +189,11 @@ public class LimitBundle extends ValueBundle implements Limit {
         }
       }
       return builder.build();
+    }
+
+    @Override
+    public String toString() {
+      return "ConfiguredWorldHolder{" + "worldIdentifiers=" + worldIdentifiers + '}';
     }
   }
 

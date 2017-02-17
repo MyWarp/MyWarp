@@ -23,7 +23,6 @@ import com.sk89q.intake.CommandException;
 
 import me.taylorkelly.mywarp.command.CommandHandler;
 import me.taylorkelly.mywarp.service.limit.Limit;
-import me.taylorkelly.mywarp.service.limit.Limit.Type;
 import me.taylorkelly.mywarp.util.i18n.DynamicMessages;
 
 import org.apache.commons.lang.text.StrBuilder;
@@ -37,26 +36,26 @@ public class ExceedsInitiatorLimitException extends CommandException {
 
   private static final DynamicMessages msg = new DynamicMessages(CommandHandler.RESOURCE_BUNDLE_NAME);
 
-  private final Limit.Type exceededLimit;
+  private final Limit.Value exceededLimit;
   private final int limitMaximum;
 
   /**
    * Constructs an instance.
    *
-   * @param exceededLimit the exceeded Limit.Type
+   * @param exceededLimit the exceeded Limit.Value
    * @param limitMaximum  the maximum number of warps a user can create under the exceeded limit
    */
-  public ExceedsInitiatorLimitException(Type exceededLimit, int limitMaximum) {
+  public ExceedsInitiatorLimitException(Limit.Value exceededLimit, int limitMaximum) {
     this.exceededLimit = exceededLimit;
     this.limitMaximum = limitMaximum;
   }
 
   /**
-   * Gets the exceeded Limit.Type.
+   * Gets the exceeded Limit.Value.
    *
-   * @return the exceeded Limit.Type
+   * @return the exceeded Limit.Value
    */
-  public Limit.Type getExceededLimit() {
+  public Limit.Value getExceededLimit() {
     return exceededLimit;
   }
 

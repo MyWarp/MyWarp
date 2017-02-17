@@ -21,22 +21,19 @@ package me.taylorkelly.mywarp.service.limit;
 
 import static com.google.common.base.Preconditions.checkState;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
 import me.taylorkelly.mywarp.platform.LocalPlayer;
 import me.taylorkelly.mywarp.platform.LocalWorld;
 import me.taylorkelly.mywarp.platform.capability.LimitCapability;
-import me.taylorkelly.mywarp.util.IterableUtils;
-import me.taylorkelly.mywarp.util.WarpUtils;
+import me.taylorkelly.mywarp.service.limit.Limit.Value;
 import me.taylorkelly.mywarp.warp.Warp;
 import me.taylorkelly.mywarp.warp.WarpManager;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -61,71 +58,103 @@ public class LimitService {
   }
 
   /**
-   * Evaluates whether the given creator exceeds limit on the given LocalWorld, testing against the given Limit.Type.
+   * Evaluates whether the given {@code creator} can add a new Warp of the given {@code warpType} to the given {@code
+   * world}.
    *
-   * @param creator         the creator
-   * @param world           the LocalWorld
-   * @param type            the Limit.Type
-   * @param evaluateParents Whether parents of the given {@code type} will be evaluated too (recursively). This is
-   *                        useful if not just a specific Limit.Type might be exceeded, but also a more general limit
-   *                        that includes the given one
-   * @return an EvaluationResult representing the result of the evaluation
+   * <p>This method will return a positive result if the current number of warps counted under any limit applicable for
+   * creator, world and warp type falls below the allowed maximum by at least 1.</p>
+   *
+   * @param creator  The creator who wants to add a new Warp
+   * @param world    The world the warp should be added to
+   * @param warpType the type of the warp to add
+   * @return the result of the evaluation
    */
-  public EvaluationResult evaluateLimit(LocalPlayer creator, LocalWorld world, Limit.Type type,
-                                        boolean evaluateParents) {
-    if (!type.canDisobey(creator, world)) {
-
-      Iterable<Warp> filteredWarps = warpManager.getAll(WarpUtils.isCreator(creator.getUniqueId()));
-      Limit limit = capability.getLimit(creator, world);
-
-      List<Limit.Type> limitsToCheck = Lists.newArrayList(type);
-      if (evaluateParents) {
-        limitsToCheck.addAll(type.getParentsRecusive());
-      }
-
-      for (Limit.Type check : limitsToCheck) {
-        EvaluationResult result = evaluateLimit(limit, check, filteredWarps);
-        if (result.exceedsLimit()) {
-          return result;
-        }
-      }
-    }
-    return EvaluationResult.limitMet();
-  }
-
-  private EvaluationResult evaluateLimit(Limit limit, Limit.Type type, Iterable<Warp> filteredWarps) {
-    int limitMaximum = limit.getLimit(type);
-    if (IterableUtils.atLeast(Iterables.filter(filteredWarps, type.getCondition()), limitMaximum)) {
-      return EvaluationResult.exceeded(type, limitMaximum);
-    }
-    return EvaluationResult.limitMet();
+  public EvaluationResult canAdd(LocalPlayer creator, LocalWorld world, Warp.Type warpType) {
+    return evaluate(creator, world, Value.getApplicableValues(warpType));
   }
 
   /**
-   * Gets all warps created by the given player mapped under the applicable {@link Limit}. <p/> The map is guaranteed to
-   * include all limit that effect the given player. If no warp exists for a certain limit, {@code getByName(Limit)}
-   * will return an empty list.
+   * Evaluates whether the given {@code creator} can change the type of an existing Warp on the given {@code world} from
+   * {@code oldType} to {@code newType}.
    *
-   * @param creator the creator
-   * @return a Map with all matching warps
+   * <p>This method will return a positive result if the current number of warps counted under the limit applicable for
+   * creator, world and the new warp type falls below the allowed maximum by at least 1. Any limit that counts warps
+   * from both, old and new type, is ignored.</p>
+   *
+   * @param creator The creator of the warp
+   * @param world   The world of the warp
+   * @param oldType the old type of the warp
+   * @param newType the new type of the warp
+   * @return the result of the evaluation
    */
-  public Map<Limit, List<Warp>> getWarpsPerLimit(LocalPlayer creator) {
-    Collection<Warp> warps = warpManager.getAll(WarpUtils.isCreator(creator.getUniqueId()));
-    Map<Limit, List<Warp>> ret = new HashMap<Limit, List<Warp>>();
+  public EvaluationResult canChangeType(LocalPlayer creator, LocalWorld world, Warp.Type oldType, Warp.Type newType) {
 
-    for (Limit limit : capability.getEffectiveLimits(creator)) {
-      ret.put(limit, new ArrayList<Warp>());
+    ImmutableSet.Builder<Value> builder = ImmutableSet.builder();
+    for (Value toCheck : Value.getApplicableValues(newType)) {
+      if (toCheck.getWarpTypes().contains(oldType)) {
+        continue;
+      }
+      builder.add(toCheck);
     }
+    return evaluate(creator, world, builder.build());
+  }
 
-    // sort warps to limit
-    for (Warp warp : warps) {
-      for (Limit limit : ret.keySet()) {
-        if (limit.isAffectedWorld(warp.getWorldIdentifier())) {
-          ret.get(limit).add(warp);
-        }
+  private EvaluationResult evaluate(LocalPlayer creator, LocalWorld world, Iterable<Value> values) {
+    LimitValueWarpMapping valueWarpMapping = new LimitValueWarpMapping(warpManager, createPredicate(creator, world));
+
+    for (Value toCheck : values) {
+      if (toCheck.canDisobey(creator, world)) {
+        continue;
+      }
+      int max = capability.getLimit(creator, world).get(toCheck);
+
+      if (valueWarpMapping.atLeast(toCheck, max)) {
+        return EvaluationResult.exceeded(toCheck, max);
       }
     }
-    return ret;
+    return EvaluationResult.limitMet();
+  }
+
+  private static Predicate<Warp> createPredicate(final LocalPlayer creator, LocalWorld... worlds) {
+    return createPredicate(creator, Arrays.asList(worlds));
+  }
+
+  private static Predicate<Warp> createPredicate(final LocalPlayer creator, final Iterable<LocalWorld> worlds) {
+    return new Predicate<Warp>() {
+      @Override
+      public boolean apply(Warp input) {
+        return input.isCreator(creator.getUniqueId()) && containsIdentifiedWorld(worlds, input.getWorldIdentifier());
+      }
+    };
+  }
+
+  /**
+   * Returns an ImmutableMap with every Limit that could affect the given player mapped to the corresponding
+   * LimitValueMapping.
+   *
+   * <p>Which limit actually applies to a certain player depends on the world, the check is run for. The map returned by
+   * this method contains all limits that could apply for a player; it therefore contains all possible LimitValueMapping
+   * and can be used to display a player's assets.</p>
+   *
+   * @param player the player
+   * @return a Map that mapps every limit that could affect the given player to the corresponding LimtiValueMapping
+   */
+  public ImmutableMap<Limit, LimitValueWarpMapping> getAssets(LocalPlayer player) {
+    ImmutableMap.Builder<Limit, LimitValueWarpMapping> builder = ImmutableMap.builder();
+
+    for (Limit limit : capability.getEffectiveLimits(player)) {
+      builder.put(limit, new LimitValueWarpMapping(warpManager, createPredicate(player, limit.getAffectedWorlds())));
+    }
+    return builder.build();
+  }
+
+  private static boolean containsIdentifiedWorld(Iterable<LocalWorld> worlds, UUID worldIdentifier) {
+    for (LocalWorld world : worlds) {
+      if (world.getUniqueId().equals(worldIdentifier)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -135,22 +164,22 @@ public class LimitService {
 
     private final boolean exceedsLimit;
     @Nullable
-    private final Limit.Type exceededLimit;
+    private final Value exceededValue;
     @Nullable
-    private final Integer limitMaximum;
+    private final Integer allowedMaximium;
 
     /**
      * Creates an instance with the given values.
      *
-     * @param exceedsLimit  whether a limit was exceeded
-     * @param exceededLimit the exceeded limit or {@code null} if no limit was exceeded
-     * @param limitMaximum  the maximum number of warps a user can create under the exceeded limit or {@code null} if no
-     *                      limit was exceeded
+     * @param exceedsLimit    whether a limit was exceeded
+     * @param exceededValue   the exceeded limit or {@code null} if no limit was exceeded
+     * @param allowedMaximium the maximum number of warps a user can create under the exceeded limit or {@code null} if
+     *                        no limit was exceeded
      */
-    private EvaluationResult(boolean exceedsLimit, @Nullable Limit.Type exceededLimit, @Nullable Integer limitMaximum) {
+    private EvaluationResult(boolean exceedsLimit, @Nullable Value exceededValue, @Nullable Integer allowedMaximium) {
       this.exceedsLimit = exceedsLimit;
-      this.exceededLimit = exceededLimit;
-      this.limitMaximum = limitMaximum;
+      this.exceededValue = exceededValue;
+      this.allowedMaximium = allowedMaximium;
     }
 
     /**
@@ -168,9 +197,9 @@ public class LimitService {
      * @return the exceeded limit
      * @throws IllegalStateException if no limit is exceeded and thus {@link #exceedsLimit()} returns {@code true}.
      */
-    public Limit.Type getExceededLimit() {
-      checkState(exceededLimit != null);
-      return exceededLimit;
+    public Value getExceededValue() {
+      checkState(exceededValue != null);
+      return exceededValue;
     }
 
     /**
@@ -179,9 +208,9 @@ public class LimitService {
      * @return the maximum number of warps of the exceeded limit
      * @throws IllegalStateException if no limit is exceeded and thus {@link #exceedsLimit()} returns {@code true}.
      */
-    public Integer getLimitMaximum() {
-      checkState(limitMaximum != null);
-      return limitMaximum;
+    public Integer getAllowedMaximium() {
+      checkState(allowedMaximium != null);
+      return allowedMaximium;
     }
 
     /**
@@ -189,19 +218,19 @@ public class LimitService {
      *
      * @return a new instance
      */
-    protected static EvaluationResult limitMet() {
-      return new EvaluationResult(false, null, -1);
+    static EvaluationResult limitMet() {
+      return new EvaluationResult(false, null, null);
     }
 
     /**
-     * Creates an instance that inidicates the given limit is exceeded.
+     * Creates an instance that indicates the given limit is exceeded.
      *
-     * @param exceededLimit the exceeded limit
-     * @param limitMaximum  the limit maximum
+     * @param exceededValue  the exceeded limit
+     * @param allowedMaximum the limit maximum
      * @return a new instance
      */
-    protected static EvaluationResult exceeded(Limit.Type exceededLimit, int limitMaximum) {
-      return new EvaluationResult(true, exceededLimit, limitMaximum);
+    static EvaluationResult exceeded(Value exceededValue, int allowedMaximum) {
+      return new EvaluationResult(true, exceededValue, allowedMaximum);
     }
 
   }

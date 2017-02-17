@@ -107,7 +107,13 @@ public final class InformativeCommands {
       throw new AuthorizationException();
     }
 
-    new AssetsPrinter(creator, limitService, game, warpManager).print(actor);
+    AssetsPrinter printer;
+    if (limitService != null) {
+      printer = AssetsPrinter.create(creator, limitService);
+    } else {
+      printer = AssetsPrinter.create(creator, game, warpManager);
+    }
+    printer.print(actor);
   }
 
   @Command(aliases = {"list", "alist"}, desc = "list.description", help = "list.help")

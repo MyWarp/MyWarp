@@ -19,7 +19,9 @@
 
 package me.taylorkelly.mywarp.command.util.printer;
 
-import com.google.common.collect.ImmutableMultimap;
+import static com.google.common.base.Preconditions.checkState;
+
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 import me.taylorkelly.mywarp.command.CommandHandler;
@@ -29,6 +31,7 @@ import me.taylorkelly.mywarp.platform.LocalPlayer;
 import me.taylorkelly.mywarp.platform.LocalWorld;
 import me.taylorkelly.mywarp.service.limit.Limit;
 import me.taylorkelly.mywarp.service.limit.LimitService;
+import me.taylorkelly.mywarp.service.limit.LimitValueWarpMapping;
 import me.taylorkelly.mywarp.util.Message;
 import me.taylorkelly.mywarp.util.WarpUtils;
 import me.taylorkelly.mywarp.util.i18n.DynamicMessages;
@@ -37,10 +40,8 @@ import me.taylorkelly.mywarp.warp.WarpManager;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -48,32 +49,53 @@ import javax.annotation.Nullable;
 /**
  * Prints a certain player's assets, showing active limit and Warps sorted to the corresponding limit.
  */
-//REVIEW rewrite?
 public class AssetsPrinter {
 
-  private static final List<Limit.Type> DISPLAYABLE_TYPES = Arrays.asList(Limit.Type.PRIVATE, Limit.Type.PUBLIC);
+  private static final List<Limit.Value> DISPLAYABLE_VALUES = Arrays.asList(Limit.Value.PRIVATE, Limit.Value.PUBLIC);
   private static final DynamicMessages msg = new DynamicMessages(CommandHandler.RESOURCE_BUNDLE_NAME);
 
   private final LocalPlayer creator;
   @Nullable
   private final LimitService limitService;
+  @Nullable
   private final Game game;
-  private final WarpManager manager;
+  @Nullable
+  private final WarpManager warpManager;
 
-  /**
-   * Creates an instance.
-   *
-   * @param creator      the player whose assets should be displayed
-   * @param limitService the limitService that manages the limit that should be displayed  - may be {@code null} if no
-   *                     limit service is used
-   * @param game         the running game
-   * @param manager      the warp manager that hold's the assets to display
-   */
-  public AssetsPrinter(LocalPlayer creator, @Nullable LimitService limitService, Game game, WarpManager manager) {
+  private AssetsPrinter(LocalPlayer creator, @Nullable LimitService limitService, @Nullable Game game,
+                        @Nullable WarpManager warpManager) {
+    checkState((limitService != null && game == null && warpManager == null) != (limitService == null && game != null
+                                                                                 && warpManager != null));
     this.creator = creator;
     this.limitService = limitService;
     this.game = game;
-    this.manager = manager;
+    this.warpManager = warpManager;
+  }
+
+  /**
+   * Creates a new AssetsPrinter that will display the assets of the given player using the given {@code limitService}.
+   *
+   * @param forWhom      the player whose assets to display
+   * @param limitService the limit service
+   * @return a new AssetsPrinter
+   */
+  public static AssetsPrinter create(LocalPlayer forWhom, LimitService limitService) {
+    return new AssetsPrinter(forWhom, limitService, null, null);
+  }
+
+  /**
+   * Creates a new AssetsPrinter that will display the assets of the given player on the given {@code warpManager}.
+   *
+   * <p>This method should only be used, if no LimitService is configured. Otherwise use
+   * {@link #create(LocalPlayer, LimitService)}.</p>
+   *
+   * @param forWhom     the player whose assets to display
+   * @param game        the Game
+   * @param warpManager the WarpManager
+   * @return a new AssetsPrinter
+   */
+  public static AssetsPrinter create(LocalPlayer forWhom, Game game, WarpManager warpManager) {
+    return new AssetsPrinter(forWhom, null, game, warpManager);
   }
 
   /**
@@ -87,58 +109,44 @@ public class AssetsPrinter {
     receiver.sendMessage(Message.builder().append(Message.Style.HEADLINE_1).append(heading).build());
 
     // display the limit
-    Map<Limit, Collection<Warp>> index = new HashMap<Limit, Collection<Warp>>();
+    Map<Limit, LimitValueWarpMapping> index;
 
     if (limitService != null) {
-      index.putAll(limitService.getWarpsPerLimit(creator));
+      index = limitService.getAssets(creator);
     } else {
-      index.put(new Limit() {
-        @Override
-        public int getLimit(Type type) {
-          return -1;
-        }
-
-        @Override
-        public ImmutableSet<LocalWorld> getAffectedWorlds() {
-          return game.getWorlds();
-        }
-
-        @Override
-        public boolean isAffectedWorld(UUID worldIdentifier) {
-          return true;
-        }
-      }, manager.getAll(WarpUtils.isCreator(creator.getUniqueId())));
+      assert game != null && warpManager != null;
+      index =
+          ImmutableMap.of(createDummyLimit(game),
+                          new LimitValueWarpMapping(warpManager, WarpUtils.isCreator(creator.getUniqueId())));
     }
 
-    for (Entry<Limit, Collection<Warp>> entry : index.entrySet()) {
+    for (Map.Entry<Limit, LimitValueWarpMapping> entry : index.entrySet()) {
       printLimit(receiver, entry.getKey(), entry.getValue());
     }
   }
 
-  /**
-   * Prints the given Limit to the receiver. The given Warps will be matched to the individual Limit.Types and displayed
-   * accordingly.
-   *
-   * @param receiver the Actor who is receiving this print
-   * @param limit    the limit
-   * @param warps    the Warps that are affected by the given Limit
-   */
-  private void printLimit(Actor receiver, Limit limit, Collection<Warp> warps) {
-    ImmutableMultimap.Builder<Limit.Type, Warp> builder = ImmutableMultimap.builder();
-
-    // sort warps to types
-    for (Warp warp : warps) {
-      for (Limit.Type type : Limit.Type.values()) {
-        if (type.getCondition().apply(warp)) {
-          builder.put(type, warp);
-        }
+  private static Limit createDummyLimit(final Game game) {
+    return new Limit() {
+      @Override
+      public ImmutableSet<LocalWorld> getAffectedWorlds() {
+        return game.getWorlds();
       }
-    }
 
-    // display...
-    final ImmutableMultimap<Limit.Type, Warp> index = builder.build();
+      @Override
+      public boolean isAffectedWorld(UUID worldIdentifier) {
+        return true;
+      }
 
-    // ...the total limit
+      @Override
+      public int get(Value value) {
+        return -1;
+      }
+    };
+  }
+
+  private void printLimit(Actor receiver, Limit limit, LimitValueWarpMapping mapping) {
+
+    // ...the total value (max. number & worlds)
     Message.Builder totalMsg = Message.builder();
     totalMsg.append(Message.Style.HEADLINE_2);
 
@@ -146,20 +154,20 @@ public class AssetsPrinter {
     totalMsg.append(" ");
     totalMsg.appendWithSeparators(limit.getAffectedWorlds());
     totalMsg.append(" ");
-    warpLimitCount(totalMsg, index.get(Limit.Type.TOTAL).size(), limit.getLimit(Limit.Type.TOTAL));
+    appendCurrentAndMaximum(totalMsg, mapping.get(Limit.Value.TOTAL).size(), limit.get(Limit.Value.TOTAL));
     totalMsg.append(":");
 
     receiver.sendMessage(totalMsg.build());
 
-    // ... all other limit
-    for (Limit.Type type : DISPLAYABLE_TYPES) {
-      final Collection<Warp> typeWarps = index.get(type);
+    // ... all other values (max. number & warp names)
+    for (Limit.Value value : DISPLAYABLE_VALUES) {
+      final Collection<Warp> typeWarps = mapping.get(value);
 
       Message.Builder limitMsg = Message.builder();
       limitMsg.append(Message.Style.KEY);
-      limitMsg.append(msg.getString("assets." + type.lowerCaseName()));
+      limitMsg.append(msg.getString("assets." + value.lowerCaseName()));
       limitMsg.append(" ");
-      warpLimitCount(limitMsg, typeWarps.size(), limit.getLimit(type));
+      appendCurrentAndMaximum(limitMsg, typeWarps.size(), limit.get(value));
       limitMsg.append(": ");
       limitMsg.append(Message.Style.VALUE);
       limitMsg.appendWithSeparators(typeWarps);
@@ -168,19 +176,11 @@ public class AssetsPrinter {
     }
   }
 
-  /**
-   * Creates the count-suffix from the given warp-count and the given limit-maximum to the given builder.
-   *
-   * @param builder      the builder
-   * @param warpCount    the warp-count
-   * @param limitMaximum the limit-maximum
-   * @return builder with appended contents
-   */
-  private Message.Builder warpLimitCount(Message.Builder builder, int warpCount, int limitMaximum) {
+  private Message.Builder appendCurrentAndMaximum(Message.Builder builder, int current, int max) {
     builder.append("(");
-    builder.append(warpCount);
-    if (0 <= limitMaximum) {
-      builder.append('/').append(limitMaximum);
+    builder.append(current);
+    if (0 <= max) {
+      builder.append('/').append(max);
     }
     builder.append(")");
     return builder;

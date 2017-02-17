@@ -31,7 +31,6 @@ import me.taylorkelly.mywarp.command.util.ExceedsInitiatorLimitException;
 import me.taylorkelly.mywarp.platform.Actor;
 import me.taylorkelly.mywarp.platform.LocalPlayer;
 import me.taylorkelly.mywarp.service.economy.FeeType;
-import me.taylorkelly.mywarp.service.limit.Limit;
 import me.taylorkelly.mywarp.service.limit.LimitService;
 import me.taylorkelly.mywarp.util.i18n.DynamicMessages;
 import me.taylorkelly.mywarp.warp.Warp;
@@ -89,17 +88,15 @@ public final class ManagementCommands {
   private void addWarp(LocalPlayer creator, Warp.Type type, String name) throws CommandException {
 
     if (limitService != null) {
-      LimitService.EvaluationResult
-              result =
-              limitService.evaluateLimit(creator, creator.getWorld(), Limit.Type.valueOf(type), true);
+      LimitService.EvaluationResult result = limitService.canAdd(creator, creator.getWorld(), type);
       if (result.exceedsLimit()) {
-        throw new ExceedsInitiatorLimitException(result.getExceededLimit(), result.getLimitMaximum());
+        throw new ExceedsInitiatorLimitException(result.getExceededValue(), result.getAllowedMaximium());
       }
     }
 
     warpManager.add(
-            new WarpBuilder(name, creator.getUniqueId(), creator.getWorld().getUniqueId(), creator.getPosition(),
-                    creator.getRotation()).setType(type).build());
+        new WarpBuilder(name, creator.getUniqueId(), creator.getWorld().getUniqueId(), creator.getPosition(),
+                        creator.getRotation()).setType(type).build());
   }
 
   @Command(aliases = {"delete", "remove"}, desc = "delete.description", help = "delete.help")
