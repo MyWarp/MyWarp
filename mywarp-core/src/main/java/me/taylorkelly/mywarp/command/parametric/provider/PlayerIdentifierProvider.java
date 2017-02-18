@@ -22,8 +22,6 @@ package me.taylorkelly.mywarp.command.parametric.provider;
 import com.google.common.base.Optional;
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
-import com.sk89q.intake.argument.Namespace;
-import com.sk89q.intake.parametric.Provider;
 import com.sk89q.intake.parametric.ProvisionException;
 
 import me.taylorkelly.mywarp.command.parametric.provider.exception.NoSuchPlayerIdentifierException;
@@ -31,7 +29,6 @@ import me.taylorkelly.mywarp.platform.LocalPlayer;
 import me.taylorkelly.mywarp.platform.PlayerNameResolver;
 
 import java.lang.annotation.Annotation;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,7 +39,7 @@ import javax.annotation.Nullable;
  *
  * @see LocalPlayer#getUniqueId()
  */
-class PlayerIdentifierProvider implements Provider<UUID> {
+class PlayerIdentifierProvider extends NonSuggestiveProvider<UUID> {
 
   private final PlayerNameResolver playerNameResolver;
 
@@ -50,15 +47,10 @@ class PlayerIdentifierProvider implements Provider<UUID> {
     this.playerNameResolver = playerNameResolver;
   }
 
-  @Override
-  public boolean isProvided() {
-    return false;
-  }
-
   @Nullable
   @Override
   public UUID get(CommandArgs arguments, List<? extends Annotation> modifiers)
-          throws ArgumentException, ProvisionException {
+      throws ArgumentException, ProvisionException {
     String query = arguments.next();
 
     Optional<UUID> optional = playerNameResolver.getByName(query);
@@ -67,12 +59,6 @@ class PlayerIdentifierProvider implements Provider<UUID> {
       throw new NoSuchPlayerIdentifierException(query);
     }
     return optional.get();
-  }
-
-  @Override
-  public List<String> getSuggestions(String prefix, Namespace namespace) {
-    //TODO implement
-    return Collections.emptyList();
   }
 
 }

@@ -38,7 +38,7 @@ public class NoSuchPlayerException extends NonMatchingInputException {
    * @param uniqueId the unique identifier of the Player
    */
   //REVIEW This is only used by the give command. The resulting error message displays the UUID, although in the give
-  // command a name might have been given. This is bad.
+  // command a name might have been given (see private & public commands).
   public NoSuchPlayerException(UUID uniqueId) {
     this(uniqueId.toString());
   }

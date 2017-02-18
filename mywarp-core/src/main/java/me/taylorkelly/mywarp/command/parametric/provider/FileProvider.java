@@ -30,7 +30,7 @@ import me.taylorkelly.mywarp.command.parametric.provider.exception.NoSuchFileExc
 import java.io.File;
 import java.io.FilenameFilter;
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -55,7 +55,7 @@ class FileProvider implements Provider<File> {
   @Nullable
   @Override
   public File get(CommandArgs arguments, List<? extends Annotation> modifiers)
-          throws ArgumentException, ProvisionException {
+      throws ArgumentException, ProvisionException {
     File ret = new File(base, arguments.next());
     if (!ret.exists() || !ret.canRead()) {
       throw new NoSuchFileException(ret);
@@ -65,7 +65,6 @@ class FileProvider implements Provider<File> {
 
   @Override
   public List<String> getSuggestions(String prefix, Namespace namespace) {
-    //TODO this does not work well for folders
     final File specified = new File(base, prefix);
 
     File searchFolder = specified.getParentFile();
@@ -73,12 +72,26 @@ class FileProvider implements Provider<File> {
       return Collections.emptyList();
     }
 
-    String[] list = searchFolder.list(new FilenameFilter() {
+    String[] matchingFileNames = searchFolder.list(new FilenameFilter() {
       @Override
       public boolean accept(File file, String name) {
         return name.startsWith(specified.getName());
       }
     });
-    return list != null ? Arrays.asList(list) : Collections.<String>emptyList();
+    if (matchingFileNames == null || matchingFileNames.length == 0) {
+      return Collections.emptyList();
+    }
+
+    List<String> ret = new ArrayList<String>();
+    for (String fileName : matchingFileNames) {
+      //XXX Use Path.relativize(Path) once we updated to Java 7
+      //'fileName' is the name of a file or folder within 'searchFolder',
+      // but we need to return the path relative to 'base':
+      ret.add(base.toURI().relativize(new File(searchFolder, fileName).toURI()).getPath());
+      //Due to a bug, URL#relativize(URL) does NOT work if base is not the parent of the new file,
+      //here this is guaranteed as base was our starting point and relative paths are not supported.
+      //see http://stackoverflow.com/a/205655/1692291
+    }
+    return ret;
   }
 }
