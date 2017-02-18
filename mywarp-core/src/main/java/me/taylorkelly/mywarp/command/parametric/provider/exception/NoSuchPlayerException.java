@@ -21,6 +21,7 @@ package me.taylorkelly.mywarp.command.parametric.provider.exception;
 
 import me.taylorkelly.mywarp.command.CommandHandler;
 import me.taylorkelly.mywarp.platform.LocalPlayer;
+import me.taylorkelly.mywarp.platform.PlayerNameResolver;
 import me.taylorkelly.mywarp.util.i18n.DynamicMessages;
 
 import java.util.UUID;
@@ -36,11 +37,10 @@ public class NoSuchPlayerException extends NonMatchingInputException {
    * Creates an instance.
    *
    * @param uniqueId the unique identifier of the Player
+   * @param resolver the PlayerNameResolver to convert the identifier into a human readable name
    */
-  //REVIEW This is only used by the give command. The resulting error message displays the UUID, although in the give
-  // command a name might have been given (see private & public commands).
-  public NoSuchPlayerException(UUID uniqueId) {
-    this(uniqueId.toString());
+  public NoSuchPlayerException(UUID uniqueId, PlayerNameResolver resolver) {
+    this(resolver.getByUniqueId(uniqueId).or(uniqueId.toString()));
   }
 
   /**

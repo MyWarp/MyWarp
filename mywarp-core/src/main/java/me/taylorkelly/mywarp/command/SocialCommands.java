@@ -84,7 +84,7 @@ public final class SocialCommands {
 
     if (!ignoreLimits && limitService != null) {
       if (!receiverPlayerOptional.isPresent()) {
-        throw new NoSuchPlayerException(receiver);
+        throw new NoSuchPlayerException(receiver, playerNameResolver);
       }
       LocalPlayer receiverPlayer = receiverPlayerOptional.get();
 
@@ -114,7 +114,7 @@ public final class SocialCommands {
     }
 
     if (!receiverPlayerOptional.isPresent()) {
-      throw new NoSuchPlayerException(receiver);
+      throw new NoSuchPlayerException(receiver, playerNameResolver);
     }
     receiverPlayerOptional.get().initiateAcceptanceConversation(actor, warp);
     actor.sendMessage(msg.getString("give.asked-successful", receiverPlayerOptional.get().getName(), warp.getName()));
@@ -133,7 +133,7 @@ public final class SocialCommands {
       UUID creator = warp.getCreator();
       Optional<LocalPlayer> creatorPlayerOptional = game.getPlayer(creator);
       if (!creatorPlayerOptional.isPresent()) {
-        throw new NoSuchPlayerException(creator);
+        throw new NoSuchPlayerException(creator, playerNameResolver);
       }
       LocalPlayer creatorPlayer = creatorPlayerOptional.get();
 
@@ -170,7 +170,7 @@ public final class SocialCommands {
       UUID creator = warp.getCreator();
       Optional<LocalPlayer> creatorPlayerOptional = game.getPlayer(creator);
       if (!creatorPlayerOptional.isPresent()) {
-        throw new NoSuchPlayerException(creator);
+        throw new NoSuchPlayerException(creator, playerNameResolver);
       }
       LocalPlayer creatorPlayer = creatorPlayerOptional.get();
 
