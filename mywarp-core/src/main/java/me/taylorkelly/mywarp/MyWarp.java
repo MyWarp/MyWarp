@@ -123,7 +123,6 @@ public final class MyWarp {
         new EventfulPopulatableWarpManager(
             new StoragePopulatableWarpManager(new MemoryPopulatableWarpManager(), warpStorage), eventBus);
 
-    //REVIEW can we use the WorldAccessAuthorizationStrategy only if it enabled in the config?
     AuthorizationResolver
         authorizationResolver =
         new AuthorizationResolver(new PermissionAuthorizationStrategy(

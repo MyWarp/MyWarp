@@ -36,8 +36,7 @@ import me.taylorkelly.mywarp.warp.Warp;
  */
 public class HandlerTeleportService implements TeleportService {
 
-  //REVIEW move resources into dedicated bundle?
-  private static final DynamicMessages msg = new DynamicMessages(Warp.RESOURCE_BUNDLE_NAME);
+  private static final DynamicMessages msg = new DynamicMessages("me.taylorkelly.mywarp.lang.Teleports");
 
   private final TeleportHandler handler;
   private final PlaceholderResolver resolver;

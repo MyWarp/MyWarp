@@ -21,10 +21,9 @@ package me.taylorkelly.mywarp.util;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.Collections2;
 import com.google.common.eventbus.Subscribe;
 
-import me.taylorkelly.mywarp.command.CommandHandler;
 import me.taylorkelly.mywarp.platform.Game;
 import me.taylorkelly.mywarp.platform.LocalPlayer;
 import me.taylorkelly.mywarp.util.i18n.DynamicMessages;
@@ -39,8 +38,7 @@ import java.util.Arrays;
  */
 public class InvitationInformationListener {
 
-  //REVIEW move into dedicated bundle?
-  private static final DynamicMessages msg = new DynamicMessages(CommandHandler.RESOURCE_BUNDLE_NAME);
+  private static final DynamicMessages msg = new DynamicMessages("me.taylorkelly.mywarp.lang.Invitations");
 
   private final Game game;
 
@@ -79,12 +77,12 @@ public class InvitationInformationListener {
   @Subscribe
   public void onGroupInvite(final WarpGroupInvitesEvent event) {
     inform(event.getInvitationStatus(), event.getWarp().getName(),
-            Iterables.filter(game.getPlayers(), new Predicate<LocalPlayer>() {
-              @Override
-              public boolean apply(LocalPlayer input) {
-                return input.hasGroup(event.getGroupId());
-              }
-            }));
+           Collections2.filter(game.getPlayers(), new Predicate<LocalPlayer>() {
+             @Override
+             public boolean apply(LocalPlayer input) {
+               return input.hasGroup(event.getGroupId());
+             }
+           }));
   }
 
   private void inform(WarpInvitesEvent.InvitationStatus status, String warpName, LocalPlayer... players) {
@@ -96,10 +94,10 @@ public class InvitationInformationListener {
 
     switch (status) {
       case INVITE:
-        builder.append(msg.getString("invite.player.player-invited", warpName));
+        builder.append(msg.getString("player.invited", warpName));
         break;
       case UNINVITE:
-        builder.append(msg.getString("uninvite.player.player-uninvited", warpName));
+        builder.append(msg.getString("player.uninvited", warpName));
         break;
       default:
         assert false : status;
