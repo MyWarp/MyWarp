@@ -185,7 +185,7 @@ public final class InformativeCommands {
 
       @Override
       public Message apply(Warp input) {
-        // 'name' (xy) by player
+        // 'name' (world) by player
         Message.Builder builder = Message.builder();
         builder.append("'");
         builder.append(input);
