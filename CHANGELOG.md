@@ -19,7 +19,7 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 * [Bukkit] Overhaul Bukkit implementation
 * Unify naming of internal components, refactor most classes into a cleaner package structure
 * Make the core handled teleporting of tamed horses
-* [[#108](https://github.com/TheE/MyWarp/issues/108)] - Update FlyWay to 4.0.2
+* [[#108](https://github.com/TheE/MyWarp/issues/108)] - Update FlyWay to 4.1.1
 * [[#86](https://github.com/TheE/MyWarp/issues/86)] - Replace EulerDirection with Vectors
 * Require at least Java8 to build (not to run) MyWarp
 * [[#84](https://github.com/TheE/MyWarp/issues/84)] - Warp signs are handled completely by the core
@@ -31,7 +31,9 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 * [[#93](https://github.com/TheE/MyWarp/issues/93)] - Allow interactions (e.g. updating, deleting, listing) with warps positioned on non existing worlds
 * [Bukkit] [[#117](https://github.com/TheE/MyWarp/issues/117)] - Update warp safety with Materials added in Minecraft 1.8, 1.9, 1.10 and 1.11
 * Update Gradle to 3.3 and use up-to-date versions of all plugins used in the build process
-
+* Move handling of teleport and welcome messages into the `TeleportService`
+* Massively simplify internal implementation of limits
+* Update flow-math to 1.0.3
 
 ### Added:
 * [[#77](https://github.com/TheE/MyWarp/issues/77)] - Support for golden and iron pressure plates
@@ -56,6 +58,7 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 * [Bukkit] [[#130](https://github.com/TheE/MyWarp/issues/130)] - Player name to UUID conversion fails if a name is requested twice
 * [[#132](https://github.com/TheE/MyWarp/issues/132)] - CI builds are missing translations from crowdin
 * [Bukkit] [[#136](https://github.com/TheE/MyWarp/issues/136)] - Warp labels on Dynmap display the creators UUID instead of the name
+* NoSuchPlayerException`s try to display a player's name before falling back to its UUID
 
 ### Removed:
 * [Bukkit] Chunk pre-loading can no longer be disabled
