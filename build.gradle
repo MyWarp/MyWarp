@@ -93,9 +93,8 @@ subprojects {
         def crowdinTempDir = "build/tmp/crowdin"
 
         task crowdinCopy(type: Copy) {
-            from fileTree(dir:crowdinTempDir + "/master/" + project.name)
-                         .matching{include "**/*.properties"}
-                         .files
+            FileTree tree = fileTree(dir:crowdinTempDir, include: "**/" + project.name + "/**/*.properties")
+            from tree.files
             into translationFinalDir
             dependsOn(crowdinDownload)
         }
