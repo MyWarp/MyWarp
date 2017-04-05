@@ -1,6 +1,6 @@
-![MyWarp](https://github.com/TheE/MyWarp/wiki/images/logo_vertical.png)
+![MyWarp](https://github.com/MyWarp/MyWarp/wiki/images/logo_vertical.png)
 ==========
-[![Build Status](https://travis-ci.org/TheE/MyWarp.svg)](https://travis-ci.org/TheE/MyWarp) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/mywarp/localized.svg)](https://crowdin.com/project/mywarp)
+[![Build Status](https://travis-ci.org/MyWarp/MyWarp.svg?branch=master)](https://travis-ci.org/MyWarp/MyWarp) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/mywarp/localized.svg)](https://crowdin.com/project/mywarp)
 
 MyWarp is an extension for the Minecraft multiplayer that allows players to share locations with each other. Shared locations (called ‘warps’) can be visited instantly by other players using a simple command. Creators remain in full control over their warps: They can remove them, change their locations, or invite players to or uninvite players from using them.
 
@@ -44,8 +44,8 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for important guidelines to follo
 
 Links
 -----
-* [Official Website](https://thee.github.io/MyWarp/)
-* [Documentation](https://github.com/TheE/MyWarp/wiki)
+* [Official Website](https://mywarp.github.io/)
+* [Documentation](https://github.com/MyWarp/MyWarp/wiki)
 * [Localization](https://crowdin.com/project/mywarp)
-* [Issue Tracker](https://github.com/TheE/MyWarp/issues)
+* [Issue Tracker](https://github.com/MyWarp/MyWarp/issues)
 * [Continues Integration](https://thee140.ci.cloudbees.com/)
