@@ -12,8 +12,8 @@ if [ "$TRAVIS_REPO_SLUG" == "MyWarp/MyWarp" ] && \
 
   git config --global user.email "travis@travis-ci.org"
   git config --global user.name "travis-ci"
-  git clone --quiet --branch=master https://${GH_TOKEN}@github.com/MyWarp/mywarp.github.io $HOME/gh-pages > /dev/null
-  cd $HOME/mywarp.github.io
+  git clone --quiet --branch=master https://${GH_TOKEN}@github.com/MyWarp/mywarp.github.io $HOME/web > /dev/null
+  cd $HOME/web
 
   echo -e "Repository cloned."
 
@@ -27,7 +27,7 @@ if [ "$TRAVIS_REPO_SLUG" == "MyWarp/MyWarp" ] && \
   done
 
   git commit -m "Lastest javadoc on successful travis build $TRAVIS_BUILD_NUMBER auto-pushed to mywarp.github.io."
-  git push -fq origin gh-pages > /dev/null
+  git push -fq origin master > /dev/null
 
   echo -e "Published Javadoc to mywarp.github.io.\n"
 
