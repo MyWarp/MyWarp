@@ -1,9 +1,9 @@
 #!/bin/bash
 #
-# Publish Javadoc of successful CI builds to https://thee.github.io/MyWarp/javadoc
+# Publish Javadoc of successful CI builds to https://mywarp.github.io/javadoc
 # See https://web.archive.org/web/20150107174657/http://benlimmer.com/2013/12/26/automatically-publish-javadoc-to-gh-pages-with-travis-ci/
 
-if [ "$TRAVIS_REPO_SLUG" == "TheE/MyWarp" ] && \
+if [ "$TRAVIS_REPO_SLUG" == "MyWarp/MyWarp" ] && \
    [ "$TRAVIS_JDK_VERSION" == "oraclejdk8" ] && \
    [ "$TRAVIS_PULL_REQUEST" == "false" ] &&  \
    [ "$TRAVIS_BRANCH" == "master" ]; then
@@ -12,10 +12,10 @@ if [ "$TRAVIS_REPO_SLUG" == "TheE/MyWarp" ] && \
 
   git config --global user.email "travis@travis-ci.org"
   git config --global user.name "travis-ci"
-  git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/TheE/MyWarp $HOME/gh-pages > /dev/null
-  cd $HOME/gh-pages
+  git clone --quiet --branch=master https://${GH_TOKEN}@github.com/MyWarp/mywarp.github.io $HOME/gh-pages > /dev/null
+  cd $HOME/mywarp.github.io
 
-  echo -e "Pages repository cloned."
+  echo -e "Repository cloned."
 
   for module in mywarp-core mywarp-bukkit; do
     mkdir -p ./javadoc/$module
@@ -26,9 +26,9 @@ if [ "$TRAVIS_REPO_SLUG" == "TheE/MyWarp" ] && \
     echo -e "Javadocs for '$module' added."
   done
 
-  git commit -m "Lastest javadoc on successful travis build $TRAVIS_BUILD_NUMBER auto-pushed to gh-pages"
+  git commit -m "Lastest javadoc on successful travis build $TRAVIS_BUILD_NUMBER auto-pushed to mywarp.github.io."
   git push -fq origin gh-pages > /dev/null
 
-  echo -e "Published Javadoc to gh-pages.\n"
+  echo -e "Published Javadoc to mywarp.github.io.\n"
 
 fi
