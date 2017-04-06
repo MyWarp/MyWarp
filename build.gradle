@@ -32,8 +32,8 @@ subprojects {
     ext.projectName = "MyWarp"
     ext.inceptionYear = "2011"
     ext.packaging = "jar"
-    ext.url = "https://thee.github.io/MyWarp/"
-    ext.projectDescription = "Social and dynamic warps for Minecraft"
+    ext.url = "https://mywarp.github.io/"
+    ext.projectDescription = "A social and self managing warp system for the Minecraft multiplayer."
 
     ext.internalVersion = version + "+" + ciSystem + "-b" + buildNumber + ".git-" + commitHash
 
