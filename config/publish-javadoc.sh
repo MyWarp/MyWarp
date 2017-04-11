@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Publish Javadoc of successful CI builds to https://mywarp.github.io/javadoc
+# Publish Javadoc of successful CI builds to https://mywarp.github.io/javadocs
 # See https://web.archive.org/web/20150107174657/http://benlimmer.com/2013/12/26/automatically-publish-javadoc-to-gh-pages-with-travis-ci/
 
 destinationBranch="src";
@@ -21,7 +21,7 @@ if [ "$TRAVIS_REPO_SLUG" == "MyWarp/MyWarp" ] && \
   echo -e "Repository cloned (branch $destinationBranch)."
 
   for module in mywarp-core mywarp-bukkit; do
-    finalDestination=./${javadocDestination}$module;
+    finalDestination=./${javadocDestination}${module}
 
     mkdir -p ${finalDestination}
     git rm -rf ${finalDestination}/*
