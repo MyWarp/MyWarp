@@ -7,6 +7,3 @@ before_install:
 - chmod +x gradlew
 - chmod +x config/publish-javadoc.sh
 after_success: config/publish-javadoc.sh
-env:
-  global:
-    secure: OLzkuZu/1pE/xvzH0/SzKyHvHxwhc/2+MgrUpJoS77JDhOrMWhf2qtIGLrg9RIdVIlvLCbx6oUITvKK9amU97BzYdcUlb81LXvg8r1aelqWXkHcyeoHf1uqNi0ok5V4T8bG0Q2xv+a9O9xpI2/MQZDUjd7mHz1IOGS34iZgxnCI=
