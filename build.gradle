@@ -1,6 +1,6 @@
 plugins {
     id "com.mendhak.gradlecrowdin" version "0.0.9" apply false
-    id "com.palantir.git-version" version "0.5.2"
+    id "com.palantir.git-version" version "0.7.1"
 }
 
 // Define variables
@@ -47,7 +47,7 @@ subprojects {
     }
 
     checkstyle {
-        toolVersion = "7.5.1"
+        toolVersion = "7.6.1"
         configProperties.checkstyleConfigDir = new File(rootProject.projectDir, "config/checkstyle")
         configFile = new File(configProperties.checkstyleConfigDir, "checkstyle.xml")
     }
