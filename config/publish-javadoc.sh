@@ -21,13 +21,13 @@ if [ "$TRAVIS_REPO_SLUG" == "MyWarp/MyWarp" ] && \
   echo -e "Repository cloned (branch $destinationBranch)."
 
   for module in mywarp-core mywarp-bukkit; do
-    mkdir -p ./javadoc/$module
-    git rm -rf ./javadoc/$module/*
+    finalDestination=./${javadocDestination}$module;
 
-    finalDestination=.${javadocDestination}/$module;
+    mkdir -p ${finalDestination}
+    git rm -rf ${finalDestination}/*
 
     cp -Rf $TRAVIS_BUILD_DIR/$module/build/docs/javadoc/ ${finalDestination}
-    git add -f ./javadoc/$module
+    git add -f ${finalDestination}
     echo -e "Javadocs for '$module' copied to ${finalDestination}."
   done
 
