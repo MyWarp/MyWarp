@@ -49,7 +49,7 @@ shadowJar {
         include(dependency("org.slf4j:slf4j-api"))
         include(dependency("org.apache.logging.log4j:log4j-slf4j-impl"))
         include(dependency("com.sk89q:squirrelid"))
-        include(dependency("de.minehattan.intake:intake"))
+        include(dependency("io.github.mywarp.intake:intake"))
         include(dependency("com.h2database:h2"))
         include(dependency("com.flowpowered:flow-math"))
     }
