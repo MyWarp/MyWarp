@@ -51,6 +51,13 @@ public interface Settings {
   boolean isShowTeleportEffect();
 
   /**
+   * Returns whether a warp names should be compared case sensitively.
+   *
+   * @return {@code true} if warp names should be compared case sensitively
+   */
+  boolean isCaseSensitiveWarpNames();
+
+  /**
    * Gets the default locale.
    *
    * @return the default locale

@@ -121,6 +121,11 @@ public class BukkitSettings implements Settings {
   }
 
   @Override
+  public boolean isCaseSensitiveWarpNames() {
+    return config.getBoolean("settings.caseSensitiveWarpNames");
+  }
+
+  @Override
   public boolean isTeleportTamedHorses() {
     return config.getBoolean("settings.teleportHorses");
   }

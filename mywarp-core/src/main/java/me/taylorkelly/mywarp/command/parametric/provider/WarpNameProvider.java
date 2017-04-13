@@ -19,6 +19,8 @@
 
 package me.taylorkelly.mywarp.command.parametric.provider;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
 import com.sk89q.intake.parametric.ProvisionException;
@@ -26,6 +28,7 @@ import com.sk89q.intake.parametric.ProvisionException;
 import me.taylorkelly.mywarp.command.CommandHandler;
 import me.taylorkelly.mywarp.command.parametric.provider.exception.InvalidWarpNameException;
 import me.taylorkelly.mywarp.command.parametric.provider.exception.InvalidWarpNameException.Reason;
+import me.taylorkelly.mywarp.platform.Settings;
 import me.taylorkelly.mywarp.util.WarpUtils;
 import me.taylorkelly.mywarp.warp.Warp;
 import me.taylorkelly.mywarp.warp.WarpManager;
@@ -38,20 +41,22 @@ import java.util.List;
  */
 class WarpNameProvider extends NonSuggestiveProvider<String> {
 
-  private WarpManager warpManager;
-  private CommandHandler commandHandler;
+  private final WarpManager warpManager;
+  private final CommandHandler commandHandler;
+  private final Settings settings;
 
-  WarpNameProvider(WarpManager warpManager, CommandHandler commandHandler) {
+  WarpNameProvider(WarpManager warpManager, CommandHandler commandHandler, Settings settings) {
     this.warpManager = warpManager;
     this.commandHandler = commandHandler;
+    this.settings = settings;
   }
 
   @Override
   public String get(CommandArgs arguments, List<? extends Annotation> modifiers)
-          throws ArgumentException, ProvisionException {
-    String name = arguments.next();
+      throws ArgumentException, ProvisionException {
+    final String name = arguments.next();
 
-    if (warpManager.containsByName(name)) {
+    if (existsSameNameWarp(name, settings.isCaseSensitiveWarpNames())) {
       throw new InvalidWarpNameException(name, Reason.ALREADY_EXISTS);
     }
     if (name.length() > WarpUtils.MAX_NAME_LENGTH) {
@@ -62,5 +67,18 @@ class WarpNameProvider extends NonSuggestiveProvider<String> {
     }
 
     return name;
+  }
+
+  private boolean existsSameNameWarp(final String nameToCheck, boolean checkCaseSensitively) {
+    if (checkCaseSensitively) {
+      return warpManager.containsByName(nameToCheck);
+    }
+
+    return !Iterables.isEmpty(warpManager.getAll(new Predicate<Warp>() {
+      @Override
+      public boolean apply(Warp input) {
+        return input.getName().equalsIgnoreCase(nameToCheck);
+      }
+    }));
   }
 }

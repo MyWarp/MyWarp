@@ -1,5 +1,6 @@
 settings:
   controlWorldAccess: false
+  caseSensitiveWarpNames: true
   teleportHorses: true
   showTeleportEffect: true
   informPlayersOnInvitation: true

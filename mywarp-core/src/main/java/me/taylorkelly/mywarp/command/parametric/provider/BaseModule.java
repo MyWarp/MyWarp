@@ -34,6 +34,7 @@ import me.taylorkelly.mywarp.platform.Game;
 import me.taylorkelly.mywarp.platform.LocalEntity;
 import me.taylorkelly.mywarp.platform.LocalPlayer;
 import me.taylorkelly.mywarp.platform.PlayerNameResolver;
+import me.taylorkelly.mywarp.platform.Settings;
 import me.taylorkelly.mywarp.warp.Warp;
 import me.taylorkelly.mywarp.warp.WarpManager;
 import me.taylorkelly.mywarp.warp.authorization.AuthorizationResolver;
@@ -51,6 +52,7 @@ public class BaseModule extends AbstractModule {
   private final AuthorizationResolver authorizationResolver;
   private final PlayerNameResolver playerNameResolver;
   private final Game game;
+  private final Settings settings;
   private CommandHandler commandHandler;
   private File base;
 
@@ -61,15 +63,18 @@ public class BaseModule extends AbstractModule {
    * @param authorizationResolver the AuthorizationResolver to use
    * @param playerNameResolver    the PlayerNameResolver to use
    * @param game                  the Game to use
+   * @param settings              the Settings to use
    * @param commandHandler        the CommandHandler to use
    * @param base                  the base File to use
    */
   public BaseModule(WarpManager warpManager, AuthorizationResolver authorizationResolver,
-                    PlayerNameResolver playerNameResolver, Game game, CommandHandler commandHandler, File base) {
+                    PlayerNameResolver playerNameResolver, Game game, Settings settings, CommandHandler commandHandler,
+                    File base) {
     this.warpManager = warpManager;
     this.authorizationResolver = authorizationResolver;
     this.playerNameResolver = playerNameResolver;
     this.game = game;
+    this.settings = settings;
     this.commandHandler = commandHandler;
     this.base = base;
   }
@@ -102,7 +107,8 @@ public class BaseModule extends AbstractModule {
     });
 
     //warp name
-    bind(String.class).annotatedWith(WarpName.class).toProvider(new WarpNameProvider(warpManager, commandHandler));
+    bind(String.class).annotatedWith(WarpName.class)
+        .toProvider(new WarpNameProvider(warpManager, commandHandler, settings));
 
     //configuration
     bind(ConnectionConfiguration.class).toProvider(new ConnectionConfigurationProvider());

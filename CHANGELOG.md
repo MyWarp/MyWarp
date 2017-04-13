@@ -5,6 +5,11 @@ Starting with version 3, this project adheres to [Semantic Versioning](http://se
 
 Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 
+## [Unreleased]
+
+### Added
+* [[#142](https://github.com/TheE/MyWarp/issues/142)] - Add an option to disallow warps with different capitalization
+
 ## [3.0-beta-4] - 2017-02-26
 
 ### Changed:
