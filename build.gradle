@@ -25,7 +25,7 @@ subprojects {
     apply plugin: "com.mendhak.gradlecrowdin"
 
     // Basic project information
-    group = "me.taylorkelly"
+    group = "io.github.mywarp.mywarp"
     version = "3.0-SNAPSHOT"
 
     // Extended project information
