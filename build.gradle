@@ -33,7 +33,7 @@ subprojects {
     ext.inceptionYear = "2011"
     ext.packaging = "jar"
     ext.url = "https://mywarp.github.io/"
-    ext.projectDescription = "A social and self managing warp system for the Minecraft multiplayer."
+    ext.projectDescription = "Social and self managing warps for the Minecraft multiplayer."
 
     ext.internalVersion = version + "+" + ciSystem + "-b" + buildNumber + ".git-" + commitHash
 
@@ -83,7 +83,7 @@ subprojects {
     }
 
     // handle translations
-    def translationsSourceDir = "me/taylorkelly/mywarp/lang"
+    def translationsSourceDir = "io/github/mywarp/mywarp/lang"
     def translationFinalDir = new File(sourceSets.main.output.resourcesDir, translationsSourceDir)
 
     // if present, additional translations will be downloaded from crowdin,

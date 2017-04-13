@@ -7,6 +7,9 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 
 ## [Unreleased]
 
+### Changed
+* [[#143](https://github.com/TheE/MyWarp/issues/143)] - Change group-id and package structure to `io.github.mywarp.mywarp`
+
 ### Added
 * [[#142](https://github.com/TheE/MyWarp/issues/142)] - Add an option to disallow warps with different capitalization
 

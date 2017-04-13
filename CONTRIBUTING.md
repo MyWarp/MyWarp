@@ -25,4 +25,4 @@ Code Conventions
 * Use [Optionals](https://code.google.com/p/guava-libraries/wiki/UsingAndAvoidingNullExplained) instead of returning `null`.
 * Method parameters accepting `null` must be annotated with `@javax.annotation.Nullable`, all methods and parameters are nonnull by default.
 * Use [Google Preconditions](https://code.google.com/p/guava-libraries/wiki/PreconditionsExplained) for null- and argument checking.
-* Use `me.taylorkelly.mywarp.util.MyWarpLogger.getLogger(Class<?>)` to create per-class loggers, if needed.
+* Use `MyWarpLogger.getLogger(Class<?>)` to create per-class loggers, if needed.
