@@ -73,3 +73,5 @@ dynmap:
     iconID: 'mywarp_warp-32'
     minZoom: 0
     showLabel: false
+slf4j:
+  showShortLogName: false

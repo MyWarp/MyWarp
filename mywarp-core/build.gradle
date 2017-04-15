@@ -10,7 +10,7 @@ dependencies {
     compile "commons-lang:commons-lang:2.3"
     // Bukkit only bundles 10.0.1
     compile "com.google.guava:guava:10.0.1"
-    compile "org.slf4j:slf4j-api:1.7.10"
+    compile "org.slf4j:slf4j-api:1.7.25"
     compile "com.flowpowered:flow-math:1.0.3"
     compile "io.github.mywarp.intake:intake:4.2-SNAPSHOT"
 }

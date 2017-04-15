@@ -19,17 +19,27 @@
 
 package io.github.mywarp.mywarp.util;
 
+import com.google.common.base.Function;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 
+import javax.annotation.Nullable;
+
 /**
- * A custom logger that actually delegates all input to an underlying {@link org.slf4j.Logger}, but adds the prefix
- * {@code [MyWarp]} before each messages.
+ * A custom logger that actually delegates all input to an underlying {@link org.slf4j.Logger}, but allows to modify the
+ * message beforehand.
  */
 public class MyWarpLogger implements Logger {
 
-  private static final String prefix = "[MyWarp] ";
+  private static Function<String, String> modifier = new Function<String, String>() {
+    @Nullable
+    @Override
+    public String apply(@Nullable String input) {
+      return input;
+    }
+  };
 
   private final Logger logger;
 
@@ -54,114 +64,122 @@ public class MyWarpLogger implements Logger {
     return new MyWarpLogger(clazz);
   }
 
+  private String applyModifier(String msg) {
+    return modifier.apply(msg);
+  }
+
   /**
-   * Adds a prefix to the given string.
+   * Sets the modifier of log messages.
    *
-   * @param str the string
-   * @return the prefixed string
+   * <p>Each log message is given to the Function given to this method. The output of this Function is than delegated to
+   * the underlying logging framework. </p>
+   *
+   * <p>This method can be used to append custom prefixes to log messages.</p>
+   *
+   * @param modifier the modifier
    */
-  private String prefix(String str) {
-    return prefix + str;
+  public static void setModifier(Function<String, String> modifier) {
+    MyWarpLogger.modifier = modifier;
   }
 
   @Override
   public void debug(String format, Object arg1, Object arg2) {
-    logger.debug(prefix(format), arg1, arg2);
+    logger.debug(applyModifier(format), arg1, arg2);
   }
 
   @Override
   public void debug(Marker marker, String msg) {
-    logger.debug(marker, prefix(msg));
+    logger.debug(marker, applyModifier(msg));
   }
 
   @Override
   public void debug(String format, Object arg) {
-    logger.debug(prefix(format), arg);
+    logger.debug(applyModifier(format), arg);
   }
 
   @Override
   public void debug(String msg) {
-    logger.debug(prefix(msg));
+    logger.debug(applyModifier(msg));
   }
 
   @Override
   public void debug(String format, Object... arguments) {
-    logger.debug(prefix(format), arguments);
+    logger.debug(applyModifier(format), arguments);
   }
 
   @Override
   public void debug(Marker marker, String msg, Throwable t) {
-    logger.debug(marker, prefix(msg), t);
+    logger.debug(marker, applyModifier(msg), t);
   }
 
   @Override
   public void debug(String msg, Throwable t) {
-    logger.debug(prefix(msg), t);
+    logger.debug(applyModifier(msg), t);
   }
 
   @Override
   public void debug(Marker marker, String format, Object... arguments) {
-    logger.debug(marker, prefix(format), arguments);
+    logger.debug(marker, applyModifier(format), arguments);
   }
 
   @Override
   public void debug(Marker marker, String format, Object arg) {
-    logger.debug(marker, prefix(format), arg);
+    logger.debug(marker, applyModifier(format), arg);
   }
 
   @Override
   public void debug(Marker marker, String format, Object arg1, Object arg2) {
-    logger.debug(marker, prefix(format), arg1, arg2);
+    logger.debug(marker, applyModifier(format), arg1, arg2);
   }
 
   @Override
   public void error(Marker marker, String format, Object... arguments) {
-    logger.error(marker, prefix(format), arguments);
+    logger.error(marker, applyModifier(format), arguments);
   }
 
   @Override
   public void error(String format, Object arg1, Object arg2) {
-    logger.error(prefix(format), arg1, arg2);
+    logger.error(applyModifier(format), arg1, arg2);
   }
 
   @Override
   public void error(Marker marker, String format, Object arg1, Object arg2) {
-    logger.error(marker, prefix(format), arg1, arg2);
+    logger.error(marker, applyModifier(format), arg1, arg2);
   }
 
   @Override
   public void error(String msg, Throwable t) {
-    logger.error(prefix(msg), t);
+    logger.error(applyModifier(msg), t);
   }
 
   @Override
   public void error(Marker marker, String msg) {
-    logger.error(marker, prefix(msg));
+    logger.error(marker, applyModifier(msg));
   }
 
   @Override
   public void error(Marker marker, String msg, Throwable t) {
-    logger.error(marker, prefix(msg), t);
+    logger.error(marker, applyModifier(msg), t);
   }
 
   @Override
   public void error(String format, Object arg) {
-    logger.error(prefix(format), arg);
+    logger.error(applyModifier(format), arg);
   }
 
   @Override
   public void error(String format, Object... arguments) {
-    logger.error(prefix(format), arguments);
+    logger.error(applyModifier(format), arguments);
   }
 
   @Override
   public void error(Marker marker, String format, Object arg) {
-    logger.error(marker, prefix(format), arg);
+    logger.error(marker, applyModifier(format), arg);
   }
 
   @Override
   public void error(String msg) {
-    logger.error(prefix(msg));
+    logger.error(applyModifier(msg));
   }
 
   @Override
@@ -171,52 +189,52 @@ public class MyWarpLogger implements Logger {
 
   @Override
   public void info(Marker marker, String format, Object arg) {
-    logger.info(marker, prefix(format), arg);
+    logger.info(marker, applyModifier(format), arg);
   }
 
   @Override
   public void info(Marker marker, String msg, Throwable t) {
-    logger.info(marker, prefix(msg), t);
+    logger.info(marker, applyModifier(msg), t);
   }
 
   @Override
   public void info(String msg) {
-    logger.info(prefix(msg));
+    logger.info(applyModifier(msg));
   }
 
   @Override
   public void info(String format, Object... arguments) {
-    logger.info(prefix(format), arguments);
+    logger.info(applyModifier(format), arguments);
   }
 
   @Override
   public void info(String msg, Throwable t) {
-    logger.info(prefix(msg), t);
+    logger.info(applyModifier(msg), t);
   }
 
   @Override
   public void info(String format, Object arg1, Object arg2) {
-    logger.info(prefix(format), arg1, arg2);
+    logger.info(applyModifier(format), arg1, arg2);
   }
 
   @Override
   public void info(Marker marker, String format, Object... arguments) {
-    logger.info(marker, prefix(format), arguments);
+    logger.info(marker, applyModifier(format), arguments);
   }
 
   @Override
   public void info(String format, Object arg) {
-    logger.info(prefix(format), arg);
+    logger.info(applyModifier(format), arg);
   }
 
   @Override
   public void info(Marker marker, String msg) {
-    logger.info(marker, prefix(msg));
+    logger.info(marker, applyModifier(msg));
   }
 
   @Override
   public void info(Marker marker, String format, Object arg1, Object arg2) {
-    logger.info(marker, prefix(format), arg1, arg2);
+    logger.info(marker, applyModifier(format), arg1, arg2);
   }
 
   @Override
@@ -271,101 +289,101 @@ public class MyWarpLogger implements Logger {
 
   @Override
   public void trace(String format, Object... arguments) {
-    logger.trace(prefix(format), arguments);
+    logger.trace(applyModifier(format), arguments);
   }
 
   @Override
   public void trace(Marker marker, String msg, Throwable t) {
-    logger.trace(marker, prefix(msg), t);
+    logger.trace(marker, applyModifier(msg), t);
   }
 
   @Override
   public void trace(Marker marker, String msg) {
-    logger.trace(marker, prefix(msg));
+    logger.trace(marker, applyModifier(msg));
   }
 
   @Override
   public void trace(Marker marker, String format, Object arg1, Object arg2) {
-    logger.trace(marker, prefix(format), arg1, arg2);
+    logger.trace(marker, applyModifier(format), arg1, arg2);
   }
 
   @Override
   public void trace(Marker marker, String format, Object... argArray) {
-    logger.trace(marker, prefix(format), argArray);
+    logger.trace(marker, applyModifier(format), argArray);
   }
 
   @Override
   public void trace(Marker marker, String format, Object arg) {
-    logger.trace(marker, prefix(format), arg);
+    logger.trace(marker, applyModifier(format), arg);
   }
 
   @Override
   public void trace(String msg, Throwable t) {
-    logger.trace(prefix(msg), t);
+    logger.trace(applyModifier(msg), t);
   }
 
   @Override
   public void trace(String msg) {
-    logger.trace(prefix(msg));
+    logger.trace(applyModifier(msg));
   }
 
   @Override
   public void trace(String format, Object arg1, Object arg2) {
-    logger.trace(prefix(format), arg1, arg2);
+    logger.trace(applyModifier(format), arg1, arg2);
   }
 
   @Override
   public void trace(String format, Object arg) {
-    logger.trace(prefix(format), arg);
+    logger.trace(applyModifier(format), arg);
   }
 
   @Override
   public void warn(String msg) {
-    logger.warn(prefix(msg));
+    logger.warn(applyModifier(msg));
   }
 
   @Override
   public void warn(String format, Object arg) {
-    logger.warn(prefix(format), arg);
+    logger.warn(applyModifier(format), arg);
   }
 
   @Override
   public void warn(String format, Object arg1, Object arg2) {
-    logger.warn(prefix(format), arg1, arg2);
+    logger.warn(applyModifier(format), arg1, arg2);
   }
 
   @Override
   public void warn(Marker marker, String msg) {
-    logger.warn(marker, prefix(msg));
+    logger.warn(marker, applyModifier(msg));
   }
 
   @Override
   public void warn(String format, Object... arguments) {
-    logger.warn(prefix(format), arguments);
+    logger.warn(applyModifier(format), arguments);
   }
 
   @Override
   public void warn(Marker marker, String format, Object arg) {
-    logger.warn(marker, prefix(format), arg);
+    logger.warn(marker, applyModifier(format), arg);
   }
 
   @Override
   public void warn(Marker marker, String format, Object... arguments) {
-    logger.warn(marker, prefix(format), arguments);
+    logger.warn(marker, applyModifier(format), arguments);
   }
 
   @Override
   public void warn(Marker marker, String format, Object arg1, Object arg2) {
-    logger.warn(marker, prefix(format), arg1, arg2);
+    logger.warn(marker, applyModifier(format), arg1, arg2);
   }
 
   @Override
   public void warn(Marker marker, String msg, Throwable t) {
-    logger.warn(marker, prefix(msg), t);
+    logger.warn(marker, applyModifier(msg), t);
   }
 
   @Override
   public void warn(String msg, Throwable t) {
-    logger.warn(prefix(msg), t);
+    logger.warn(applyModifier(msg), t);
   }
 }
