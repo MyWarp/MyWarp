@@ -37,6 +37,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Attachable;
+import org.bukkit.material.MaterialData;
 
 /**
  * Listens for events involving signs and feats them to a {@link WarpSignHandler}.
@@ -104,9 +105,11 @@ class WarpSignListener extends AbstractListener {
 
         //player clicked on something that might trigger a warp sign
         if (SUPPORTED_ATTACHABLES.contains(block.getType())) {
-          Attachable attachable = (Attachable) block.getState().getData();
-          warpSignHandler
-              .handleInteraction(toPlayer(event), toVector(block), BukkitAdapter.adapt(attachable.getAttachedFace()));
+          Optional<BlockFace> blockFace = attachedBlockFace(block);
+
+          if (blockFace.isPresent()) {
+            warpSignHandler.handleInteraction(toPlayer(event), toVector(block), blockFace.get());
+          }
         }
         break;
       case PHYSICAL:
@@ -148,6 +151,15 @@ class WarpSignListener extends AbstractListener {
     public void setLine(int line, String text) {
       event.setLine(line, text);
     }
+  }
+
+  private Optional<BlockFace> attachedBlockFace(Block block) {
+    MaterialData materialData = block.getState().getData();
+
+    if (materialData instanceof Attachable) {
+      return BukkitAdapter.adapt(((Attachable) materialData).getAttachedFace());
+    }
+    return Optional.absent();
   }
 
 }

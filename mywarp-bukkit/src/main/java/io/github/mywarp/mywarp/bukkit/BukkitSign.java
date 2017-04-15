@@ -19,6 +19,8 @@
 
 package io.github.mywarp.mywarp.bukkit;
 
+import com.google.common.base.Optional;
+
 import io.github.mywarp.mywarp.platform.Sign;
 import io.github.mywarp.mywarp.util.BlockFace;
 
@@ -54,13 +56,16 @@ class BukkitSign implements Sign {
    * @param blockFace the block face.
    * @return {@code true} if this sign is attached to the given block face
    */
-  boolean isAttached(BlockFace blockFace) {
-    org.bukkit.material.Sign signMat = asMaterial();
-    return signMat.isWallSign() && blockFace.equals(BukkitAdapter.adapt(signMat.getAttachedFace()));
-  }
+  boolean isAttachedTo(BlockFace blockFace) {
+    org.bukkit.material.Sign signMat = (org.bukkit.material.Sign) bukkitSign.getData();
 
-  private org.bukkit.material.Sign asMaterial() {
-    return (org.bukkit.material.Sign) bukkitSign.getData();
+    if (signMat.isWallSign()) {
+      Optional<BlockFace> adapt = BukkitAdapter.adapt(signMat.getAttachedFace());
+      if (adapt.isPresent() && adapt.get().equals(blockFace)) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }

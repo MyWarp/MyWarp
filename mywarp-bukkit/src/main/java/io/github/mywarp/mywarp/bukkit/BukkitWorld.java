@@ -89,7 +89,7 @@ public class BukkitWorld implements LocalWorld {
   public Optional<Sign> getAttachedSign(Vector3i position, BlockFace blockFace) {
     BukkitSign sign = getBukkitSign(position);
 
-    if (sign != null && sign.isAttached(blockFace)) {
+    if (sign != null && sign.isAttachedTo(blockFace)) {
       //Generics are stupid and throw an error when not casting
       return Optional.of((Sign) sign);
     }

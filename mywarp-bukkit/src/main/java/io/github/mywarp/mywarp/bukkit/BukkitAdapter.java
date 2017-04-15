@@ -19,6 +19,8 @@
 
 package io.github.mywarp.mywarp.bukkit;
 
+import com.google.common.base.Optional;
+
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.util.BlockFace;
@@ -48,7 +50,7 @@ public final class BukkitAdapter {
     if (world instanceof BukkitWorld) {
       return ((BukkitWorld) world).getLoadedWorld();
     }
-    World loadedWorld = Bukkit.getWorld(world.getName());
+    World loadedWorld = Bukkit.getWorld(world.getUniqueId());
     if (loadedWorld == null) {
       throw new IllegalArgumentException("Cannot find a loaded world for " + world + "in Bukkit.");
     }
@@ -82,22 +84,22 @@ public final class BukkitAdapter {
     return loadedPlayer;
   }
 
-  static BlockFace adapt(org.bukkit.block.BlockFace blockFace) {
+  static Optional<BlockFace> adapt(org.bukkit.block.BlockFace blockFace) {
     switch (blockFace) {
       case NORTH:
-        return BlockFace.NORTH;
+        return Optional.of(BlockFace.NORTH);
       case EAST:
-        return BlockFace.EAST;
+        return Optional.of(BlockFace.EAST);
       case SOUTH:
-        return BlockFace.SOUTH;
+        return Optional.of(BlockFace.SOUTH);
       case WEST:
-        return BlockFace.WEST;
+        return Optional.of(BlockFace.WEST);
       case UP:
-        return BlockFace.UP;
+        return Optional.of(BlockFace.UP);
       case DOWN:
-        return BlockFace.DOWN;
+        return Optional.of(BlockFace.DOWN);
       default:
-        return BlockFace.NONE;
+        return Optional.absent();
     }
   }
 }

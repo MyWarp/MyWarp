@@ -24,8 +24,7 @@ import com.flowpowered.math.vector.Vector3i;
 /**
  * The individual faces of a block.
  *
- * <p>Since blocks are regular cubes, there are 6 individual block faces, one for each side. Any direction that cannot
- * be represented by one of these block faces <b>must</b> use {@link BlockFace#NONE}.</p>
+ * <p>Since blocks are regular cubes, there are only 6 individual block faces, one for each side.</p>
  */
 public enum BlockFace {
 
@@ -47,10 +46,7 @@ public enum BlockFace {
   UP(new Vector3i(0, 1, 0)), /**
    * The bottom side of a block (-y).
    */
-  DOWN(new Vector3i(0, -1, 0)), /**
-   * Represents no side of a block.
-   */
-  NONE(Vector3i.ZERO);
+  DOWN(new Vector3i(0, -1, 0));
 
   private final Vector3i vector;
   private BlockFace opposite;
@@ -66,7 +62,6 @@ public enum BlockFace {
     WEST.opposite = EAST;
     UP.opposite = DOWN;
     DOWN.opposite = UP;
-    NONE.opposite = NONE;
   }
 
   /**
