@@ -38,8 +38,8 @@ subprojects {
     ext.internalVersion = version + "+" + ciSystem + "-b" + buildNumber + ".git-" + commitHash
 
     // Minimum version of Java required
-    sourceCompatibility = 6
-    targetCompatibility = 6
+    sourceCompatibility = 8
+    targetCompatibility = 8
 
     // Project repositories
     repositories {
