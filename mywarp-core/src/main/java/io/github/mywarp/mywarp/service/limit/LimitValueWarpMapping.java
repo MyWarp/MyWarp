@@ -19,15 +19,12 @@
 
 package io.github.mywarp.mywarp.service.limit;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-
 import io.github.mywarp.mywarp.service.limit.Limit.Value;
-import io.github.mywarp.mywarp.util.IterableUtils;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 
 /**
  * A mapping of limit values to warps on a certain WarpManager.
@@ -60,7 +57,7 @@ public class LimitValueWarpMapping {
    * @return a Collection with all warps to be counted under the value
    */
   public Collection<Warp> get(Value value) {
-    return manager.getAll(Predicates.and(filter, value.getCondition()));
+    return manager.getAll(filter.and(value.getCondition()));
   }
 
   /**
@@ -68,9 +65,10 @@ public class LimitValueWarpMapping {
    *
    * @param value the value
    * @param count the number of Warps that should exist at least
-   * @return {@code true} if there are at least the given nmber of Warps
+   * @return {@code true} if there are at least the given number of Warps
    */
   boolean atLeast(Value value, int count) {
-    return IterableUtils.atLeast(get(value), count);
+    //FIXME correct?
+    return get(value).size() <= count;
   }
 }

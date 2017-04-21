@@ -19,7 +19,6 @@
 
 package io.github.mywarp.mywarp.bukkit;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 
 import io.github.mywarp.mywarp.platform.Game;
@@ -30,6 +29,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 
@@ -62,7 +62,7 @@ public class BukkitGame implements Game {
     if (world != null) {
       return Optional.of(BukkitAdapter.adapt(world));
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 
   @Override
@@ -71,7 +71,7 @@ public class BukkitGame implements Game {
     if (world != null) {
       return Optional.of(BukkitAdapter.adapt(world));
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 
   @Override
@@ -90,7 +90,7 @@ public class BukkitGame implements Game {
     if (player != null) {
       return Optional.of(plugin.wrap(player));
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 
   @Override
@@ -99,7 +99,7 @@ public class BukkitGame implements Game {
     if (player != null) {
       return Optional.of(plugin.wrap(player));
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 
   @Override

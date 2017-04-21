@@ -19,7 +19,6 @@
 
 package io.github.mywarp.mywarp.command;
 
-import com.google.common.base.Optional;
 import com.sk89q.intake.CommandCallable;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.CommandMapping;
@@ -72,6 +71,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -190,7 +190,7 @@ public final class CommandHandler {
   public void callCommand(String command, Actor caller) {
     //call the command
     try {
-      dispatcher.call(command, createNamespace(caller), new ArrayList<String>());
+      dispatcher.call(command, createNamespace(caller), new ArrayList<>());
 
       //handle errors
     } catch (InvocationCommandException e) {
@@ -263,7 +263,7 @@ public final class CommandHandler {
    * @return all usable commands as strings
    */
   Set<String> getUsableCommands(Actor forWhom) {
-    Set<String> usableCommands = new TreeSet<String>();
+    Set<String> usableCommands = new TreeSet<>();
 
     flattenCommands(usableCommands, createNamespace(forWhom), "", dispatcher);
 

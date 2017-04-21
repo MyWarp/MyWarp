@@ -21,8 +21,6 @@ package io.github.mywarp.mywarp.warp;
 
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
 
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalWorld;
@@ -30,6 +28,8 @@ import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 import io.github.mywarp.mywarp.warp.storage.WarpStorage;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Stores all warps managed in a {@link WarpStorage}. Calls are all delegated to an underling PopulatableWarpManager as
@@ -72,13 +72,8 @@ public class StoragePopulatableWarpManager extends ForwardingPopulatableWarpMana
 
   @Override
   public void populate(Iterable<Warp> warps) {
-    delegate().populate(Iterables.transform(warps, new Function<Warp, Warp>() {
-
-      @Override
-      public PersistentWarp apply(Warp input) {
-        return new PersistentWarp(input);
-      }
-    }));
+    delegate().populate(
+        StreamSupport.stream(warps.spliterator(), false).map(PersistentWarp::new).collect(Collectors.toList()));
   }
 
   /**

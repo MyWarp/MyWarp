@@ -20,7 +20,6 @@
 package io.github.mywarp.mywarp.bukkit;
 
 import com.flowpowered.math.vector.Vector3i;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 
 import io.github.mywarp.mywarp.bukkit.util.AbstractListener;
@@ -38,6 +37,8 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Attachable;
 import org.bukkit.material.MaterialData;
+
+import java.util.Optional;
 
 /**
  * Listens for events involving signs and feats them to a {@link WarpSignHandler}.
@@ -159,7 +160,7 @@ class WarpSignListener extends AbstractListener {
     if (materialData instanceof Attachable) {
       return BukkitAdapter.adapt(((Attachable) materialData).getAttachedFace());
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 
 }

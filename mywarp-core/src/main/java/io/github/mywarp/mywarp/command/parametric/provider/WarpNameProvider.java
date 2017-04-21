@@ -19,7 +19,6 @@
 
 package io.github.mywarp.mywarp.command.parametric.provider;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
@@ -73,11 +72,6 @@ class WarpNameProvider extends NonSuggestiveProvider<String> {
       return warpManager.containsByName(nameToCheck);
     }
 
-    return !Iterables.isEmpty(warpManager.getAll(new Predicate<Warp>() {
-      @Override
-      public boolean apply(Warp input) {
-        return input.getName().equalsIgnoreCase(nameToCheck);
-      }
-    }));
+    return !Iterables.isEmpty(warpManager.getAll(input -> input.getName().equalsIgnoreCase(nameToCheck)));
   }
 }

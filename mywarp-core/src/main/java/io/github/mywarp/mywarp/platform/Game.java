@@ -19,9 +19,9 @@
 
 package io.github.mywarp.mywarp.platform;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 

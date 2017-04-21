@@ -23,7 +23,7 @@
 package io.github.mywarp.mywarp.warp.storage.generated.tables;
 
 
-import io.github.mywarp.mywarp.warp.storage.converter.DateTimestampConverter;
+import io.github.mywarp.mywarp.warp.storage.converter.InstantTimestampConverter;
 import io.github.mywarp.mywarp.warp.storage.converter.TypeConverter;
 import io.github.mywarp.mywarp.warp.storage.generated.Keys;
 import io.github.mywarp.mywarp.warp.storage.generated.Mywarp;
@@ -38,8 +38,8 @@ import org.jooq.UniqueKey;
 import org.jooq.impl.TableImpl;
 import org.jooq.types.UInteger;
 
+import java.time.Instant;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Generated;
@@ -133,10 +133,10 @@ public class Warp extends TableImpl<Record> {
   /**
    * The column <code>mywarp.warp.creation_date</code>.
    */
-  public final TableField<Record, Date>
+  public final TableField<Record, Instant>
       CREATION_DATE =
       createField("creation_date", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "",
-                  new DateTimestampConverter());
+                  new InstantTimestampConverter());
 
   /**
    * The column <code>mywarp.warp.type</code>.

@@ -28,8 +28,9 @@ import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
@@ -57,7 +58,9 @@ public interface Warp extends Comparable<Warp> {
    * @param uniqueId the unique identifier to check
    * @return true if the identifiers are equal
    */
-  boolean isCreator(UUID uniqueId);
+  default boolean isCreator(UUID uniqueId) {
+    return getCreator().equals(uniqueId);
+  }
 
   /**
    * Returns whether the Warp has the same type as the given type.
@@ -65,7 +68,9 @@ public interface Warp extends Comparable<Warp> {
    * @param type the type
    * @return true if the given type is the same as this Warp's type
    */
-  boolean isType(Warp.Type type);
+  default boolean isType(Warp.Type type) {
+    return getType().equals(type);
+  }
 
   /**
    * Returns whether the given unique identifier identifies a player who is invited to this Warp.
@@ -73,7 +78,9 @@ public interface Warp extends Comparable<Warp> {
    * @param uniqueId the unique identifier to check
    * @return true if the identified player is invited to this Warp
    */
-  boolean isPlayerInvited(UUID uniqueId);
+  default boolean isPlayerInvited(UUID uniqueId) {
+    return getInvitedPlayers().contains(uniqueId);
+  }
 
   /**
    * Returns whether the permission-group identified by the given ID is invited to this Warp.
@@ -81,7 +88,9 @@ public interface Warp extends Comparable<Warp> {
    * @param groupId the ID of the group
    * @return true if group identified by the given ID is invited to this Warp
    */
-  boolean isGroupInvited(String groupId);
+  default boolean isGroupInvited(String groupId) {
+    return getInvitedGroups().contains(groupId);
+  }
 
   /**
    * Invites the permission-group identified by the given ID to this Warp.
@@ -194,7 +203,7 @@ public interface Warp extends Comparable<Warp> {
    *
    * @return the creation-date of this Warp
    */
-  Date getCreationDate();
+  Instant getCreationDate();
 
   /**
    * Gets this Warp's visits number.
@@ -256,8 +265,7 @@ public interface Warp extends Comparable<Warp> {
     @Override
     public int compare(Warp w1, Warp w2) {
       return ComparisonChain.start().compare(popularityScore(w2), popularityScore(w1))
-          .compare(w2.getCreationDate().getTime(), w1.getCreationDate().getTime()).compare(w1.getName(), w2.getName())
-          .result();
+          .compare(w2.getCreationDate(), w1.getCreationDate()).compare(w1.getName(), w2.getName()).result();
     }
 
     /**
@@ -266,11 +274,12 @@ public interface Warp extends Comparable<Warp> {
      *
      * @return the popularity score of this Warp
      */
+    //FIXME
     private double popularityScore(Warp warp) {
       // a basic implementation of the hacker news ranking algorithm detailed
       // at http://amix.dk/blog/post/19574: Older warps receive lower scores
       // due to the influence of the gravity constant.
-      double daysExisting = (System.currentTimeMillis() - warp.getCreationDate().getTime()) / (1000 * 60 * 60 * 24L);
+      double daysExisting = Duration.between(warp.getCreationDate(), Instant.now()).toMillis() / (1000 * 60 * 60 * 24L);
       return warp.getVisits() / Math.pow(daysExisting, GRAVITY_CONSTANT);
     }
   }

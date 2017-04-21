@@ -19,32 +19,10 @@
 
 package io.github.mywarp.mywarp.warp;
 
-import java.util.UUID;
-
 /**
  * Implements methods that can be resolved using other existing methods.
  */
 abstract class AbstractWarp implements Warp {
-
-  @Override
-  public boolean isCreator(UUID uniqueId) {
-    return getCreator().equals(uniqueId);
-  }
-
-  @Override
-  public boolean isType(Type type) {
-    return getType() == type;
-  }
-
-  @Override
-  public boolean isPlayerInvited(UUID uniqueId) {
-    return getInvitedPlayers().contains(uniqueId);
-  }
-
-  @Override
-  public boolean isGroupInvited(String groupId) {
-    return getInvitedGroups().contains(groupId);
-  }
 
   @Override
   public int compareTo(Warp that) {

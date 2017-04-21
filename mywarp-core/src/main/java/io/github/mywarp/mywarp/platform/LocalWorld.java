@@ -21,10 +21,10 @@ package io.github.mywarp.mywarp.platform;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
-import com.google.common.base.Optional;
 
 import io.github.mywarp.mywarp.util.BlockFace;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**

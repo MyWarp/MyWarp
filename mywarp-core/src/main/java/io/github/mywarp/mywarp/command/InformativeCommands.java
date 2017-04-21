@@ -20,9 +20,6 @@
 package io.github.mywarp.mywarp.command;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.Ordering;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.Require;
@@ -54,9 +51,11 @@ import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
 
 import org.apache.commons.lang.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
@@ -125,26 +124,17 @@ public final class InformativeCommands {
                    @Switch('w') final String world) throws IllegalCommandSenderException {
 
     // build the listing predicate
-    List<Predicate<Warp>> predicates = new ArrayList<Predicate<Warp>>();
-    predicates.add(authorizationResolver.isViewable(actor));
+    Predicate<Warp> filter = authorizationResolver.isViewable(actor);
 
     if (creator != null) {
-      predicates.add(new Predicate<Warp>() {
-        @Override
-        public boolean apply(Warp input) {
-          com.google.common.base.Optional<String> creatorName = playerNameResolver.getByUniqueId(input.getCreator());
-          return creatorName.isPresent() && StringUtils.containsIgnoreCase(creatorName.get(), creator);
-        }
+      filter.and(input -> {
+        Optional<String> creatorName = playerNameResolver.getByUniqueId(input.getCreator());
+        return creatorName.isPresent() && StringUtils.containsIgnoreCase(creatorName.get(), creator);
       });
     }
 
     if (name != null) {
-      predicates.add(new Predicate<Warp>() {
-        @Override
-        public boolean apply(Warp input) {
-          return StringUtils.containsIgnoreCase(input.getName(), name);
-        }
-      });
+      filter.and(input -> StringUtils.containsIgnoreCase(input.getName(), name));
     }
 
     if (radius != null) {
@@ -158,55 +148,43 @@ public final class InformativeCommands {
 
       final int squaredRadius = radius * radius;
       final Vector3d position = entity.getPosition();
-      predicates.add(new Predicate<Warp>() {
-        @Override
-        public boolean apply(Warp input) {
-          return input.getWorldIdentifier().equals(worldId)
-                 && input.getPosition().distanceSquared(position) <= squaredRadius;
-        }
-      });
+      filter.and(input -> input.getWorldIdentifier().equals(worldId)
+                          && input.getPosition().distanceSquared(position) <= squaredRadius);
     }
 
     if (world != null) {
-      predicates.add(new Predicate<Warp>() {
-        @Override
-        public boolean apply(Warp input) {
-          com.google.common.base.Optional<LocalWorld> worldOptional = game.getWorld(input.getWorldIdentifier());
-          return worldOptional.isPresent() && StringUtils.containsIgnoreCase(worldOptional.get().getName(), world);
-        }
+      filter.and(input -> {
+        Optional<LocalWorld> worldOptional = game.getWorld(input.getWorldIdentifier());
+        return worldOptional.isPresent() && StringUtils.containsIgnoreCase(worldOptional.get().getName(), world);
       });
     }
 
     //query the warps
     //noinspection RedundantTypeArguments
-    final List<Warp> warps = Ordering.natural().sortedCopy(warpManager.getAll(Predicates.<Warp>and(predicates)));
+    final List<Warp> warps = Ordering.natural().sortedCopy(warpManager.getAll(filter));
 
-    Function<Warp, Message> mapping = new Function<Warp, Message>() {
+    Function<Warp, Message> mapping = input -> {
+      // 'name' (world) by player
+      Message.Builder builder = Message.builder();
+      builder.append("'");
+      builder.append(input);
+      builder.append("' (");
+      builder.append(CommandUtil.toWorldName(input.getWorldIdentifier(), game));
+      builder.append(") ");
+      builder.append(msg.getString("list.by"));
+      builder.append(" ");
 
-      @Override
-      public Message apply(Warp input) {
-        // 'name' (world) by player
-        Message.Builder builder = Message.builder();
-        builder.append("'");
-        builder.append(input);
-        builder.append("' (");
-        builder.append(CommandUtil.toWorldName(input.getWorldIdentifier(), game));
-        builder.append(") ");
-        builder.append(msg.getString("list.by"));
-        builder.append(" ");
-
-        if (actor instanceof LocalPlayer && input.isCreator(((LocalPlayer) actor).getUniqueId())) {
-          builder.append(msg.getString("list.you"));
-        } else {
-          builder.append(CommandUtil.toName(input.getCreator(), playerNameResolver));
-        }
-        return builder.build();
+      if (actor instanceof LocalPlayer && input.isCreator(((LocalPlayer) actor).getUniqueId())) {
+        builder.append(msg.getString("list.you"));
+      } else {
+        builder.append(CommandUtil.toName(input.getCreator(), playerNameResolver));
       }
-
+      return builder.build();
     };
 
     // display
-    StringPaginator.of(msg.getString("list.heading"), warps).withMapping(mapping).paginate().display(actor, page);
+    StringPaginator.of(msg.getString("list.heading"), warps).withMapping(mapping::apply).paginate()
+        .display(actor, page);
   }
 
   @Command(aliases = {"info", "stats"}, desc = "info.description", help = "info.help")

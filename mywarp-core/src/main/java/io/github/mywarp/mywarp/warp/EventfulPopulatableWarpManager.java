@@ -21,8 +21,6 @@ package io.github.mywarp.mywarp.warp;
 
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
 import com.google.common.eventbus.EventBus;
 
 import io.github.mywarp.mywarp.platform.LocalEntity;
@@ -37,6 +35,8 @@ import io.github.mywarp.mywarp.warp.event.WarpPlayerInvitesEvent;
 import io.github.mywarp.mywarp.warp.event.WarpUpdateEvent;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Fires events for all warps managed by it. Functional calls are all delegated to an underling PopulatableWarpManager
@@ -78,13 +78,8 @@ public class EventfulPopulatableWarpManager extends ForwardingPopulatableWarpMan
 
   @Override
   public void populate(Iterable<Warp> warps) {
-    delegate().populate(Iterables.transform(warps, new Function<Warp, Warp>() {
-
-      @Override
-      public EventfulWarp apply(Warp input) {
-        return new EventfulWarp(input);
-      }
-    }));
+    delegate()
+        .populate(StreamSupport.stream(warps.spliterator(), false).map(EventfulWarp::new).collect(Collectors.toList()));
   }
 
   @Override

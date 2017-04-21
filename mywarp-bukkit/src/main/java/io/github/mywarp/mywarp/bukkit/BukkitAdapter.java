@@ -19,8 +19,6 @@
 
 package io.github.mywarp.mywarp.bukkit;
 
-import com.google.common.base.Optional;
-
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.util.BlockFace;
@@ -28,6 +26,8 @@ import io.github.mywarp.mywarp.util.BlockFace;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+
+import java.util.Optional;
 
 /**
  * Adapts between equivalent local and Bukkit objects.
@@ -99,7 +99,7 @@ public final class BukkitAdapter {
       case DOWN:
         return Optional.of(BlockFace.DOWN);
       default:
-        return Optional.absent();
+        return Optional.empty();
     }
   }
 }

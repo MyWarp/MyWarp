@@ -21,7 +21,6 @@ package io.github.mywarp.mywarp.command.parametric.provider;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.google.common.base.Predicate;
 import com.sk89q.intake.parametric.AbstractModule;
 
 import io.github.mywarp.mywarp.command.CommandHandler;
@@ -42,6 +41,7 @@ import io.github.mywarp.mywarp.warp.storage.ConnectionConfiguration;
 
 import java.io.File;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 /**
  * Provides most of MyWarp's internal objects by converting the user given arguments.

@@ -29,8 +29,8 @@ import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 
+import java.time.Instant;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
@@ -40,7 +40,7 @@ import java.util.UUID;
 class SimpleWarp extends AbstractWarp {
 
   private final String name;
-  private final Date creationDate;
+  private final Instant creationDate;
   private final Set<UUID> invitedPlayers;
   private final Set<String> invitedGroups;
 
@@ -69,7 +69,7 @@ class SimpleWarp extends AbstractWarp {
    * @throws NullPointerException     if one of the given values is {@code null}
    * @throws IllegalArgumentException if {@code invitedPlayers} or {@code invitedGroups} contains {@code null}
    */
-  SimpleWarp(String name, Date creationDate, Set<UUID> invitedPlayers, Set<String> invitedGroups, UUID creator,
+  SimpleWarp(String name, Instant creationDate, Set<UUID> invitedPlayers, Set<String> invitedGroups, UUID creator,
              Type type, UUID worldIdentifier, Vector3d position, Vector2f rotation, int visits, String welcomeMessage) {
     this.name = checkNotNull(name);
     this.creationDate = checkNotNull(creationDate);
@@ -152,9 +152,8 @@ class SimpleWarp extends AbstractWarp {
   }
 
   @Override
-  public Date getCreationDate() {
-    // date is mutable, so we return a copy
-    return new Date(creationDate.getTime());
+  public Instant getCreationDate() {
+    return creationDate;
   }
 
   @Override

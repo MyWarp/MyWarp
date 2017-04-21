@@ -20,7 +20,6 @@
 package io.github.mywarp.mywarp.sign;
 
 import com.flowpowered.math.vector.Vector3i;
-import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 
 import io.github.mywarp.mywarp.MyWarp;
@@ -40,6 +39,7 @@ import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
 
+import java.util.Optional;
 import java.util.TreeSet;
 
 import javax.annotation.Nullable;
@@ -123,7 +123,7 @@ public class WarpSignHandler {
    */
   public Optional<Boolean> handleSignCreation(LocalPlayer player, Sign sign) {
     if (!isWarpSign(sign)) {
-      return Optional.absent();
+      return Optional.empty();
     }
 
     //validate permission

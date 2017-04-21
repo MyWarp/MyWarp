@@ -19,14 +19,13 @@
 
 package io.github.mywarp.mywarp.service.teleport.timer;
 
-import com.google.common.base.Optional;
-
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.service.teleport.TimerTeleportService;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.i18n.LocaleManager;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**

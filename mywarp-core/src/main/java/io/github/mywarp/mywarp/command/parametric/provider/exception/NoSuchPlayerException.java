@@ -40,7 +40,7 @@ public class NoSuchPlayerException extends NonMatchingInputException {
    * @param resolver the PlayerNameResolver to convert the identifier into a human readable name
    */
   public NoSuchPlayerException(UUID uniqueId, PlayerNameResolver resolver) {
-    this(resolver.getByUniqueId(uniqueId).or(uniqueId.toString()));
+    this(resolver.getByUniqueId(uniqueId).orElse(uniqueId.toString()));
   }
 
   /**

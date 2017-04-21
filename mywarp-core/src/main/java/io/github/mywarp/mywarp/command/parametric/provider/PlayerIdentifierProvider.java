@@ -19,7 +19,6 @@
 
 package io.github.mywarp.mywarp.command.parametric.provider;
 
-import com.google.common.base.Optional;
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
 import com.sk89q.intake.parametric.ProvisionException;
@@ -30,6 +29,7 @@ import io.github.mywarp.mywarp.platform.PlayerNameResolver;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.annotation.Nullable;

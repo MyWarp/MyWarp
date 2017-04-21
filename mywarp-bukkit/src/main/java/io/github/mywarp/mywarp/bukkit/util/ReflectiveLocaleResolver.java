@@ -19,8 +19,6 @@
 
 package io.github.mywarp.mywarp.bukkit.util;
 
-import com.google.common.base.Optional;
-
 import io.github.mywarp.mywarp.util.MyWarpLogger;
 
 import org.bukkit.entity.Player;
@@ -30,6 +28,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 

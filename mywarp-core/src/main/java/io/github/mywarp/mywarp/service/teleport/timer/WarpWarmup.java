@@ -20,7 +20,6 @@
 package io.github.mywarp.mywarp.service.teleport.timer;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.google.common.base.Optional;
 
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
@@ -31,6 +30,7 @@ import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.i18n.LocaleManager;
 import io.github.mywarp.mywarp.warp.Warp;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**

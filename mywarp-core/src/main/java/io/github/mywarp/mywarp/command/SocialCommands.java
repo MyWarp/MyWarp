@@ -19,7 +19,6 @@
 
 package io.github.mywarp.mywarp.command;
 
-import com.google.common.base.Optional;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.Require;
@@ -43,6 +42,7 @@ import io.github.mywarp.mywarp.util.Message;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.warp.Warp;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -287,6 +287,6 @@ public final class SocialCommands {
   }
 
   private String friendlyName(UUID uniqueId) {
-    return playerNameResolver.getByUniqueId(uniqueId).or(uniqueId.toString());
+    return playerNameResolver.getByUniqueId(uniqueId).orElse(uniqueId.toString());
   }
 }

@@ -19,8 +19,6 @@
 
 package io.github.mywarp.mywarp.command.parametric;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Iterables;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
@@ -33,10 +31,11 @@ import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.service.economy.EconomyService;
 import io.github.mywarp.mywarp.service.economy.FeeType;
-import io.github.mywarp.mywarp.util.IterableUtils;
 
 import java.lang.annotation.Annotation;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Makes commands require a certain fee if annotated with with {@link Billable}.
@@ -68,7 +67,7 @@ public class EconomyInvokeHandler extends AbstractInvokeListener implements Invo
   @Override
   public boolean preInvoke(List<? extends Annotation> annotations, ArgumentParser parser, Object[] args,
                            CommandArgs commandArgs) throws CommandException, ArgumentException {
-    Optional<Billable> billable = IterableUtils.getFirst(Iterables.filter(annotations, Billable.class));
+    Optional<Billable> billable = findFirst(annotations, Billable.class);
     if (!billable.isPresent()) {
       return true;
     }
@@ -85,7 +84,7 @@ public class EconomyInvokeHandler extends AbstractInvokeListener implements Invo
   @Override
   public void postInvoke(List<? extends Annotation> annotations, ArgumentParser parser, Object[] args,
                          CommandArgs commandArgs) throws CommandException, ArgumentException {
-    Optional<Billable> billable = IterableUtils.getFirst(Iterables.filter(annotations, Billable.class));
+    Optional<Billable> billable = findFirst(annotations, Billable.class);
     if (!billable.isPresent()) {
       return;
     }
@@ -97,5 +96,9 @@ public class EconomyInvokeHandler extends AbstractInvokeListener implements Invo
 
     FeeType feeType = billable.get().value();
     economyService.withdraw((LocalPlayer) actor, feeType);
+  }
+
+  private <T> Optional<T> findFirst(Collection<?> collection, Class<T> cls) {
+    return (Optional<T>) collection.stream().filter(a -> cls.isAssignableFrom(a.getClass())).findFirst();
   }
 }

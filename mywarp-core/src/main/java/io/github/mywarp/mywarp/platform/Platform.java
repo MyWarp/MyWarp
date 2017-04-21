@@ -77,7 +77,7 @@ public interface Platform {
    * @param <C>             the type of the capability
    * @return an Optional with an instance of the requested capability
    */
-  <C> Optional<C> getCapability(Class<C> capabilityClass);
+  <C> java.util.Optional<C> getCapability(Class<C> capabilityClass);
 
   /**
    * Creates a {@link RelationalDataService} as described by the given {@code config}.

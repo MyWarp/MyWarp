@@ -19,9 +19,6 @@
 
 package io.github.mywarp.mywarp.util;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
 import com.google.common.eventbus.Subscribe;
 
 import io.github.mywarp.mywarp.platform.Game;
@@ -32,6 +29,8 @@ import io.github.mywarp.mywarp.warp.event.WarpInvitesEvent;
 import io.github.mywarp.mywarp.warp.event.WarpPlayerInvitesEvent;
 
 import java.util.Arrays;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Listens for (un)invitations and informs affected players.
@@ -77,12 +76,7 @@ public class InvitationInformationListener {
   @Subscribe
   public void onGroupInvite(final WarpGroupInvitesEvent event) {
     inform(event.getInvitationStatus(), event.getWarp().getName(),
-           Collections2.filter(game.getPlayers(), new Predicate<LocalPlayer>() {
-             @Override
-             public boolean apply(LocalPlayer input) {
-               return input.hasGroup(event.getGroupId());
-             }
-           }));
+           game.getPlayers().stream().filter(p -> p.hasGroup(event.getGroupId())).collect(Collectors.toList()));
   }
 
   private void inform(WarpInvitesEvent.InvitationStatus status, String warpName, LocalPlayer... players) {

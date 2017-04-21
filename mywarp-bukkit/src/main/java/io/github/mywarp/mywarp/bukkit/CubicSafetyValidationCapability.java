@@ -22,10 +22,11 @@ package io.github.mywarp.mywarp.bukkit;
 import static io.github.mywarp.mywarp.bukkit.MyWarpPlugin.getMaterial;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.google.common.base.Optional;
 
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.capability.PositionValidationCapability;
+
+import java.util.Optional;
 
 /**
  * Searches for positions that are safe for a normal entity within a cube surrounding a given center position.
@@ -56,7 +57,7 @@ public class CubicSafetyValidationCapability implements PositionValidationCapabi
         return safePosition;
       }
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 
   /**
@@ -87,7 +88,7 @@ public class CubicSafetyValidationCapability implements PositionValidationCapabi
         return safePosition;
       }
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 
   /**
@@ -113,7 +114,7 @@ public class CubicSafetyValidationCapability implements PositionValidationCapabi
         return checkPosition;
       }
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 
   /**
@@ -155,7 +156,7 @@ public class CubicSafetyValidationCapability implements PositionValidationCapabi
         return Optional.of(checkPosition);
       }
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 
   /**

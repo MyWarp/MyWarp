@@ -19,7 +19,6 @@
 
 package io.github.mywarp.mywarp.service.limit;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 
 import io.github.mywarp.mywarp.platform.LocalPlayer;
@@ -28,6 +27,7 @@ import io.github.mywarp.mywarp.warp.Warp;
 
 import java.util.EnumSet;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 /**
  * A creation limit for warps. Implementations are expected to provide the limit for each {@link Value} and a way to
@@ -89,12 +89,7 @@ public interface Limit {
      * @return the condition
      */
     Predicate<Warp> getCondition() {
-      return new Predicate<Warp>() {
-        @Override
-        public boolean apply(Warp input) {
-          return warpTypes.contains(input.getType());
-        }
-      };
+      return input -> warpTypes.contains(input.getType());
     }
 
     /**

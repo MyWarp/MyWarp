@@ -21,9 +21,7 @@ package io.github.mywarp.mywarp.bukkit;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
-import com.google.common.base.Optional;
 
-import io.github.mywarp.mywarp.command.util.NoSuchWorldException;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.Sign;
 import io.github.mywarp.mywarp.util.BlockFace;
@@ -34,6 +32,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -82,7 +81,7 @@ public class BukkitWorld implements LocalWorld {
   @Override
   public Optional<Sign> getSign(Vector3i position) {
     //Generics are stupid and throw an error when not casting
-    return Optional.fromNullable((Sign) getBukkitSign(position));
+    return Optional.ofNullable((Sign) getBukkitSign(position));
   }
 
   @Override
@@ -93,7 +92,7 @@ public class BukkitWorld implements LocalWorld {
       //Generics are stupid and throw an error when not casting
       return Optional.of((Sign) sign);
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 
   @Nullable
@@ -110,7 +109,7 @@ public class BukkitWorld implements LocalWorld {
    * Gets the loaded World that is referenced by this BukkitWorld.
    *
    * @return the loaded World
-   * @throws NoSuchWorldException if the World is no longer loaded
+   * @throws IllegalStateException if the World is no longer loaded
    */
   World getLoadedWorld() {
     World ret = Bukkit.getWorld(worldIdentifier);

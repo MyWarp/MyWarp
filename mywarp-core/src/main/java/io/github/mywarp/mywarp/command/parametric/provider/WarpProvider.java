@@ -23,7 +23,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.sk89q.intake.argument.CommandArgs;
 import com.sk89q.intake.argument.MissingArgumentException;
@@ -39,6 +38,7 @@ import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Provides {@link Warp} instances.

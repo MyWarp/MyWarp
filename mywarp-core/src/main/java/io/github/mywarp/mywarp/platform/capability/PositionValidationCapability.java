@@ -20,9 +20,10 @@
 package io.github.mywarp.mywarp.platform.capability;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.google.common.base.Optional;
 
 import io.github.mywarp.mywarp.platform.LocalWorld;
+
+import java.util.Optional;
 
 /**
  * The capability of a platform to validate a given position and suggests alternative ones.

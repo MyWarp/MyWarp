@@ -105,7 +105,7 @@ public class BukkitLimitCapability implements LimitCapability {
   @Override
   public List<Limit> getEffectiveLimits(LocalPlayer player) {
     Builder<Limit> ret = ImmutableList.builder();
-    Set<LocalWorld> worlds = new HashSet<LocalWorld>();
+    Set<LocalWorld> worlds = new HashSet<>();
     for (LimitBundle bundle : configuredLimits) {
       if (!player.hasPermission(bundle.getPermission())) {
         continue;

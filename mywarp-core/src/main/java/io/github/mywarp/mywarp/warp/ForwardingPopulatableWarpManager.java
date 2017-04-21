@@ -21,18 +21,18 @@ package io.github.mywarp.mywarp.warp;
 
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
 import com.google.common.collect.ForwardingObject;
 
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 
+import java.time.Instant;
 import java.util.Collection;
-import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 /**
  * Forwards all method calls to another PopulatableWarpManager. Subclasses should override one or more methods to modify
@@ -203,7 +203,7 @@ abstract class ForwardingPopulatableWarpManager extends ForwardingObject impleme
     }
 
     @Override
-    public Date getCreationDate() {
+    public Instant getCreationDate() {
       return delegate().getCreationDate();
     }
 

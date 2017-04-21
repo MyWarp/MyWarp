@@ -20,10 +20,11 @@
 package io.github.mywarp.mywarp.util.teleport;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.google.common.base.Optional;
 
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.capability.PositionValidationCapability;
+
+import java.util.Optional;
 
 /**
  * Corrects positions saved with MyWarp versions prior to version 3 if necessary.

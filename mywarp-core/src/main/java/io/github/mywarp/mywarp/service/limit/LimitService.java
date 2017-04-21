@@ -21,7 +21,6 @@ package io.github.mywarp.mywarp.service.limit;
 
 import static com.google.common.base.Preconditions.checkState;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
@@ -34,6 +33,7 @@ import io.github.mywarp.mywarp.warp.WarpManager;
 
 import java.util.Arrays;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
@@ -120,12 +120,8 @@ public class LimitService {
   }
 
   private static Predicate<Warp> createPredicate(final LocalPlayer creator, final Iterable<LocalWorld> worlds) {
-    return new Predicate<Warp>() {
-      @Override
-      public boolean apply(Warp input) {
-        return input.isCreator(creator.getUniqueId()) && containsIdentifiedWorld(worlds, input.getWorldIdentifier());
-      }
-    };
+    return input -> input.isCreator(creator.getUniqueId()) && containsIdentifiedWorld(worlds,
+                                                                                      input.getWorldIdentifier());
   }
 
   /**

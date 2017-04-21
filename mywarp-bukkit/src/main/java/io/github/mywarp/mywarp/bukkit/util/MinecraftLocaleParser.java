@@ -21,13 +21,12 @@ package io.github.mywarp.mywarp.bukkit.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.base.Optional;
-
 import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Parses Strings in Minecraft's locale format into {@link Locale} objects.
@@ -35,7 +34,7 @@ import java.util.Map;
 class MinecraftLocaleParser {
 
   //XXX use Guava's LoadingCache once we updated to Guava 11
-  private static final Map<String, Locale> cache = new HashMap<String, Locale>();
+  private static final Map<String, Locale> cache = new HashMap<>();
 
   /**
    * Parses the given String into a Locale.
@@ -52,11 +51,11 @@ class MinecraftLocaleParser {
       try {
         locale = toLocaleCaseInsensitive(rawLocale);
       } catch (RuntimeException e) {
-        return Optional.absent();
+        return Optional.empty();
       }
       cache.put(rawLocale, locale);
     }
-    return Optional.fromNullable(locale);
+    return Optional.of(locale);
   }
 
   /**

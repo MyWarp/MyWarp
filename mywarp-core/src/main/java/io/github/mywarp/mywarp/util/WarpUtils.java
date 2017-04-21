@@ -19,12 +19,10 @@
 
 package io.github.mywarp.mywarp.util;
 
-import com.google.common.base.Predicate;
-
 import io.github.mywarp.mywarp.warp.Warp;
 
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
+import java.time.Instant;
 
 /**
  * Utility methods to work with warps.
@@ -47,52 +45,6 @@ public final class WarpUtils {
    * @return the average number of visits per day
    */
   public static double visitsPerDay(Warp warp) {
-    // this method might not be 100% exact (considering leap seconds), but
-    // within the current Java API there are no alternatives
-    long
-        daysSinceCreation =
-        TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - warp.getCreationDate().getTime());
-    if (daysSinceCreation <= 0) {
-      daysSinceCreation = 1;
-    }
-    return warp.getVisits() / daysSinceCreation;
+    return warp.getVisits() / Duration.between(warp.getCreationDate(), Instant.now()).toDays();
   }
-
-  /**
-   * Returns a predicate that evaluates to {@code true} if the warp being tested is created by player identified by the
-   * given profile.
-   *
-   * @param uniqueId the Profile
-   * @return a predicate that checks if the given warp is created by the given player
-   * @see Warp#isCreator(java.util.UUID)
-   */
-  public static Predicate<Warp> isCreator(final UUID uniqueId) {
-    return new Predicate<Warp>() {
-
-      @Override
-      public boolean apply(Warp warp) {
-        return warp.isCreator(uniqueId);
-      }
-
-    };
-  }
-
-  /**
-   * Returns a predicate that evaluates to {@code true} if the warp being tested is of the given type.
-   *
-   * @param type the type
-   * @return a predicate that checks if the given warp is of the given type
-   * @see Warp#isType(Warp.Type)
-   */
-  public static Predicate<Warp> isType(final Warp.Type type) {
-    return new Predicate<Warp>() {
-
-      @Override
-      public boolean apply(Warp warp) {
-        return warp.isType(type);
-      }
-
-    };
-  }
-
 }

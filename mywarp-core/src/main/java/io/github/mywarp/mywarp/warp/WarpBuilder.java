@@ -25,7 +25,7 @@ import com.google.common.collect.Iterables;
 
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -45,7 +45,7 @@ public class WarpBuilder {
   private final Vector3d position;
   private final Vector2f rotation;
 
-  private Date creationDate = new Date();
+  private Instant creationDate = Instant.now();
   private Warp.Type type = Warp.Type.PUBLIC;
   private int visits = 0;
   private String welcomeMessage = msg.getString("default-welcome-message");
@@ -60,8 +60,8 @@ public class WarpBuilder {
    * @param rotation        the Warp's rotation
    */
   public WarpBuilder(String name, UUID creator, UUID worldIdentifier, Vector3d position, Vector2f rotation) {
-    this.invitedPlayers = new HashSet<UUID>();
-    this.invitedGroups = new HashSet<String>();
+    this.invitedPlayers = new HashSet<>();
+    this.invitedGroups = new HashSet<>();
 
     this.name = name;
     this.creator = creator;
@@ -76,7 +76,7 @@ public class WarpBuilder {
    * @param creationDate the creation date
    * @return this {@code WarpBuilder}
    */
-  public WarpBuilder setCreationDate(Date creationDate) {
+  public WarpBuilder setCreationDate(Instant creationDate) {
     this.creationDate = creationDate;
     return this;
   }

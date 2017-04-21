@@ -19,10 +19,9 @@
 
 package io.github.mywarp.mywarp.warp;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-
 import java.util.Collection;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * Holds and manages Warps.

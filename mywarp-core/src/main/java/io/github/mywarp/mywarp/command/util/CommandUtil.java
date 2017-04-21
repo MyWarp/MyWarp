@@ -19,7 +19,6 @@
 
 package io.github.mywarp.mywarp.command.util;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
 import io.github.mywarp.mywarp.platform.Game;
@@ -30,6 +29,7 @@ import io.github.mywarp.mywarp.warp.Warp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -51,7 +51,7 @@ public class CommandUtil {
    * @return a readable name
    */
   public static String toName(UUID uniqueId, PlayerNameResolver resolver) {
-    return resolver.getByUniqueId(uniqueId).or(uniqueId.toString());
+    return resolver.getByUniqueId(uniqueId).orElse(uniqueId.toString());
   }
 
   /**

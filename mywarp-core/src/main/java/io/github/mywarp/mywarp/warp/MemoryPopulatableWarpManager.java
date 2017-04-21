@@ -21,13 +21,12 @@ package io.github.mywarp.mywarp.warp;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Stores managed warp in memory.
@@ -59,12 +58,12 @@ public class MemoryPopulatableWarpManager implements PopulatableWarpManager {
 
   @Override
   public Optional<Warp> getByName(String name) {
-    return Optional.fromNullable(warpMap.get(name));
+    return Optional.ofNullable(warpMap.get(name));
   }
 
   @Override
   public Collection<Warp> getAll(Predicate<Warp> predicate) {
-    return Collections2.filter(warpMap.values(), predicate);
+    return warpMap.values().stream().filter(predicate).collect(Collectors.toList());
   }
 
   @Override
@@ -79,9 +78,7 @@ public class MemoryPopulatableWarpManager implements PopulatableWarpManager {
 
   @Override
   public void populate(Iterable<Warp> warps) {
-    for (Warp warp : warps) {
-      add(warp);
-    }
+    warps.forEach(this::add);
   }
 
   @Override

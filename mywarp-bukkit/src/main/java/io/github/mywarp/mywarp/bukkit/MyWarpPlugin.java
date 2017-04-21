@@ -22,7 +22,6 @@ package io.github.mywarp.mywarp.bukkit;
 import static com.google.common.base.Preconditions.checkState;
 
 import com.flowpowered.math.vector.Vector3i;
-import com.google.common.base.Predicates;
 import com.google.common.primitives.Ints;
 
 import io.github.mywarp.mywarp.MyWarp;
@@ -36,7 +35,6 @@ import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
-import io.github.mywarp.mywarp.util.WarpUtils;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.i18n.FolderSourcedControl;
 import io.github.mywarp.mywarp.util.i18n.LocaleManager;
@@ -62,6 +60,7 @@ import org.slf4j.Logger;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
@@ -154,7 +153,7 @@ public final class MyWarpPlugin extends JavaPlugin {
   /**
    * Notifies the MyWarpPlugin instance that the core is fully initialized.
    */
-  protected void notifyCoreInitialized() {
+  void notifyCoreInitialized() {
 
     //register profile service listener
     getProfileCache().registerEvents(this);
@@ -176,12 +175,12 @@ public final class MyWarpPlugin extends JavaPlugin {
    * Notifies the MyWarpPlugin instance about the availability of warps, so that it can execute additional callback (if
    * any).
    */
-  protected void notifyWarpAvailability() {
+  void notifyWarpAvailability() {
     if (getSettings().isDynmapEnabled()) {
       Plugin dynmap = getServer().getPluginManager().getPlugin("dynmap");
       if (dynmap != null && dynmap.isEnabled() && dynmap instanceof DynmapCommonAPI) {
-        marker = new DynmapMarker((DynmapCommonAPI) dynmap, this, platform, WarpUtils.isType(Warp.Type.PUBLIC));
-        marker.addMarker(myWarp.getWarpManager().getAll(Predicates.<Warp>alwaysTrue()));
+        marker = new DynmapMarker((DynmapCommonAPI) dynmap, this, platform, w -> w.isType(Warp.Type.PUBLIC));
+        marker.addMarker(myWarp.getWarpManager().getAll(warp -> true));
         myWarp.getEventBus().register(marker);
       } else {
         log.error("Failed to hook into Dynmap. Disabling Dynmap support.");
@@ -253,7 +252,7 @@ public final class MyWarpPlugin extends JavaPlugin {
    *
    * @return the configured GroupResolver
    */
-  protected GroupResolver getGroupResolver() {
+  GroupResolver getGroupResolver() {
     checkState(groupResolver != null, "'groupResolver' is not yet initialized");
     return groupResolver;
   }
@@ -263,7 +262,7 @@ public final class MyWarpPlugin extends JavaPlugin {
    *
    * @return the configured welcome editor factory
    */
-  protected WelcomeEditorFactory getWelcomeEditorFactory() {
+  WelcomeEditorFactory getWelcomeEditorFactory() {
     checkState(welcomeEditorFactory != null, "'welcomeEditorFactory' is not yet initialized");
     return welcomeEditorFactory;
   }
@@ -273,7 +272,7 @@ public final class MyWarpPlugin extends JavaPlugin {
    *
    * @return the configured acceptance prompt factory
    */
-  protected AcceptancePromptFactory getAcceptancePromptFactory() {
+  AcceptancePromptFactory getAcceptancePromptFactory() {
     checkState(acceptancePromptFactory != null, "'acceptancePromptFactory' is not yet initialized");
     return acceptancePromptFactory;
   }
@@ -293,7 +292,7 @@ public final class MyWarpPlugin extends JavaPlugin {
    *
    * @return the configured PlayerNameResolver
    */
-  protected SquirrelIdPlayerNameResolver getProfileCache() {
+  SquirrelIdPlayerNameResolver getProfileCache() {
     checkState(platform != null, "'platform' is not yet initialized");
     return platform.getPlayerNameResolver();
   }
@@ -301,12 +300,12 @@ public final class MyWarpPlugin extends JavaPlugin {
   /**
    * Registers the given {@code closable} for closure when the plugin is disabled.
    *
-   * <p>Registered Closables will be stored within a {@link java.lang.ref.WeakReference}. If MyWarp is disabled by
+   * <p>Registered Closables will be stored within a {@link WeakReference}. If MyWarp is disabled by
    * Bukkit and the reference is still valid, {@link Closeable#close()} is invoked.</p>
    *
    * @param closeable the Closable to register
    */
-  protected void registerClosable(Closeable closeable) {
+  void registerClosable(Closeable closeable) {
     closeables.add(closeable);
   }
 
@@ -317,7 +316,7 @@ public final class MyWarpPlugin extends JavaPlugin {
   /**
    * Unregisters all permissions registered by MyWarp, all active event-listeners and all created markers (if any).
    */
-  protected void unregister() {
+  void unregister() {
     HandlerList.unregisterAll(this);
     BukkitPermissionsRegistration.INSTANCE.unregisterAll();
 
@@ -333,7 +332,7 @@ public final class MyWarpPlugin extends JavaPlugin {
    * @param position the position
    * @return the Material of the block at the given position
    */
-  protected static Material getMaterial(LocalWorld world, Vector3i position) {
+  static Material getMaterial(LocalWorld world, Vector3i position) {
     return BukkitAdapter.adapt(world).getBlockAt(Ints.checkedCast(position.getX()), Ints.checkedCast(position.getY()),
                                                  Ints.checkedCast(position.getZ())).getType();
   }

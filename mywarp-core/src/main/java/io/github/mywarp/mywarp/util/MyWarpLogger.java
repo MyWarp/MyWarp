@@ -19,16 +19,16 @@
 
 package io.github.mywarp.mywarp.util;
 
-import com.google.common.base.Function;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 
+import java.util.function.Function;
+
 import javax.annotation.Nullable;
 
 /**
- * A custom logger that actually delegates all input to an underlying {@link org.slf4j.Logger}, but allows to modify the
+ * A custom logger that actually delegates all input to an underlying {@link Logger}, but allows to modify the
  * message beforehand.
  */
 public class MyWarpLogger implements Logger {
@@ -47,7 +47,7 @@ public class MyWarpLogger implements Logger {
    * Return a logger named corresponding to the class passed as parameter.
    *
    * @param clazz the returned logger will be named after clazz
-   * @see org.slf4j.LoggerFactory#getLogger(java.lang.Class)
+   * @see LoggerFactory#getLogger(Class)
    */
   private MyWarpLogger(Class<?> clazz) {
     this.logger = LoggerFactory.getLogger(clazz);
@@ -58,7 +58,7 @@ public class MyWarpLogger implements Logger {
    *
    * @param clazz the returned logger will be named after clazz
    * @return the logger
-   * @see org.slf4j.LoggerFactory#getLogger(java.lang.Class)
+   * @see LoggerFactory#getLogger(Class)
    */
   public static Logger getLogger(Class<?> clazz) {
     return new MyWarpLogger(clazz);

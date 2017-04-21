@@ -177,7 +177,7 @@ public class PlaceholderResolver {
     @Override
     public String apply(Warp input) {
       UUID creator = input.getCreator();
-      return resolver.getByUniqueId(creator).or(creator.toString());
+      return resolver.getByUniqueId(creator).orElse(creator.toString());
     }
 
     @Override

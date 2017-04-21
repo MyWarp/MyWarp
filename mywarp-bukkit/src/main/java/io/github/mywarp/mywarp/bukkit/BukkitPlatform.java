@@ -19,7 +19,6 @@
 
 package io.github.mywarp.mywarp.bukkit;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
 
@@ -44,6 +43,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.slf4j.Logger;
 
 import java.io.File;
+import java.util.Optional;
 
 /**
  * The platform implementation for Bukkit.
@@ -117,8 +117,7 @@ public class BukkitPlatform implements Platform {
         if (serviceProvider != null) {
           BundleProvider<FeeBundle>
               feeProvider =
-              new BundleProvider<FeeBundle>(settings.getEconomyConfiguredFeeBundles(),
-                                            settings.getEconomyDefaultFeeBundle());
+              new BundleProvider<>(settings.getEconomyConfiguredFeeBundles(), settings.getEconomyDefaultFeeBundle());
           economyCapability = new BukkitEconomyCapability(serviceProvider.getProvider(), feeProvider, settings);
         } else {
           log.error("Failed to hook into Vault (Economy is null). Economy support will not be available.");
@@ -136,8 +135,7 @@ public class BukkitPlatform implements Platform {
     //TimerCapability
     if (capabilityClass.isAssignableFrom(TimerCapability.class) && settings.isTimersEnabled()) {
       BundleProvider<DurationBundle>
-          durationProvider =
-          new BundleProvider<DurationBundle>(settings.getTimersConfiguredDurationBundles(), settings
+          durationProvider = new BundleProvider<>(settings.getTimersConfiguredDurationBundles(), settings
 
               .getTimersDefaultDurationBundle());
       TimerCapability timerCapability = new BukkitTimerCapability(plugin, durationProvider, settings);
@@ -155,7 +153,7 @@ public class BukkitPlatform implements Platform {
       registered = (C) positionValidationCapability;
     }
 
-    return Optional.fromNullable(registered);
+    return Optional.ofNullable(registered);
   }
 
   @Override

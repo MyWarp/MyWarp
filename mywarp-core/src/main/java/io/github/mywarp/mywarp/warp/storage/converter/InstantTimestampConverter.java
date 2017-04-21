@@ -22,31 +22,31 @@ package io.github.mywarp.mywarp.warp.storage.converter;
 import org.jooq.Converter;
 
 import java.sql.Timestamp;
-import java.util.Date;
+import java.time.Instant;
 
 /**
- * Converts {@link Timestamp} values to {@link Date}s and back.
+ * Converts {@link Timestamp} values to {@link Instant}s and back.
  */
-public class DateTimestampConverter implements Converter<Timestamp, Date> {
+public class InstantTimestampConverter implements Converter<Timestamp, Instant> {
 
   private static final long serialVersionUID = 5420942769269889198L;
 
   @Override
-  public Date from(Timestamp databaseObject) {
+  public Instant from(Timestamp databaseObject) {
     if (databaseObject == null) {
       return null;
     }
 
-    return new Date(databaseObject.getTime());
+    return databaseObject.toInstant();
   }
 
   @Override
-  public Timestamp to(Date userObject) {
+  public Timestamp to(Instant userObject) {
     if (userObject == null) {
       return null;
     }
 
-    return new Timestamp(userObject.getTime());
+    return Timestamp.from(userObject);
   }
 
   @Override
@@ -55,8 +55,8 @@ public class DateTimestampConverter implements Converter<Timestamp, Date> {
   }
 
   @Override
-  public Class<Date> toType() {
-    return Date.class;
+  public Class<Instant> toType() {
+    return Instant.class;
   }
 
 }

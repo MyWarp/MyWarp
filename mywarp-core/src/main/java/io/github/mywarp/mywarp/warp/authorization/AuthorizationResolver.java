@@ -19,11 +19,11 @@
 
 package io.github.mywarp.mywarp.warp.authorization;
 
-import com.google.common.base.Predicate;
-
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.warp.Warp;
+
+import java.util.function.Predicate;
 
 /**
  * Resolves a user's authentication for a certain warp using a previously defined {@link AuthorizationStrategy}.
@@ -66,12 +66,7 @@ public class AuthorizationResolver {
    * @see #isModifiable(Warp, Actor)
    */
   public Predicate<Warp> isModifiable(final Actor actor) {
-    return new Predicate<Warp>() {
-      @Override
-      public boolean apply(Warp input) {
-        return isModifiable(input, actor);
-      }
-    };
+    return input -> isModifiable(input, actor);
   }
 
   /**
@@ -96,12 +91,7 @@ public class AuthorizationResolver {
    * @see #isUsable(Warp, LocalEntity)
    */
   public Predicate<Warp> isUsable(final LocalEntity entity) {
-    return new Predicate<Warp>() {
-      @Override
-      public boolean apply(Warp input) {
-        return isUsable(input, entity);
-      }
-    };
+    return input -> isUsable(input, entity);
   }
 
   /**
@@ -123,11 +113,6 @@ public class AuthorizationResolver {
    * @see #isViewable(Warp, Actor)
    */
   public Predicate<Warp> isViewable(final Actor actor) {
-    return new Predicate<Warp>() {
-      @Override
-      public boolean apply(Warp input) {
-        return isViewable(input, actor);
-      }
-    };
+    return input -> isViewable(input, actor);
   }
 }

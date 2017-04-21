@@ -19,7 +19,6 @@
 
 package io.github.mywarp.mywarp;
 
-import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -62,7 +61,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import javax.annotation.Nullable;
 
@@ -248,18 +246,14 @@ public final class MyWarp {
    */
   public WarpSignHandler createWarpSignHandler() {
     return new WarpSignHandler(getSettings().getWarpSignsIdentifiers(), this,
-                               platform.getCapability(EconomyCapability.class).orNull());
+                               platform.getCapability(EconomyCapability.class).orElse(null));
   }
 
   private void initializeMutableFields() {
     List<PositionValidationCapability> validationStrategies = new ArrayList<PositionValidationCapability>();
     validationStrategies.add(new LegacyPositionCorrectionCapability());
-    Optional<PositionValidationCapability>
-        validationStrategyOptional =
-        platform.getCapability(PositionValidationCapability.class);
-    if (validationStrategyOptional.isPresent()) {
-      validationStrategies.add(validationStrategyOptional.get());
-    }
+    platform.getCapability(PositionValidationCapability.class).ifPresent(validationStrategies::add);
+
     teleportHandler = new StrategicTeleportHandler(getSettings(), getGame(), validationStrategies);
 
     commandHandler = new CommandHandler(this, platform);
@@ -271,13 +265,8 @@ public final class MyWarp {
   }
 
   private void loadWarps() {
-    log.info("Loading warps...");
-    ListenableFuture<List<Warp>> futureWarps = dataService.getExecutorService().submit(new Callable<List<Warp>>() {
-      @Override
-      public List<Warp> call() throws Exception {
-        return warpStorage.getWarps();
-      }
-    });
+    //FIXME
+    ListenableFuture<List<Warp>> futureWarps = dataService.getExecutorService().submit(warpStorage::getWarps);
 
     Futures.addCallback(futureWarps, new FutureCallback<Collection<Warp>>() {
 

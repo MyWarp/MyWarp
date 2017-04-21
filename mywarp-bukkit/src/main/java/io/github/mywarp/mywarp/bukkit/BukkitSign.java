@@ -19,10 +19,10 @@
 
 package io.github.mywarp.mywarp.bukkit;
 
-import com.google.common.base.Optional;
-
 import io.github.mywarp.mywarp.platform.Sign;
 import io.github.mywarp.mywarp.util.BlockFace;
+
+import java.util.Optional;
 
 /**
  * A reference to an existing sign in Bukkit.

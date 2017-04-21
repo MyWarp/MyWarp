@@ -19,7 +19,6 @@
 
 package io.github.mywarp.mywarp.command.util.printer;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Ordering;
 
 import io.github.mywarp.mywarp.command.CommandHandler;
@@ -38,6 +37,7 @@ import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
 
 import java.text.DateFormat;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 

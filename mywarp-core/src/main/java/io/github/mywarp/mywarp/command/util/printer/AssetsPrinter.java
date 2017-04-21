@@ -33,7 +33,6 @@ import io.github.mywarp.mywarp.service.limit.Limit;
 import io.github.mywarp.mywarp.service.limit.LimitService;
 import io.github.mywarp.mywarp.service.limit.LimitValueWarpMapping;
 import io.github.mywarp.mywarp.util.Message;
-import io.github.mywarp.mywarp.util.WarpUtils;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
@@ -117,7 +116,7 @@ public class AssetsPrinter {
       assert game != null && warpManager != null;
       index =
           ImmutableMap.of(createDummyLimit(game),
-                          new LimitValueWarpMapping(warpManager, WarpUtils.isCreator(creator.getUniqueId())));
+                          new LimitValueWarpMapping(warpManager, w -> w.isCreator(creator.getUniqueId())));
     }
 
     for (Map.Entry<Limit, LimitValueWarpMapping> entry : index.entrySet()) {

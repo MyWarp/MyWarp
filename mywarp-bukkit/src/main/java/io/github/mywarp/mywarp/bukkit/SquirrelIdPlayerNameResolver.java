@@ -19,12 +19,12 @@
 
 package io.github.mywarp.mywarp.bukkit;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedMap;
 import com.sk89q.squirrelid.Profile;
 import com.sk89q.squirrelid.cache.HashMapCache;
+import com.sk89q.squirrelid.cache.ProfileCache;
 import com.sk89q.squirrelid.cache.SQLiteCache;
 import com.sk89q.squirrelid.resolver.BukkitPlayerService;
 import com.sk89q.squirrelid.resolver.CacheForwardingService;
@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -54,7 +55,7 @@ class SquirrelIdPlayerNameResolver extends AbstractListener implements PlayerNam
   private static final Logger log = MyWarpLogger.getLogger(SquirrelIdPlayerNameResolver.class);
 
   private final CacheForwardingService resolver;
-  private com.sk89q.squirrelid.cache.ProfileCache cache;
+  private ProfileCache cache;
 
   /**
    * Creates an instance, using the given file to store the SQLite cache.
@@ -80,7 +81,7 @@ class SquirrelIdPlayerNameResolver extends AbstractListener implements PlayerNam
     if (profile != null) {
       return Optional.of(profile.getName());
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 
   @Override
@@ -109,7 +110,7 @@ class SquirrelIdPlayerNameResolver extends AbstractListener implements PlayerNam
     } catch (InterruptedException e) {
       log.error(String.format("Failed to find UUID for '%s' as the process was interrupted.", name), e);
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 
   @Override
