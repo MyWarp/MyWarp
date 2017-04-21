@@ -26,7 +26,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Ordering;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.Require;
-import com.sk89q.intake.parametric.annotation.Optional;
+import com.sk89q.intake.parametric.annotation.OptArg;
 import com.sk89q.intake.parametric.annotation.Range;
 import com.sk89q.intake.parametric.annotation.Switch;
 import com.sk89q.intake.util.auth.AuthorizationException;
@@ -95,7 +95,7 @@ public final class InformativeCommands {
   @Command(aliases = {"assets", "limits"}, desc = "assets.description", help = "assets.help")
   @Require("mywarp.cmd.assets.self")
   @Billable(FeeType.ASSETS)
-  public void assets(Actor actor, @Optional LocalPlayer creator)
+  public void assets(Actor actor, @OptArg LocalPlayer creator)
       throws IllegalCommandSenderException, AuthorizationException {
     if (creator == null) {
       if (actor instanceof LocalPlayer) {
@@ -119,7 +119,7 @@ public final class InformativeCommands {
   @Command(aliases = {"list", "alist"}, desc = "list.description", help = "list.help")
   @Require("mywarp.cmd.list")
   @Billable(FeeType.LIST)
-  public void list(final Actor actor, @Optional("1") int page, @Switch('c') final String creator,
+  public void list(final Actor actor, @OptArg("1") int page, @Switch('c') final String creator,
                    @Switch('n') final String name,
                    @Switch('r') @Range(min = 1, max = Integer.MAX_VALUE) final Integer radius,
                    @Switch('w') final String world) throws IllegalCommandSenderException {

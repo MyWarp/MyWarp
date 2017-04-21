@@ -21,7 +21,7 @@ package io.github.mywarp.mywarp.command;
 
 import com.sk89q.intake.Command;
 import com.sk89q.intake.Require;
-import com.sk89q.intake.parametric.annotation.Optional;
+import com.sk89q.intake.parametric.annotation.OptArg;
 
 import io.github.mywarp.mywarp.MyWarp;
 import io.github.mywarp.mywarp.command.parametric.annotation.Billable;
@@ -71,7 +71,7 @@ public final class UtilityCommands {
   @Command(aliases = {"help"}, desc = "help.description", help = "help.help")
   @Require("mywarp.cmd.help")
   @Billable(FeeType.HELP)
-  public void help(Actor actor, @Optional("1") int page) {
+  public void help(Actor actor, @OptArg("1") int page) {
     Set<String> usableCommands = commandHandler.getUsableCommands(actor);
 
     StringPaginator.of(msg.getString("help.heading"), usableCommands).withNote(msg.getString("help.note")).paginate()
@@ -81,7 +81,7 @@ public final class UtilityCommands {
   @Command(aliases = {"point"}, desc = "point.description", help = "point.help")
   @Require("mywarp.cmd.point")
   @Billable(FeeType.POINT)
-  public void point(@Sender LocalPlayer player, @Optional @Usable Warp warp) throws NoSuchWorldException {
+  public void point(@Sender LocalPlayer player, @OptArg @Usable Warp warp) throws NoSuchWorldException {
     if (warp != null) {
       player.setCompassTarget(CommandUtil.toWorld(warp, game), warp.getPosition());
       player.sendMessage(msg.getString("point.set", warp.getName()));
