@@ -23,7 +23,6 @@ import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
 import com.google.common.base.Optional;
 
-import io.github.mywarp.mywarp.command.util.NoSuchWorldException;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.Sign;
 import io.github.mywarp.mywarp.util.BlockFace;
@@ -110,7 +109,7 @@ public class BukkitWorld implements LocalWorld {
    * Gets the loaded World that is referenced by this BukkitWorld.
    *
    * @return the loaded World
-   * @throws NoSuchWorldException if the World is no longer loaded
+   * @throws IllegalStateException if the World is no longer loaded
    */
   World getLoadedWorld() {
     World ret = Bukkit.getWorld(worldIdentifier);
@@ -132,11 +131,7 @@ public class BukkitWorld implements LocalWorld {
 
     BukkitWorld that = (BukkitWorld) o;
 
-    if (!worldIdentifier.equals(that.worldIdentifier)) {
-      return false;
-    }
-
-    return true;
+    return worldIdentifier.equals(that.worldIdentifier);
   }
 
   @Override
