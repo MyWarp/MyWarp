@@ -131,11 +131,7 @@ public class BukkitWorld implements LocalWorld {
 
     BukkitWorld that = (BukkitWorld) o;
 
-    if (!worldIdentifier.equals(that.worldIdentifier)) {
-      return false;
-    }
-
-    return true;
+    return worldIdentifier.equals(that.worldIdentifier);
   }
 
   @Override
