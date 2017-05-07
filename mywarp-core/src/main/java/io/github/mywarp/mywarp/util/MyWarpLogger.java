@@ -25,21 +25,13 @@ import org.slf4j.Marker;
 
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
 /**
  * A custom logger that actually delegates all input to an underlying {@link Logger}, but allows to modify the
  * message beforehand.
  */
 public class MyWarpLogger implements Logger {
 
-  private static Function<String, String> modifier = new Function<String, String>() {
-    @Nullable
-    @Override
-    public String apply(@Nullable String input) {
-      return input;
-    }
-  };
+  private static Function<String, String> modifier = input -> input;
 
   private final Logger logger;
 

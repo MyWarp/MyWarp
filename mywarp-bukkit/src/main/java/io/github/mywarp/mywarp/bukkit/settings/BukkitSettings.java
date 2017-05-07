@@ -19,6 +19,8 @@
 
 package io.github.mywarp.mywarp.bukkit.settings;
 
+import com.google.common.collect.ImmutableSet;
+
 import io.github.mywarp.mywarp.platform.Settings;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
 import io.github.mywarp.mywarp.warp.storage.ConnectionConfiguration;
@@ -164,8 +166,8 @@ public class BukkitSettings implements Settings {
   }
 
   @Override
-  public List<String> getWarpSignsIdentifiers() {
-    return config.getStringList("warpSigns.identifiers");
+  public ImmutableSet<String> getWarpSignsIdentifiers() {
+    return ImmutableSet.copyOf(config.getStringList("warpSigns.identifiers"));
   }
 
   /**

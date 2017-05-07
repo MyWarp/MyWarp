@@ -22,6 +22,7 @@ package io.github.mywarp.mywarp.warp;
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.ForwardingObject;
+import com.google.common.collect.ImmutableSet;
 
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalWorld;
@@ -30,7 +31,6 @@ import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -163,12 +163,12 @@ abstract class ForwardingPopulatableWarpManager extends ForwardingObject impleme
     }
 
     @Override
-    public Set<String> getInvitedGroups() {
+    public ImmutableSet<String> getInvitedGroups() {
       return delegate().getInvitedGroups();
     }
 
     @Override
-    public Set<UUID> getInvitedPlayers() {
+    public ImmutableSet<UUID> getInvitedPlayers() {
       return delegate().getInvitedPlayers();
     }
 

@@ -19,9 +19,6 @@
 
 package io.github.mywarp.mywarp.warp;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Maps;
-
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.PlayerNameResolver;
 
@@ -29,8 +26,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -101,13 +100,7 @@ public class PlaceholderResolver {
       tokens.add(new ActorToken(actor.getName()));
     }
 
-    return Maps.uniqueIndex(tokens, new Function<Token, String>() {
-
-      @Override
-      public String apply(Token input) {
-        return input.token();
-      }
-    });
+    return tokens.stream().collect(Collectors.toMap(Token::token, i -> i));
   }
 
   /**

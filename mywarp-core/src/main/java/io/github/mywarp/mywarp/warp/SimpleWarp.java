@@ -24,13 +24,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
+import com.google.common.collect.ImmutableSet;
 
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
@@ -127,13 +127,13 @@ class SimpleWarp extends AbstractWarp {
   }
 
   @Override
-  public Set<String> getInvitedGroups() {
-    return Collections.unmodifiableSet(invitedGroups);
+  public ImmutableSet<String> getInvitedGroups() {
+    return ImmutableSet.copyOf(invitedGroups);
   }
 
   @Override
-  public Set<UUID> getInvitedPlayers() {
-    return Collections.unmodifiableSet(invitedPlayers);
+  public ImmutableSet<UUID> getInvitedPlayers() {
+    return ImmutableSet.copyOf(invitedPlayers);
   }
 
   @Override

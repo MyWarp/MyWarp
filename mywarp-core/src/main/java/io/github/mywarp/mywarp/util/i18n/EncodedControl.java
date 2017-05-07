@@ -21,8 +21,6 @@ package io.github.mywarp.mywarp.util.i18n;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.google.common.base.Charsets;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,6 +28,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
@@ -46,7 +45,7 @@ import javax.annotation.Nullable;
  */
 class EncodedControl extends ResourceBundle.Control {
 
-  private static final Charset DEFAULT_ENCODING = Charsets.UTF_8;
+  private static final Charset DEFAULT_ENCODING = StandardCharsets.UTF_8;
 
   private final Charset encoding;
 
@@ -84,11 +83,9 @@ class EncodedControl extends ResourceBundle.Control {
     InputStream stream;
 
     try {
-      stream = AccessController.doPrivileged(new PrivilegedExceptionAction<InputStream>() {
-        public InputStream run() throws IOException {
-          return readResource(resourceName, loader, reload);
-        }
-      });
+      stream =
+          AccessController
+              .doPrivileged((PrivilegedExceptionAction<InputStream>) () -> readResource(resourceName, loader, reload));
     } catch (PrivilegedActionException e) {
       throw (IOException) e.getException();
     }
@@ -139,11 +136,8 @@ class EncodedControl extends ResourceBundle.Control {
    * @throws IOException if a I/O error occurs
    */
   protected ResourceBundle createBundle(InputStream stream) throws IOException {
-    Reader reader = new InputStreamReader(stream, encoding);
-    try {
+    try (Reader reader = new InputStreamReader(stream, encoding)) {
       return new PropertyResourceBundle(reader);
-    } finally {
-      reader.close();
     }
 
   }

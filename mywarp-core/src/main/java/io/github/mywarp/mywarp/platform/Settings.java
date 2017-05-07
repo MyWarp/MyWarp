@@ -19,9 +19,10 @@
 
 package io.github.mywarp.mywarp.platform;
 
+import com.google.common.collect.ImmutableSet;
+
 import io.github.mywarp.mywarp.warp.storage.ConnectionConfiguration;
 
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -83,7 +84,7 @@ public interface Settings {
    *
    * @return all warp sign identifiers
    */
-  List<String> getWarpSignsIdentifiers();
+  ImmutableSet<String> getWarpSignsIdentifiers();
 
   /**
    * Gets the {@code ConnectionConfiguration} of the underling database management system.

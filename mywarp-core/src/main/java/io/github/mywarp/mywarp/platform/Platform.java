@@ -19,8 +19,6 @@
 
 package io.github.mywarp.mywarp.platform;
 
-import com.google.common.base.Optional;
-
 import io.github.mywarp.mywarp.platform.capability.EconomyCapability;
 import io.github.mywarp.mywarp.platform.capability.LimitCapability;
 import io.github.mywarp.mywarp.platform.capability.TimerCapability;
@@ -28,6 +26,7 @@ import io.github.mywarp.mywarp.warp.storage.ConnectionConfiguration;
 import io.github.mywarp.mywarp.warp.storage.RelationalDataService;
 
 import java.io.File;
+import java.util.Optional;
 
 /**
  * A platform MyWarp has been adapted to run on.
@@ -64,7 +63,7 @@ public interface Platform {
   PlayerNameResolver getPlayerNameResolver();
 
   /**
-   * Gets an Optional with the instance of the given class or {@link Optional#absent()} if this Platform is unable to
+   * Gets an Optional with the instance of the given class or {@link Optional#empty()} if this Platform is unable to
    * provide support.
    *
    * <p>None of the capabilities requested by calling this method are required for MyWarp to run. The following
@@ -77,7 +76,7 @@ public interface Platform {
    * @param <C>             the type of the capability
    * @return an Optional with an instance of the requested capability
    */
-  <C> java.util.Optional<C> getCapability(Class<C> capabilityClass);
+  <C> Optional<C> getCapability(Class<C> capabilityClass);
 
   /**
    * Creates a {@link RelationalDataService} as described by the given {@code config}.

@@ -22,6 +22,7 @@ package io.github.mywarp.mywarp.warp;
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.ImmutableSet;
 
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalEntity;
@@ -31,7 +32,6 @@ import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Comparator;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -139,14 +139,14 @@ public interface Warp extends Comparable<Warp> {
    *
    * @return a set with all IDs of groups invited to this Warp
    */
-  Set<String> getInvitedGroups();
+  ImmutableSet<String> getInvitedGroups();
 
   /**
    * Gets an unmodifiable set containing the unique identifiers of all players invited to this Warp.
    *
    * @return a set with all unique identifers of players who are invited to this Warp
    */
-  Set<UUID> getInvitedPlayers();
+  ImmutableSet<UUID> getInvitedPlayers();
 
   /**
    * Gets this Warp's name.
