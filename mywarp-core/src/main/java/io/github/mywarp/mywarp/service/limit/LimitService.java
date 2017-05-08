@@ -162,20 +162,20 @@ public class LimitService {
     @Nullable
     private final Value exceededValue;
     @Nullable
-    private final Integer allowedMaximium;
+    private final Integer allowedMaximum;
 
     /**
      * Creates an instance with the given values.
      *
      * @param exceedsLimit    whether a limit was exceeded
      * @param exceededValue   the exceeded limit or {@code null} if no limit was exceeded
-     * @param allowedMaximium the maximum number of warps a user can create under the exceeded limit or {@code null} if
+     * @param allowedMaximum the maximum number of warps a user can create under the exceeded limit or {@code null} if
      *                        no limit was exceeded
      */
-    private EvaluationResult(boolean exceedsLimit, @Nullable Value exceededValue, @Nullable Integer allowedMaximium) {
+    private EvaluationResult(boolean exceedsLimit, @Nullable Value exceededValue, @Nullable Integer allowedMaximum) {
       this.exceedsLimit = exceedsLimit;
       this.exceededValue = exceededValue;
-      this.allowedMaximium = allowedMaximium;
+      this.allowedMaximum = allowedMaximum;
     }
 
     /**
@@ -204,9 +204,9 @@ public class LimitService {
      * @return the maximum number of warps of the exceeded limit
      * @throws IllegalStateException if no limit is exceeded and thus {@link #exceedsLimit()} returns {@code true}.
      */
-    public Integer getAllowedMaximium() {
-      checkState(allowedMaximium != null);
-      return allowedMaximium;
+    public Integer getAllowedMaximum() {
+      checkState(allowedMaximum != null);
+      return allowedMaximum;
     }
 
     /**

@@ -20,7 +20,7 @@
 package io.github.mywarp.mywarp.bukkit;
 
 import io.github.mywarp.mywarp.bukkit.util.BukkitMessageInterpreter;
-import io.github.mywarp.mywarp.platform.AbstractActor;
+import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.Settings;
 import io.github.mywarp.mywarp.util.Message;
 
@@ -31,7 +31,7 @@ import java.util.Locale;
 /**
  * References a Bukkit {@link CommandSender}.
  */
-public class BukkitActor extends AbstractActor {
+public class BukkitActor implements Actor {
 
   protected final Settings settings;
 

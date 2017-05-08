@@ -25,9 +25,6 @@ import java.util.Locale;
 
 /**
  * Someone who can interact with MyWarp.
- *
- * <p>Implementations should consider to implement {@link AbstractActor} instead of implementing this interface
- * directly.</p>
  */
 public interface Actor {
 
@@ -66,7 +63,9 @@ public interface Actor {
    * @see #sendError(String)
    * @see #sendMessage(Message)
    */
-  void sendMessage(String msg);
+  default void sendMessage(String msg) {
+    sendMessage(Message.builder().append(Message.Style.DEFAULT).append(msg).build());
+  }
 
   /**
    * Sends an error message to this Actor.
@@ -77,7 +76,9 @@ public interface Actor {
    * @see #sendMessage(String)
    * @see #sendMessage(Message)
    */
-  void sendError(String msg);
+  default void sendError(String msg) {
+    sendMessage(Message.builder().append(Message.Style.ERROR).append(msg).build());
+  }
 
   /**
    * Gets the current Locale of this Actor.

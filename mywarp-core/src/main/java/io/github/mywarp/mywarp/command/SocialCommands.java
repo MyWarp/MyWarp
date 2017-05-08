@@ -143,7 +143,7 @@ public final class SocialCommands {
 
       if (result.exceedsLimit()) {
         if (actor instanceof LocalPlayer && creatorPlayer.equals(actor)) {
-          throw new ExceedsInitiatorLimitException(result.getExceededValue(), result.getAllowedMaximium());
+          throw new ExceedsInitiatorLimitException(result.getExceededValue(), result.getAllowedMaximum());
         } else {
           throw new ExceedsLimitException(creatorPlayer);
         }
@@ -180,7 +180,7 @@ public final class SocialCommands {
 
       if (result.exceedsLimit()) {
         if (actor instanceof LocalPlayer && creatorPlayer.equals(actor)) {
-          throw new ExceedsInitiatorLimitException(result.getExceededValue(), result.getAllowedMaximium());
+          throw new ExceedsInitiatorLimitException(result.getExceededValue(), result.getAllowedMaximum());
         } else {
           throw new ExceedsLimitException(creatorPlayer);
         }

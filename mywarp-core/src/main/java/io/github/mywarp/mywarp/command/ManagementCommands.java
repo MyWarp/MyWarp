@@ -90,7 +90,7 @@ public final class ManagementCommands {
     if (limitService != null) {
       LimitService.EvaluationResult result = limitService.canAdd(creator, creator.getWorld(), type);
       if (result.exceedsLimit()) {
-        throw new ExceedsInitiatorLimitException(result.getExceededValue(), result.getAllowedMaximium());
+        throw new ExceedsInitiatorLimitException(result.getExceededValue(), result.getAllowedMaximum());
       }
     }
 
