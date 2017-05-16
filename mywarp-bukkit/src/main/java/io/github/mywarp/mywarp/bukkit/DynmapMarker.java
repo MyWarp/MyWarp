@@ -20,11 +20,8 @@
 package io.github.mywarp.mywarp.bukkit;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
@@ -42,6 +39,7 @@ import io.github.mywarp.mywarp.warp.event.WarpUpdateEvent;
 
 import org.bukkit.plugin.Plugin;
 import org.dynmap.DynmapCommonAPI;
+import org.dynmap.markers.GenericMarker;
 import org.dynmap.markers.Marker;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerIcon;
@@ -49,13 +47,13 @@ import org.dynmap.markers.MarkerSet;
 import org.slf4j.Logger;
 
 import java.util.Arrays;
-
-import javax.annotation.Nullable;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * Displays markers for warps using <a href="https://github.com/webbukkit/dynmap">dynmap</a>.
  *
- * <p>Warps are only displayed if they match a filter ({@link Predicate#apply(Object)} returns {@code true}) given when
+ * <p>Warps are only displayed if they match a filter ({@link Predicate#test(Object)})  returns {@code true}) given when
  * an instance is created.</p>
  *
  * <p>In addition to using the provided methods to manually add or remove warps, instances can be registered at an
@@ -75,7 +73,7 @@ public class DynmapMarker {
   private final Game game;
   private final Plugin plugin;
   private final MarkerAPI api;
-  private final java.util.function.Predicate<Warp> filter;
+  private final Predicate<Warp> filter;
   private final PlaceholderResolver tokenizer;
 
   /**
@@ -87,14 +85,13 @@ public class DynmapMarker {
    * @param platform the Bukkit platform MyWarp runs on
    * @param filter   the filter warps must matched in order to be displayed
    */
-  DynmapMarker(DynmapCommonAPI dynmap, MyWarpPlugin plugin, BukkitPlatform platform,
-               java.util.function.Predicate<Warp> filter) {
+  DynmapMarker(DynmapCommonAPI dynmap, MyWarpPlugin plugin, BukkitPlatform platform, Predicate<Warp> filter) {
     this(dynmap.getMarkerAPI(), plugin, platform.getSettings(), platform.getGame(),
          new PlaceholderResolver(platform.getPlayerNameResolver()), filter);
   }
 
   private DynmapMarker(MarkerAPI api, MyWarpPlugin plugin, BukkitSettings settings, Game game,
-                       PlaceholderResolver tokenizer, java.util.function.Predicate<Warp> filter) {
+                       PlaceholderResolver tokenizer, Predicate<Warp> filter) {
     this.api = api;
     this.plugin = plugin;
     this.game = game;
@@ -120,7 +117,7 @@ public class DynmapMarker {
    * @param warps the warps to create markers for
    */
   public void addMarker(Iterable<Warp> warps) {
-    for (Warp warp : Iterables.filter(warps, filter::test)) {
+    for (Warp warp : warps) {
       createMarker(warp);
     }
   }
@@ -141,10 +138,7 @@ public class DynmapMarker {
    */
   public void deleteMarker(Iterable<Warp> warps) {
     for (Warp warp : warps) {
-      Optional<Marker> optional = getMarker(warp);
-      if (optional.isPresent()) {
-        optional.get().deleteMarker();
-      }
+      getMarker(warp).ifPresent(GenericMarker::deleteMarker);
     }
   }
 
@@ -192,9 +186,7 @@ public class DynmapMarker {
     Optional<Marker> markerOptional = getMarker(warp);
 
     if (!filter.test(warp)) {
-      if (markerOptional.isPresent()) {
-        markerOptional.get().deleteMarker();
-      }
+      markerOptional.ifPresent(GenericMarker::deleteMarker);
       return;
     }
 
@@ -206,7 +198,7 @@ public class DynmapMarker {
     Marker marker = markerOptional.get();
     if (event.getType().equals(WarpUpdateEvent.UpdateType.LOCATION)) {
       Vector3d pos = warp.getPosition();
-      java.util.Optional<LocalWorld> worldOptional = game.getWorld(warp.getWorldIdentifier());
+      Optional<LocalWorld> worldOptional = game.getWorld(warp.getWorldIdentifier());
       if (!worldOptional.isPresent()) {
         log.debug("The world of the warp {} is not loaded. The warp is ignored.", warp);
         return;
@@ -285,9 +277,8 @@ public class DynmapMarker {
    * @return the {@code Marker}
    * @throws IllegalStateException if Dynmap fails to create the {@code Marker}
    */
-  @Nullable
   private Marker createMarker(Warp warp) {
-    java.util.Optional<LocalWorld> worldOptional = game.getWorld(warp.getWorldIdentifier());
+    Optional<LocalWorld> worldOptional = game.getWorld(warp.getWorldIdentifier());
     if (!worldOptional.isPresent()) {
       log.debug("The world of the warp {} is not loaded. The warp is ignored.", warp);
       return null;
@@ -297,6 +288,7 @@ public class DynmapMarker {
         getOrCreateSet()
             .createMarker(identifier(warp), label(warp), true, worldOptional.get().getName(), warp.getPosition().getX(),
                           warp.getPosition().getY(), warp.getPosition().getZ(), getOrCreateIcon(), false);
+
     Preconditions.checkState(ret != null, "Failed to create Marker for %s, Dynmap returns null.", warp);
 
     return ret;
@@ -309,7 +301,7 @@ public class DynmapMarker {
    * @return the Marker
    */
   private Optional<Marker> getMarker(Warp warp) {
-    return Optional.fromNullable(getOrCreateSet().findMarker(identifier(warp)));
+    return Optional.ofNullable(getOrCreateSet().findMarker(identifier(warp)));
   }
 
   /**

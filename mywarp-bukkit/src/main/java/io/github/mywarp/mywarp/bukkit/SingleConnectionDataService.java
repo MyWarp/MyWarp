@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -71,7 +72,7 @@ public class SingleConnectionDataService implements RelationalDataService {
   }
 
   @Override
-  public ListeningExecutorService getExecutorService() {
+  public ExecutorService getExecutorService() {
     if (executorService == null) {
       executorService = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
     }

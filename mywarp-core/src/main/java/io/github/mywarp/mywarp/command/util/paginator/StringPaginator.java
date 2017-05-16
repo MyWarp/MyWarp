@@ -30,8 +30,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 /**
  * Paginates results.
  *
@@ -45,13 +43,7 @@ public class StringPaginator<E> {
   private final String header;
   private final List<? extends E> elements;
 
-  @SuppressWarnings("unchecked")
-  private Function<E, Message> mapping = new Function<E, Message>() {
-    @Override
-    public Message apply(@Nullable E input) {
-      return Message.builder().append(String.valueOf(input)).build();
-    }
-  };
+  private Function<E, Message> mapping = input -> Message.builder().append(String.valueOf(input)).build();
   private List<String> notes = new ArrayList<String>();
   private int entriesPerPage = 9;
 

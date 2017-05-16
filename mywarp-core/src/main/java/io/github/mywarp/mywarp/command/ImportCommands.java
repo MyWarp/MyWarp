@@ -19,10 +19,6 @@
 
 package io.github.mywarp.mywarp.command;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.Require;
@@ -47,11 +43,11 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Bundles commands used to import Warps from an external source.
@@ -87,9 +83,7 @@ public final class ImportCommands {
     RelationalDataService dataService = platform.createDataService(configuration);
     try {
       start(actor, dataService, WarpStorageFactory.create(dataService.getDataSource(), configuration));
-    } catch (StorageInitializationException e) {
-      throw new CommandException(msg.getString("import.no-connection", e.getMessage()));
-    } catch (SQLException e) {
+    } catch (StorageInitializationException | SQLException e) {
       throw new CommandException(msg.getString("import.no-connection", e.getMessage()));
     }
   }
@@ -134,25 +128,12 @@ public final class ImportCommands {
   private void start(final Actor initiator, final RelationalDataService dataService, final WarpSource warpSource) {
     initiator.sendMessage(msg.getString("import.started"));
 
-    final ListeningExecutorService executorService = dataService.getExecutorService();
+    ExecutorService executorService = dataService.getExecutorService();
 
-    ListenableFuture<List<Warp>> futureWarps = executorService.submit(new Callable<List<Warp>>() {
-      @Override
-      public List<Warp> call() throws Exception {
-        return warpSource.getWarps();
-      }
-    });
-
-    Futures.addCallback(futureWarps, new FutureCallback<List<Warp>>() {
-
-      @Override
-      public void onFailure(final Throwable throwable) {
-        initiator.sendError(msg.getString("import.no-connection", throwable.getMessage()));
-        dataService.close();
-      }
-
-      @Override
-      public void onSuccess(final List<Warp> warps) {
+    CompletableFuture.supplyAsync(warpSource::getWarps, executorService).whenCompleteAsync((warps, ex) -> {
+      if (ex != null) {
+        initiator.sendError(msg.getString("import.no-connection", ex.getMessage()));
+      } else {
         Set<Warp> notImportedWarps = new HashSet<Warp>();
 
         for (Warp warp : warps) {
@@ -176,10 +157,8 @@ public final class ImportCommands {
 
           initiator.sendMessage(builder.build());
         }
-
         dataService.close();
       }
-
     }, game.getExecutor());
   }
 

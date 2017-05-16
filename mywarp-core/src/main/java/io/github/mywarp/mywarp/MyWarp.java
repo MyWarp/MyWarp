@@ -20,9 +20,6 @@
 package io.github.mywarp.mywarp;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
 
 import io.github.mywarp.mywarp.command.CommandHandler;
 import io.github.mywarp.mywarp.platform.Game;
@@ -42,7 +39,6 @@ import io.github.mywarp.mywarp.warp.EventfulPopulatableWarpManager;
 import io.github.mywarp.mywarp.warp.MemoryPopulatableWarpManager;
 import io.github.mywarp.mywarp.warp.PopulatableWarpManager;
 import io.github.mywarp.mywarp.warp.StoragePopulatableWarpManager;
-import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
 import io.github.mywarp.mywarp.warp.authorization.PermissionAuthorizationStrategy;
@@ -59,8 +55,8 @@ import org.slf4j.Logger;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.Nullable;
 
@@ -266,25 +262,13 @@ public final class MyWarp {
 
   private void loadWarps() {
     //FIXME
-    ListenableFuture<List<Warp>> futureWarps = dataService.getExecutorService().submit(warpStorage::getWarps);
+    CompletableFuture.supplyAsync(warpStorage::getWarps, dataService.getExecutorService()).thenAcceptAsync(warps -> {
+      warpManager.populate(warps);
 
-    Futures.addCallback(futureWarps, new FutureCallback<Collection<Warp>>() {
+      //notify platform
+      platform.onWarpsLoaded();
 
-      @Override
-      public void onSuccess(Collection<Warp> result) {
-        warpManager.populate(result);
-
-        //notify platform
-        platform.onWarpsLoaded();
-
-        log.info("{} warps loaded.", warpManager.getNumberOfAllWarps());
-      }
-
-      @Override
-      public void onFailure(Throwable throwable) {
-        log.error("Failed to load warps from the database.", throwable);
-      }
-
-    }, platform.getGame().getExecutor());
+      log.info("{} warps loaded.", warpManager.getNumberOfAllWarps());
+    });
   }
 }

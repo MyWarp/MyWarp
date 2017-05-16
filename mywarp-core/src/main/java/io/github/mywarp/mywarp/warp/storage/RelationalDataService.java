@@ -19,10 +19,9 @@
 
 package io.github.mywarp.mywarp.warp.storage;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
-
 import java.io.Closeable;
 import java.sql.SQLException;
+import java.util.concurrent.ExecutorService;
 
 import javax.sql.DataSource;
 
@@ -44,7 +43,7 @@ public interface RelationalDataService extends Closeable {
    *
    * @return a {@code ListeningExecutorService}
    */
-  ListeningExecutorService getExecutorService();
+  ExecutorService getExecutorService();
 
   @Override
   void close();

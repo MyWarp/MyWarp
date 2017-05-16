@@ -53,22 +53,12 @@ public class AsyncWritingWarpStorage extends ForwardingWarpStorage {
 
   @Override
   public void addWarp(final Warp warp) {
-    executor.execute(new Runnable() {
-      @Override
-      public void run() {
-        delegate().addWarp(warp);
-      }
-    });
+    executor.execute(() -> delegate().addWarp(warp));
   }
 
   @Override
   public void removeWarp(final Warp warp) {
-    executor.execute(new Runnable() {
-      @Override
-      public void run() {
-        delegate().removeWarp(warp);
-      }
-    });
+    executor.execute(() -> delegate().removeWarp(warp));
   }
 
   @Override
@@ -78,91 +68,46 @@ public class AsyncWritingWarpStorage extends ForwardingWarpStorage {
 
   @Override
   public void inviteGroup(final Warp warp, final String groupId) {
-    executor.execute(new Runnable() {
-      @Override
-      public void run() {
-        delegate().inviteGroup(warp, groupId);
-      }
-    });
+    executor.execute(() -> delegate().inviteGroup(warp, groupId));
   }
 
   @Override
   public void invitePlayer(final Warp warp, final UUID uniqueId) {
-    executor.execute(new Runnable() {
-      @Override
-      public void run() {
-        delegate().invitePlayer(warp, uniqueId);
-      }
-    });
+    executor.execute(() -> delegate().invitePlayer(warp, uniqueId));
   }
 
   @Override
   public void uninviteGroup(final Warp warp, final String groupId) {
-    executor.execute(new Runnable() {
-      @Override
-      public void run() {
-        delegate().uninviteGroup(warp, groupId);
-      }
-    });
+    executor.execute(() -> delegate().uninviteGroup(warp, groupId));
   }
 
   @Override
   public void uninvitePlayer(final Warp warp, final UUID uniqueId) {
-    executor.execute(new Runnable() {
-      @Override
-      public void run() {
-        delegate().uninvitePlayer(warp, uniqueId);
-      }
-    });
+    executor.execute(() -> delegate().uninvitePlayer(warp, uniqueId));
   }
 
   @Override
   public void updateCreator(final Warp warp) {
-    executor.execute(new Runnable() {
-      @Override
-      public void run() {
-        delegate().updateCreator(warp);
-      }
-    });
+    executor.execute(() -> delegate().updateCreator(warp));
   }
 
   @Override
   public void updateLocation(final Warp warp) {
-    executor.execute(new Runnable() {
-      @Override
-      public void run() {
-        delegate().updateLocation(warp);
-      }
-    });
+    executor.execute(() -> delegate().updateLocation(warp));
   }
 
   @Override
   public void updateType(final Warp warp) {
-    executor.execute(new Runnable() {
-      @Override
-      public void run() {
-        delegate().updateType(warp);
-      }
-    });
+    executor.execute(() -> delegate().updateType(warp));
   }
 
   @Override
   public void updateVisits(final Warp warp) {
-    executor.execute(new Runnable() {
-      @Override
-      public void run() {
-        delegate().updateVisits(warp);
-      }
-    });
+    executor.execute(() -> delegate().updateVisits(warp));
   }
 
   @Override
   public void updateWelcomeMessage(final Warp warp) {
-    executor.execute(new Runnable() {
-      @Override
-      public void run() {
-        delegate().updateWelcomeMessage(warp);
-      }
-    });
+    executor.execute(() -> delegate().updateWelcomeMessage(warp));
   }
 }
