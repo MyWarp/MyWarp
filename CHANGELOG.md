@@ -9,6 +9,10 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 
 ### Changed
 * [[#143](https://github.com/TheE/MyWarp/issues/143)] - Change group-id and package structure to `io.github.mywarp.mywarp`
+* [[#71](https://github.com/TheE/MyWarp/issues/71)] - Require Java 8 to run MyWarp, update internals to use new, native Java constructs where possible
+* Update to JOOQ 3.9.3
+* FlyWay to JOOQ 4.2.0
+* [Bukkit] Build against Bukkit 1.12-R0.1-SNAPSHOT
 
 ### Added
 * [[#142](https://github.com/TheE/MyWarp/issues/142)] - Add an option to disallow warps with different capitalization
@@ -17,7 +21,7 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 
 ### Changed:
 * [[#64](https://github.com/TheE/MyWarp/issues/64)] - Decouple authentication from the Warp implementation
-* Update JOOQ 3.6.4
+* Update JOOQ to 3.6.4
 * Make `DynamicMessages` use the bundled localizations by default
 * Commands are handled by the core, not by individual implementations
 * Rename `WarpRemovalEvent` to `WarpDeleteEvent`
@@ -38,7 +42,7 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 * Move population and depopulation from WarpManager into a separated (hidden) interface
 * [[#93](https://github.com/TheE/MyWarp/issues/93)] - Allow interactions (e.g. updating, deleting, listing) with warps positioned on non existing worlds
 * [Bukkit] [[#117](https://github.com/TheE/MyWarp/issues/117)] - Update warp safety with Materials added in Minecraft 1.8, 1.9, 1.10 and 1.11
-* Update Gradle to 3.3 and use up-to-date versions of all plugins used in the build process
+* Update Gradle to 3.5 and use up-to-date versions of all plugins used in the build process
 * Move handling of teleport and welcome messages into the `TeleportService`
 * Massively simplify internal implementation of limits
 * Update flow-math to 1.0.3
