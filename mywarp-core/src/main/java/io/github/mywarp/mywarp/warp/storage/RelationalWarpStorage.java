@@ -26,6 +26,8 @@ import static io.github.mywarp.mywarp.warp.storage.generated.Tables.WARP_GROUP_M
 import static io.github.mywarp.mywarp.warp.storage.generated.Tables.WARP_PLAYER_MAP;
 import static io.github.mywarp.mywarp.warp.storage.generated.Tables.WORLD;
 import static org.jooq.impl.DSL.select;
+import static org.jooq.impl.DSL.selectOne;
+import static org.jooq.impl.DSL.val;
 
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
@@ -438,13 +440,21 @@ class RelationalWarpStorage implements WarpStorage {
    */
   private <R extends Record, T> Insert<R> insertOrIgnore(Configuration configuration, Table<R> table,
                                                          TableField<R, T> uniqueField, T value) {
+    // REVIEW With JJOQ 3.7 the native implementation InsertOnDuplicateStep#onDuplicateKeyIgnore() should be usable.
+    // For some reason it fails with string values (at least on H2), rendering it unusable.
+    // For now, this workaround is stil needed.
     // @formatter:off
-    //FIXME Use onDuplicateKeyIgnore() once we updated to JOOQ 3.7
     return create(configuration)
         .insertInto(table)
         .columns(uniqueField)
-        .values(value)
-        .onDuplicateKeyIgnore();
+        .select(
+          select(val(value, uniqueField))
+          .whereNotExists(
+              selectOne()
+              .from(table)
+              .where(uniqueField.eq(value))
+          )
+        );
     // @formatter:on
   }
 }

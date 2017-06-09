@@ -41,13 +41,13 @@ import io.github.mywarp.mywarp.warp.storage.WarpStorageFactory;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
+import java.util.stream.Collectors;
 
 /**
  * Bundles commands used to import Warps from an external source.
@@ -168,11 +168,7 @@ public final class ImportCommands {
    * @return a mapping of the names to uniqueIds from all worlds
    */
   private Map<String, UUID> getWorldSnapshot() {
-    Map<String, UUID> snapshot = new HashMap<String, UUID>();
-    for (LocalWorld world : game.getWorlds()) {
-      snapshot.put(world.getName(), world.getUniqueId());
-    }
-    return snapshot;
+    return game.getWorlds().stream().collect(Collectors.toMap(LocalWorld::getName, LocalWorld::getUniqueId));
   }
 
 }

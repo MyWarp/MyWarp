@@ -19,9 +19,6 @@
 
 package io.github.mywarp.mywarp.command.parametric.provider;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.collect.Collections2;
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
 import com.sk89q.intake.argument.Namespace;
@@ -30,11 +27,14 @@ import com.sk89q.intake.parametric.ProvisionException;
 
 import io.github.mywarp.mywarp.command.parametric.provider.exception.NoSuchPlayerException;
 import io.github.mywarp.mywarp.command.util.Matches;
+import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -62,7 +62,7 @@ class PlayerProvider implements Provider<LocalPlayer> {
 
     Optional<LocalPlayer>
         playerOptional =
-        Matches.from(game.getPlayers()).withStringFunction(nameFunction()).forQuery(query).getExactMatch();
+        Matches.from(game.getPlayers()).withStringFunction(Actor::getName).forQuery(query).getExactMatch();
 
     if (!playerOptional.isPresent()) {
       throw new NoSuchPlayerException(query);
@@ -73,16 +73,8 @@ class PlayerProvider implements Provider<LocalPlayer> {
 
   @Override
   public List<String> getSuggestions(String prefix, Namespace namespace) {
-    return Matches.from(Collections2.transform(game.getPlayers(), nameFunction())).forQuery(prefix).getSortedMatches();
-  }
-
-  private static Function<LocalPlayer, String> nameFunction() {
-    return new Function<LocalPlayer, String>() {
-      @Override
-      public String apply(LocalPlayer input) {
-        return input.getName();
-      }
-    };
+    return Matches.from(game.getPlayers().stream().map(Actor::getName).collect(Collectors.toList())).forQuery(prefix)
+        .getSortedMatches();
   }
 
 }

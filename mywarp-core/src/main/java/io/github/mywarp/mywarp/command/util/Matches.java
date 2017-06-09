@@ -19,17 +19,15 @@
 
 package io.github.mywarp.mywarp.command.util;
 
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
@@ -72,10 +70,10 @@ public class Matches<E> {
       }
     }
 
-    Collections.sort(equalMatches, comparator);
-    Collections.sort(equalIgnoreCaseMatches, comparator);
-    Collections.sort(containsMatches, comparator);
-    Collections.sort(containsIgnoreCaseMatches, comparator);
+    equalMatches.sort(comparator);
+    equalIgnoreCaseMatches.sort(comparator);
+    containsMatches.sort(comparator);
+    containsIgnoreCaseMatches.sort(comparator);
   }
 
   /**
@@ -99,7 +97,7 @@ public class Matches<E> {
       ret = containsIgnoreCaseMatches.get(0);
     }
 
-    return Optional.fromNullable(ret);
+    return Optional.ofNullable(ret);
   }
 
   /**
@@ -154,13 +152,8 @@ public class Matches<E> {
 
     private final Iterable<E> elements;
 
-    private Function<E, String> stringFunction = (Function<E, String>) Functions.toStringFunction();
-    private Comparator<E> valueComparator = new Comparator<E>() {
-      @Override
-      public int compare(E left, E right) {
-        return left.toString().compareTo(right.toString());
-      }
-    };
+    private Function<E, String> stringFunction = Object::toString;
+    private Comparator<E> valueComparator = Comparator.comparing(Object::toString);
 
     private MatcherData(Iterable<E> elements) {
       this.elements = elements;

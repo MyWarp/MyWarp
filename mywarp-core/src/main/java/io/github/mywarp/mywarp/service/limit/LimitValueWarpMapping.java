@@ -61,14 +61,13 @@ public class LimitValueWarpMapping {
   }
 
   /**
-   * Returns whether there exist at least the given number of warps to be counted unter the given {@code value}.
+   * Returns whether there exist at least the given number of warps to be counted under the given {@code value}.
    *
    * @param value the value
    * @param count the number of Warps that should exist at least
    * @return {@code true} if there are at least the given number of Warps
    */
   boolean atLeast(Value value, int count) {
-    //FIXME correct?
-    return get(value).size() <= count;
+    return get(value).size() >= count;
   }
 }

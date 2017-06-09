@@ -21,8 +21,6 @@ package io.github.mywarp.mywarp.command.parametric.provider;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.sk89q.intake.argument.CommandArgs;
 import com.sk89q.intake.argument.MissingArgumentException;
@@ -38,6 +36,7 @@ import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -61,7 +60,7 @@ abstract class WarpProvider implements Provider<Warp> {
    * Returns a Predicate that evaluates to {@code true} if the tested warp is valid for the given {@code Actor}.
    *
    * <p>This method is called whenever warps are parsed from user input. Only warps that this method evaluates
-   * positively are consired valid matches for the user input.</p>
+   * positively are considered valid matches for the user input.</p>
    *
    * @param resolver the used AuthorizationResolver
    * @param actor    the Actor
@@ -80,8 +79,7 @@ abstract class WarpProvider implements Provider<Warp> {
     String query = arguments.next();
 
     Matches<Warp>
-        matches =
-        Matches.from(warpManager.getAll(isValid(arguments.getNamespace()))).withStringFunction(nameFunction())
+        matches = Matches.from(warpManager.getAll(isValid(arguments.getNamespace()))).withStringFunction(Warp::getName)
             .withValueComparator(new Warp.PopularityComparator()).forQuery(query);
     Optional<Warp> exactMatch = matches.getExactMatch();
 
@@ -93,18 +91,9 @@ abstract class WarpProvider implements Provider<Warp> {
 
   @Override
   public List<String> getSuggestions(String prefix, Namespace locals) {
-    return Lists.transform(Matches.from(warpManager.getAll(isValid(locals))).withStringFunction(nameFunction())
+    return Lists.transform(Matches.from(warpManager.getAll(isValid(locals))).withStringFunction(Warp::getName)
                                .withValueComparator(new Warp.PopularityComparator()).forQuery(prefix)
-                               .getSortedMatches(), nameFunction());
-  }
-
-  private static Function<Warp, String> nameFunction() {
-    return new Function<Warp, String>() {
-      @Override
-      public String apply(Warp input) {
-        return input.getName();
-      }
-    };
+                               .getSortedMatches(), Warp::getName);
   }
 
   private static Actor getActor(Namespace namespace) {
