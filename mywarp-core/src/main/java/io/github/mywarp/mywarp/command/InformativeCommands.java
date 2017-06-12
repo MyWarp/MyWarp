@@ -127,14 +127,14 @@ public final class InformativeCommands {
     Predicate<Warp> filter = authorizationResolver.isViewable(actor);
 
     if (creator != null) {
-      filter.and(input -> {
+      filter = filter.and(input -> {
         Optional<String> creatorName = playerNameResolver.getByUniqueId(input.getCreator());
         return creatorName.isPresent() && StringUtils.containsIgnoreCase(creatorName.get(), creator);
       });
     }
 
     if (name != null) {
-      filter.and(input -> StringUtils.containsIgnoreCase(input.getName(), name));
+      filter = filter.and(input -> StringUtils.containsIgnoreCase(input.getName(), name));
     }
 
     if (radius != null) {
@@ -148,12 +148,12 @@ public final class InformativeCommands {
 
       final int squaredRadius = radius * radius;
       final Vector3d position = entity.getPosition();
-      filter.and(input -> input.getWorldIdentifier().equals(worldId)
-                          && input.getPosition().distanceSquared(position) <= squaredRadius);
+      filter = filter.and(input -> input.getWorldIdentifier().equals(worldId)
+                                   && input.getPosition().distanceSquared(position) <= squaredRadius);
     }
 
     if (world != null) {
-      filter.and(input -> {
+      filter = filter.and(input -> {
         Optional<LocalWorld> worldOptional = game.getWorld(input.getWorldIdentifier());
         return worldOptional.isPresent() && StringUtils.containsIgnoreCase(worldOptional.get().getName(), world);
       });
