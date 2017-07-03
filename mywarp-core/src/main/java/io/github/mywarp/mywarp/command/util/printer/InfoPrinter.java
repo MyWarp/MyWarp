@@ -35,7 +35,9 @@ import io.github.mywarp.mywarp.util.i18n.LocaleManager;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
 
-import java.text.DateFormat;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -47,6 +49,9 @@ import java.util.UUID;
 public class InfoPrinter {
 
   private static final DynamicMessages msg = new DynamicMessages(CommandHandler.RESOURCE_BUNDLE_NAME);
+  private static final DateTimeFormatter
+      TIME_FORMATTER =
+      DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withZone(ZoneId.systemDefault());
 
   private final Warp warp;
   private final AuthorizationResolver authorizationResolver;
@@ -147,8 +152,8 @@ public class InfoPrinter {
     info.append(msg.getString("info.creation-date", warp.getCreationDate()));
     info.append(" ");
     info.append(Message.Style.VALUE);
-    info.append(
-        DateFormat.getDateInstance(DateFormat.DEFAULT, LocaleManager.getLocale()).format(warp.getCreationDate()));
+
+    info.append(TIME_FORMATTER.withLocale(LocaleManager.getLocale()).format(warp.getCreationDate()));
 
     info.appendNewLine();
 
