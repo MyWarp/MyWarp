@@ -1,5 +1,5 @@
 plugins {
-    id "com.mendhak.gradlecrowdin" version "0.0.9" apply false
+    id "com.mendhak.gradlecrowdin" version "0.1.0"
     id "com.palantir.git-version" version "0.7.1"
 }
 
