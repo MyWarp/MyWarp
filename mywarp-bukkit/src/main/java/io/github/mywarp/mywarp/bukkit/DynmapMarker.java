@@ -289,7 +289,7 @@ public class DynmapMarker {
             .createMarker(identifier(warp), label(warp), true, worldOptional.get().getName(), warp.getPosition().getX(),
                           warp.getPosition().getY(), warp.getPosition().getZ(), getOrCreateIcon(), false);
 
-    Preconditions.checkState(ret != null, "Failed to create Marker for %s, Dynmap returns null.", warp);
+    Preconditions.checkState(ret != null, "Failed to create Marker for " + warp + ", Dynmap returns null.");
 
     return ret;
   }

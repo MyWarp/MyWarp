@@ -26,6 +26,8 @@ import io.github.mywarp.mywarp.bukkit.util.ReflectiveLocaleResolver;
 import io.github.mywarp.mywarp.bukkit.util.conversation.AcceptancePromptFactory;
 import io.github.mywarp.mywarp.bukkit.util.conversation.WelcomeEditorFactory;
 import io.github.mywarp.mywarp.bukkit.util.permission.group.GroupResolver;
+import io.github.mywarp.mywarp.bukkit.util.versionsupport.TamedHorseChecker;
+import io.github.mywarp.mywarp.bukkit.util.versionsupport.VersionSupport;
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
@@ -35,7 +37,6 @@ import io.github.mywarp.mywarp.warp.Warp;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.slf4j.Logger;
 
@@ -150,16 +151,14 @@ public class BukkitPlayer extends BukkitActor implements LocalPlayer {
     teleportRecursive(getWrapped(), bukkitLoc, teleportTamedHorse);
   }
 
-  private void teleportRecursive(Entity teleportee, Location bukkitLoc, boolean teleportTamedHorses) {
+  private void teleportRecursive(Entity toTeleport, Location bukkitLoc, boolean teleportTamedHorses) {
     Entity vehicle = null;
 
     // handle vehicles
-    if (teleportTamedHorses) {
-      if (teleportee.getVehicle() instanceof Horse && ((Horse) teleportee.getVehicle()).isTamed()) {
-        vehicle = teleportee.getVehicle();
-      }
+    if (teleportTamedHorses && VersionSupport.get(TamedHorseChecker.class).test(toTeleport.getVehicle())) {
+      vehicle = toTeleport.getVehicle();
     }
-    teleportee.leaveVehicle();
+    toTeleport.leaveVehicle();
 
     // load the chunk if needed
     int blockX = bukkitLoc.getBlockX();
@@ -169,12 +168,12 @@ public class BukkitPlayer extends BukkitActor implements LocalPlayer {
     }
 
     // teleport the entity
-    teleportee.teleport(bukkitLoc);
+    toTeleport.teleport(bukkitLoc);
 
     // teleport the vehicle
     if (vehicle != null) {
       teleportRecursive(vehicle, bukkitLoc, true);
-      vehicle.setPassenger(teleportee);
+      vehicle.setPassenger(toTeleport);
     }
   }
 }
