@@ -188,7 +188,9 @@ public class Message {
      * @return this Builder
      */
     public Builder appendNewLine() {
-      return append(System.getProperty("line.separator"));
+      // Apparently MC requires '\n' only, regardless of the OS it is running on,
+      // see issues #157 and #61.
+      return append("\n");
     }
 
     /**
