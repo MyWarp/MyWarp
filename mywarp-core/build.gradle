@@ -3,7 +3,7 @@ repositories {
 }
 
 dependencies {
-    compile "org.jooq:jooq:3.9.3"
+    compile "org.jooq:jooq:3.9.5"
     compile "org.flywaydb:flyway-core:4.2.0"
     // Bukkit 1.7.10 only bundles 2.3
     compile "commons-lang:commons-lang:2.3"
