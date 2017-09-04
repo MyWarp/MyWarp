@@ -50,6 +50,8 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+
 /**
  * Displays markers for warps using <a href="https://github.com/webbukkit/dynmap">dynmap</a>.
  *
@@ -118,7 +120,9 @@ public class DynmapMarker {
    */
   public void addMarker(Iterable<Warp> warps) {
     for (Warp warp : warps) {
-      createMarker(warp);
+      if (filter.test(warp)) {
+        createMarker(warp);
+      }
     }
   }
 
@@ -277,6 +281,7 @@ public class DynmapMarker {
    * @return the {@code Marker}
    * @throws IllegalStateException if Dynmap fails to create the {@code Marker}
    */
+  @Nullable
   private Marker createMarker(Warp warp) {
     Optional<LocalWorld> worldOptional = game.getWorld(warp.getWorldIdentifier());
     if (!worldOptional.isPresent()) {
