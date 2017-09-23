@@ -45,6 +45,10 @@ public final class WarpUtils {
    * @return the average number of visits per day
    */
   public static double visitsPerDay(Warp warp) {
-    return warp.getVisits() / Duration.between(warp.getCreationDate(), Instant.now()).toDays();
+    long days = Duration.between(warp.getCreationDate(), Instant.now()).toDays();
+    if (days < 1) {
+      days = 1;
+    }
+    return warp.getVisits() / days;
   }
 }
