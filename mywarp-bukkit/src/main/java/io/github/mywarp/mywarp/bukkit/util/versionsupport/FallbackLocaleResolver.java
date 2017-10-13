@@ -19,21 +19,22 @@
 
 package io.github.mywarp.mywarp.bukkit.util.versionsupport;
 
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Horse;
+import org.bukkit.entity.Player;
 
-import java.util.function.Predicate;
+import java.util.Locale;
+import java.util.Optional;
 
 /**
- * Checks whether a given entity is any variant of a horse and is tamed.
+ * Fallback locale resolver that always returns an empty Optional.
  */
-public class TamedHorseChecker implements Predicate<Entity>, VersionSupportable {
+class FallbackLocaleResolver implements LocaleResolver {
 
-  TamedHorseChecker() {
+  FallbackLocaleResolver() {
   }
 
   @Override
-  public boolean test(Entity entity) {
-    return entity instanceof Horse && ((Horse) entity).isTamed();
+  public Optional<Locale> resolve(Player player) {
+    return Optional.empty();
   }
+
 }

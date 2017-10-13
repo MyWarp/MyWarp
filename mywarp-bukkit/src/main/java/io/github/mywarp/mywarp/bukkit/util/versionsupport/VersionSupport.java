@@ -19,44 +19,69 @@
 
 package io.github.mywarp.mywarp.bukkit.util.versionsupport;
 
-import com.google.common.collect.ClassToInstanceMap;
-import com.google.common.collect.MutableClassToInstanceMap;
+import io.github.mywarp.mywarp.util.MyWarpLogger;
+
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.slf4j.Logger;
+
+import java.util.function.Predicate;
+
+import javax.annotation.Nullable;
 
 /**
  * Handles functionality that requires different implementations for different versions if Minecraft or Bukkit.
  */
 public final class VersionSupport {
 
-  private static final ClassToInstanceMap<Object> map = MutableClassToInstanceMap.create();
+  private static final Logger log = MyWarpLogger.getLogger(VersionSupport.class);
+
+  @Nullable
+  private static LocaleResolver localeResolver;
+  @Nullable
+  private static Predicate<Entity> horseChecker;
 
   /**
-   * Gets an instance of the given class if this class is covered by version support. Throws an exception otherwise.
+   * Gets a {@link LocaleResolver} implementation.
    *
-   * <p>Multiple class for the same class will always return the same instance. On the first call, an instance of the
-   * implementation appropriate for the Bukkit and MC version currently running is created and cached.</p>
-   *
-   * @param clazz the class of the requested instance
-   * @param <S>   the type of the requested instance
-   * @return an appropriate instance of {@code clazz}
-   * @throws IllegalArgumentException if {@code clazz} is not covered by version support
+   * @param implClass the class that implements {@link Player} at runtime
+   * @return a working locale resolver
    */
-  public static <S extends VersionSupportable> S get(Class<S> clazz) {
-    if (!map.containsKey(clazz)) {
-
-      if (clazz.equals(TamedHorseChecker.class)) {
-        TamedHorseChecker checker;
+  public static LocaleResolver getLocaleResolver(Class<? extends Player> implClass) {
+    if (localeResolver == null) {
+      try {
+        localeResolver = SpigotLocaleResolver.create();
+        log.debug("Using SpigotLocaleResolver.");
+      } catch (NoSuchMethodException e1) {
         try {
-          checker = TamedHorseChecker112.create();
-        } catch (ClassNotFoundException ex) {
-          checker = new TamedHorseChecker();
+          localeResolver = CraftBukkitLocaleResolver.create(implClass);
+          log.debug("Using CraftBukkitLocaleResolver.");
+        } catch (ReflectiveOperationException e2) {
+          localeResolver = new FallbackLocaleResolver();
+          log.warn("Unable to create the LocaleResolver appropriate for this Bukkit implementation."
+                   + "Player locales WILL NOT be resolved!");
         }
-        map.putInstance(TamedHorseChecker.class, checker);
-
-      } else {
-        throw new IllegalArgumentException("'" + clazz + "' is not covered by VersionSupport.");
       }
     }
-    return map.getInstance(clazz);
+    return localeResolver;
+  }
+
+  /**
+   * Gets a predicate to check if a horse is tamed.
+   *
+   * @return a working checker
+   */
+  public static Predicate<Entity> getTamedHorseChecker() {
+    if (horseChecker == null) {
+      try {
+        horseChecker = TamedHorseChecker112.create();
+        log.debug("Using TamedHorseChecker112.");
+      } catch (ClassNotFoundException e) {
+        horseChecker = new LegacyTamedHorseChecker();
+        log.debug("Using LegacyTamedHorseChecker.");
+      }
+    }
+    return horseChecker;
   }
 
 }

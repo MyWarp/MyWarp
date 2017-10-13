@@ -17,7 +17,7 @@
  * along with MyWarp. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.mywarp.mywarp.bukkit.util;
+package io.github.mywarp.mywarp.bukkit.util.versionsupport;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -39,8 +39,8 @@ class MinecraftLocaleParser {
   /**
    * Parses the given String into a Locale.
    *
-   * <p>Returns an Optional with the resulting Locale or Optional.absent() if the
-   * String cannot be parsed into a Locale.</p>
+   * <p>Returns an Optional with the resulting Locale or Optional.absent() if the String cannot be parsed into a
+   * Locale.</p>
    *
    * @param rawLocale the String to convert
    * @return an Optional with the parsed Locale
@@ -61,8 +61,7 @@ class MinecraftLocaleParser {
   /**
    * Converts a String to a Locale.
    *
-   * <p>This method takes the string format of a locale and creates the
-   * locale object from it.</p>
+   * <p>This method takes the string format of a locale and creates the locale object from it.</p>
    *
    * <pre>
    *   toLocaleCaseInsensitive("")           = new Locale("", "")
@@ -71,14 +70,11 @@ class MinecraftLocaleParser {
    *   toLocaleCaseInsensitive("en_GB_xxx")  = new Locale("en", "GB", "xyz")   (#)
    * </pre>
    *
-   * <p>(#) The behaviour of the JDK variant constructor changed between JDK1.3 and JDK1.4.
-   * In JDK1.3, the constructor upper cases the variant, in JDK1.4, it doesn't.
-   * Thus, the result from getVariant() may vary depending on your JDK.</p>
+   * <p>(#) The behaviour of the JDK variant constructor changed between JDK1.3 and JDK1.4. In JDK1.3, the constructor
+   * upper cases the variant, in JDK1.4, it doesn't. Thus, the result from getVariant() may vary depending on your
+   * JDK.</p>
    *
-   * <p>This method validates the input:
-   * The length must be correct.
-   * The separator must be an underscore.
-   * </p>
+   * <p>This method validates the input: The length must be correct. The separator must be an underscore. </p>
    *
    * <p>It does <b>not</b> validate whether language and country code are lower or uppercase.</p>
    *

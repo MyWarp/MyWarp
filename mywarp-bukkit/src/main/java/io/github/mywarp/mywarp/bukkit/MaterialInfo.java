@@ -32,51 +32,51 @@ class MaterialInfo {
   //   For reference, all Materials added since 1.7 (taken directly from Spigot's source code):
   //
   //   ## 1.8
-  //   SLIME_BLOCK(165),
-  //   BARRIER(166),
-  //   IRON_TRAPDOOR(167,TrapDoor.class),
-  //   PRISMARINE(168),
-  //   SEA_LANTERN(169),
-  //   STANDING_BANNER(176, Banner.class),
-  //   WALL_BANNER(177, Banner.class),
-  //   DAYLIGHT_DETECTOR_INVERTED(178),
-  //   RED_SANDSTONE(179),
-  //   RED_SANDSTONE_STAIRS(180, Stairs.class),
-  //   DOUBLE_STONE_SLAB2(181),
-  //   STONE_SLAB2(182),
-  //   SPRUCE_FENCE_GATE(183),
-  //   BIRCH_FENCE_GATE(184),
-  //   JUNGLE_FENCE_GATE(185),
-  //   DARK_OAK_FENCE_GATE(186),
-  //   ACACIA_FENCE_GATE(187),
-  //   SPRUCE_FENCE(188),
-  //   BIRCH_FENCE(189),
-  //   JUNGLE_FENCE(190),
-  //   DARK_OAK_FENCE(191),
-  //   ACACIA_FENCE(192),
-  //   SPRUCE_DOOR(193),
-  //   BIRCH_DOOR(194),
-  //   JUNGLE_DOOR(195),
-  //   ACACIA_DOOR(196),
-  //   DARK_OAK_DOOR(197),
+  //   SLIME_BLOCK(165)
+  //   BARRIER(166)
+  //   IRON_TRAPDOOR(167,TrapDoor.class)
+  //   PRISMARINE(168)
+  //   SEA_LANTERN(169)
+  //   STANDING_BANNER(176, Banner.class)
+  //   WALL_BANNER(177, Banner.class)
+  //   DAYLIGHT_DETECTOR_INVERTED(178)
+  //   RED_SANDSTONE(179)
+  //   RED_SANDSTONE_STAIRS(180, Stairs.class)
+  //   DOUBLE_STONE_SLAB2(181)
+  //   STONE_SLAB2(182)
+  //   SPRUCE_FENCE_GATE(183)
+  //   BIRCH_FENCE_GATE(184)
+  //   JUNGLE_FENCE_GATE(185)
+  //   DARK_OAK_FENCE_GATE(186)
+  //   ACACIA_FENCE_GATE(187)
+  //   SPRUCE_FENCE(188)
+  //   BIRCH_FENCE(189)
+  //   JUNGLE_FENCE(190)
+  //   DARK_OAK_FENCE(191)
+  //   ACACIA_FENCE(192)
+  //   SPRUCE_DOOR(193)
+  //   BIRCH_DOOR(194)
+  //   JUNGLE_DOOR(195)
+  //   ACACIA_DOOR(196)
+  //   DARK_OAK_DOOR(197)
   //
   //   ## 1.9
-  //   END_ROD(198),
-  //   CHORUS_PLANT(199),
-  //   CHORUS_FLOWER(200),
-  //   PURPUR_BLOCK(201),
-  //   PURPUR_PILLAR(202),
-  //   PURPUR_STAIRS(203, Stairs.class),
-  //   PURPUR_DOUBLE_SLAB(204),
-  //   PURPUR_SLAB(205),
-  //   END_BRICKS(206),
-  //   BEETROOT_BLOCK(207, Crops.class),
-  //   GRASS_PATH(208),
-  //   END_GATEWAY(209),
-  //   COMMAND_REPEATING(210),
-  //   COMMAND_CHAIN(211),
-  //   FROSTED_ICE(212),
-  //   STRUCTURE_BLOCK(255),
+  //   END_ROD(198)
+  //   CHORUS_PLANT(199)
+  //   CHORUS_FLOWER(200)
+  //   PURPUR_BLOCK(201)
+  //   PURPUR_PILLAR(202)
+  //   PURPUR_STAIRS(203, Stairs.class)
+  //   PURPUR_DOUBLE_SLAB(204)
+  //   PURPUR_SLAB(205)
+  //   END_BRICKS(206)
+  //   BEETROOT_BLOCK(207, Crops.class)
+  //   GRASS_PATH(208)
+  //   END_GATEWAY(209)
+  //   COMMAND_REPEATING(210)
+  //   COMMAND_CHAIN(211)
+  //   FROSTED_ICE(212)
+  //   STRUCTURE_BLOCK(255)
   //
   //   ## 1.10
   //   MAGMA(213),
@@ -103,6 +103,27 @@ class MaterialInfo {
   //   GREEN_SHULKER_BOX(232, 1)
   //   RED_SHULKER_BOX(233, 1)
   //   BLACK_SHULKER_BOX(234, 1)
+  //
+  //   ## 1.12
+  //   WHITE_GLAZED_TERRACOTTA(235)
+  //   ORANGE_GLAZED_TERRACOTTA(236)
+  //   MAGENTA_GLAZED_TERRACOTTA(237)
+  //   LIGHT_BLUE_GLAZED_TERRACOTTA(238)
+  //   YELLOW_GLAZED_TERRACOTTA(239)
+  //   LIME_GLAZED_TERRACOTTA(240)
+  //   PINK_GLAZED_TERRACOTTA(241)
+  //   GRAY_GLAZED_TERRACOTTA(242)
+  //   SILVER_GLAZED_TERRACOTTA(243)
+  //   CYAN_GLAZED_TERRACOTTA(244)
+  //   PURPLE_GLAZED_TERRACOTTA(245)
+  //   BLUE_GLAZED_TERRACOTTA(246)
+  //   BROWN_GLAZED_TERRACOTTA(247)
+  //   GREEN_GLAZED_TERRACOTTA(248)
+  //   RED_GLAZED_TERRACOTTA(249)
+  //   BLACK_GLAZED_TERRACOTTA(250)
+  //   CONCRETE(251)
+  //   CONCRETE_POWDER(252)
+  //   STRUCTURE_BLOCK(255)
 
   /**
    * Returns whether a regular entity (without any status effects) can stand <i>within</i> a block of the given material

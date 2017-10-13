@@ -19,26 +19,21 @@
 
 package io.github.mywarp.mywarp.bukkit.util.versionsupport;
 
-import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Horse;
+
+import java.util.function.Predicate;
 
 /**
- * Checks whether a given entity is any variant of a horse and is tamed when running on 1.12 and newer.
+ * Checks whether a given entity is any variant of a horse and is tamed when running on versions older than 1.12.
  */
-class TamedHorseChecker112 extends LegacyTamedHorseChecker {
+class LegacyTamedHorseChecker implements Predicate<Entity>, VersionSupportable {
 
-  private TamedHorseChecker112() {
-  }
-
-  static LegacyTamedHorseChecker create() throws ClassNotFoundException {
-    // this will throw an ClassNotFoundException on anything lower than 1.12
-    // because 'org.bukkit.entity.AbstractHorse' does not exist before 1.12
-    Class.forName("org.bukkit.entity.AbstractHorse");
-    return new TamedHorseChecker112();
+  LegacyTamedHorseChecker() {
   }
 
   @Override
   public boolean test(Entity entity) {
-    return entity instanceof AbstractHorse && ((AbstractHorse) entity).isTamed();
+    return entity instanceof Horse && ((Horse) entity).isTamed();
   }
 }

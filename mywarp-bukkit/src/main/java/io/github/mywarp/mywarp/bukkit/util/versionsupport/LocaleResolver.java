@@ -19,26 +19,22 @@
 
 package io.github.mywarp.mywarp.bukkit.util.versionsupport;
 
-import org.bukkit.entity.AbstractHorse;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+
+import java.util.Locale;
+import java.util.Optional;
 
 /**
- * Checks whether a given entity is any variant of a horse and is tamed when running on 1.12 and newer.
+ * Resolves the Locale of individual players.
  */
-class TamedHorseChecker112 extends LegacyTamedHorseChecker {
+public interface LocaleResolver extends VersionSupportable {
 
-  private TamedHorseChecker112() {
-  }
+  /**
+   * Resolves the locale of the given Player.
+   *
+   * @param player the Player
+   * @return the locale of this Player
+   */
+  Optional<Locale> resolve(Player player);
 
-  static LegacyTamedHorseChecker create() throws ClassNotFoundException {
-    // this will throw an ClassNotFoundException on anything lower than 1.12
-    // because 'org.bukkit.entity.AbstractHorse' does not exist before 1.12
-    Class.forName("org.bukkit.entity.AbstractHorse");
-    return new TamedHorseChecker112();
-  }
-
-  @Override
-  public boolean test(Entity entity) {
-    return entity instanceof AbstractHorse && ((AbstractHorse) entity).isTamed();
-  }
 }

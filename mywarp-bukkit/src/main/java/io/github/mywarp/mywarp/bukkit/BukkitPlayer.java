@@ -22,33 +22,28 @@ package io.github.mywarp.mywarp.bukkit;
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
 
-import io.github.mywarp.mywarp.bukkit.util.ReflectiveLocaleResolver;
 import io.github.mywarp.mywarp.bukkit.util.conversation.AcceptancePromptFactory;
 import io.github.mywarp.mywarp.bukkit.util.conversation.WelcomeEditorFactory;
 import io.github.mywarp.mywarp.bukkit.util.permission.group.GroupResolver;
-import io.github.mywarp.mywarp.bukkit.util.versionsupport.TamedHorseChecker;
 import io.github.mywarp.mywarp.bukkit.util.versionsupport.VersionSupport;
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.Settings;
-import io.github.mywarp.mywarp.util.MyWarpLogger;
 import io.github.mywarp.mywarp.warp.Warp;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.slf4j.Logger;
 
 import java.util.Locale;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
  * A reference to a Player in Bukkit.
  */
 public class BukkitPlayer extends BukkitActor implements LocalPlayer {
-
-  private static final Logger log = MyWarpLogger.getLogger(BukkitPlayer.class);
 
   private final AcceptancePromptFactory acceptancePromptFactory;
   private final WelcomeEditorFactory welcomeEditorFactory;
@@ -84,12 +79,10 @@ public class BukkitPlayer extends BukkitActor implements LocalPlayer {
   @Override
   public Locale getLocale() {
     Locale locale = super.getLocale();
+
     if (settings.isLocalizationPerPlayer()) {
-      try {
-        locale = ReflectiveLocaleResolver.INSTANCE.resolve(getWrapped());
-      } catch (ReflectiveLocaleResolver.UnresolvableLocaleException e) {
-        log.warn(String.format("Failed to resolve the Locale for %s, defaulting to %s.", getName(), locale), e);
-      }
+      Optional<Locale> optional = VersionSupport.getLocaleResolver(getWrapped().getClass()).resolve(getWrapped());
+      return optional.orElse(locale);
     }
     return locale;
   }
@@ -155,7 +148,7 @@ public class BukkitPlayer extends BukkitActor implements LocalPlayer {
     Entity vehicle = null;
 
     // handle vehicles
-    if (teleportTamedHorses && VersionSupport.get(TamedHorseChecker.class).test(toTeleport.getVehicle())) {
+    if (teleportTamedHorses && VersionSupport.getTamedHorseChecker().test(toTeleport.getVehicle())) {
       vehicle = toTeleport.getVehicle();
     }
     toTeleport.leaveVehicle();
