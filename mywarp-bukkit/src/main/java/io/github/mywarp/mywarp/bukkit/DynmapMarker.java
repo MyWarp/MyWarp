@@ -226,7 +226,9 @@ public class DynmapMarker {
       ret =
           api.createMarkerSet(DEFAULT_SET_ID, settings.getDynmapLayerDisplayName(), ImmutableSet.of(getOrCreateIcon()),
                               false);
-      Preconditions.checkState(ret != null, "Failed to create MarkerSet '%s', Dynmap returns null.", DEFAULT_SET_ID);
+      if (ret == null) {
+        throw new IllegalStateException("Failed to create MarkerSet '" + DEFAULT_SET_ID + "', Dynmap returns null.");
+      }
 
       ret.setMarkerSetLabel(settings.getDynmapLayerDisplayName());
       ret.setLayerPriority(settings.getDynmapLayerPriority());
