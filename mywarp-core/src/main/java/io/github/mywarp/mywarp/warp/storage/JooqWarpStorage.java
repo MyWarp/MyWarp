@@ -37,6 +37,7 @@ import io.github.mywarp.mywarp.warp.Warp.Type;
 import io.github.mywarp.mywarp.warp.WarpBuilder;
 import io.github.mywarp.mywarp.warp.storage.generated.tables.Player;
 
+import org.jooq.Allow;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.Insert;
@@ -44,7 +45,9 @@ import org.jooq.InsertOnDuplicateStep;
 import org.jooq.InsertSetMoreStep;
 import org.jooq.Record;
 import org.jooq.Record14;
+import org.jooq.Require;
 import org.jooq.Result;
+import org.jooq.SQLDialect;
 import org.jooq.Table;
 import org.jooq.TableField;
 import org.jooq.impl.DSL;
@@ -61,12 +64,11 @@ import javax.annotation.Nullable;
 
 /**
  * A storage implementation that stores warps in a relational database.
- *
- * <p>This implementation is guaranteed to work with SQLite, MySQL, MariaDB and H2, but might also work on other
- * relational database management systems.</p>
  */
 @SuppressWarnings("checkstyle:indentation")
-class RelationalWarpStorage implements WarpStorage {
+@Allow({SQLDialect.SQLITE, SQLDialect.H2, SQLDialect.MYSQL, SQLDialect.MARIADB})
+@Require({SQLDialect.SQLITE, SQLDialect.H2, SQLDialect.MYSQL, SQLDialect.MARIADB})
+class JooqWarpStorage implements WarpStorage {
 
   private final Configuration configuration;
 
@@ -75,7 +77,7 @@ class RelationalWarpStorage implements WarpStorage {
    *
    * @param configuration the Configuration
    */
-  RelationalWarpStorage(Configuration configuration) {
+  JooqWarpStorage(Configuration configuration) {
     this.configuration = configuration;
   }
 
@@ -440,9 +442,9 @@ class RelationalWarpStorage implements WarpStorage {
    */
   private <R extends Record, T> Insert<R> insertOrIgnore(Configuration configuration, Table<R> table,
                                                          TableField<R, T> uniqueField, T value) {
-    // REVIEW With JJOQ 3.7 the native implementation InsertOnDuplicateStep#onDuplicateKeyIgnore() should be usable.
+    // REVIEW With JOOQ 3.7 the native implementation InsertOnDuplicateStep#onDuplicateKeyIgnore() should be usable.
     // For some reason it fails with string values (at least on H2), rendering it unusable.
-    // For now, this workaround is stil needed.
+    // For now, this workaround is still needed.
     // @formatter:off
     return create(configuration)
         .insertInto(table)

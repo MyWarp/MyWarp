@@ -19,39 +19,29 @@
 
 package io.github.mywarp.mywarp.command.parametric.provider.exception;
 
-import com.google.common.collect.ImmutableList;
-
-import io.github.mywarp.mywarp.warp.Warp;
-
-import org.apache.commons.lang.text.StrBuilder;
-
 /**
- * Thrown when a given input does not match an existing {@link Warp}.
+ * Thrown when a given input is not a valid data service configuration.
+ *
+ * @see io.github.mywarp.mywarp.platform.Platform#createDataService(String)
+ * @see io.github.mywarp.mywarp.platform.InvalidFormatException
  */
-public class NoSuchWarpException extends NonMatchingInputException {
+public class InvalidDataServiceConfigException extends NonMatchingInputException {
 
-  private final ImmutableList<Warp> matches;
+  private final String expectedFormat;
 
   /**
    * Creates an instance.
    *
-   * @param input   the input
-   * @param matches the possible matches of the input
+   * @param input          the invalid input
+   * @param expectedFormat the expected format
    */
-  public NoSuchWarpException(String input, ImmutableList<Warp> matches) {
+  public InvalidDataServiceConfigException(String input, String expectedFormat) {
     super(input);
-    this.matches = matches;
+    this.expectedFormat = expectedFormat;
   }
 
   @Override
   public String getLocalizedMessage() {
-    StrBuilder builder = new StrBuilder();
-    builder.append(msg.getString("exception.no-such-warp", getInput()));
-
-    if (!matches.isEmpty()) {
-      builder.appendNewLine();
-      builder.append(msg.getString("exception.no-such-warp.suggestion", matches.get(1).getName()));
-    }
-    return builder.toString();
+    return msg.getString("exception.invalid-data-service-config", expectedFormat, getInput());
   }
 }

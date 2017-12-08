@@ -19,17 +19,12 @@
 
 package io.github.mywarp.mywarp.command.parametric.provider.exception;
 
-import io.github.mywarp.mywarp.command.CommandHandler;
-import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
-
 /**
  * Thrown when a given input does not match a known player.
  * <p/>
  * Typically this is caused by a malformed query or unavailable UUID servers.
  */
 public class NoSuchPlayerIdentifierException extends NonMatchingInputException {
-
-  private static final DynamicMessages msg = new DynamicMessages(CommandHandler.RESOURCE_BUNDLE_NAME);
 
   /**
    * Creates an instance.

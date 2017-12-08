@@ -35,6 +35,7 @@ import io.github.mywarp.mywarp.command.CommandHandler;
 import io.github.mywarp.mywarp.command.parametric.namespace.IllegalCommandSenderException;
 import io.github.mywarp.mywarp.command.util.NoSuchWorldException;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
+import io.github.mywarp.mywarp.warp.storage.StorageInitializationException;
 
 import javax.annotation.Nullable;
 
@@ -147,5 +148,16 @@ public class ExceptionConverter extends ExceptionConverterHelper {
   @ExceptionMatch
   public void convert(NoSuchWorldException e) throws CommandException {
     throw new CommandException(msg.getString("exception.no-such-world", e.getWorldIdentifier()), e);
+  }
+
+  /**
+   * Converts a StorageInitializationException to a CommandException.
+   *
+   * @param e the StorageInitializationException
+   * @throws CommandException the converted exception
+   */
+  @ExceptionMatch
+  public void convert(StorageInitializationException e) throws CommandException {
+    throw new CommandException(msg.getString("import.no-connection", e.getLocalizedMessage()));
   }
 }

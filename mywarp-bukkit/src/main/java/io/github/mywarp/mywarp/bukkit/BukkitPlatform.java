@@ -25,15 +25,16 @@ import com.google.common.collect.MutableClassToInstanceMap;
 import io.github.mywarp.mywarp.bukkit.settings.BukkitSettings;
 import io.github.mywarp.mywarp.bukkit.settings.DurationBundle;
 import io.github.mywarp.mywarp.bukkit.settings.FeeBundle;
+import io.github.mywarp.mywarp.bukkit.util.jdbc.JdbcConfiguration;
 import io.github.mywarp.mywarp.bukkit.util.permission.BundleProvider;
+import io.github.mywarp.mywarp.platform.InvalidFormatException;
 import io.github.mywarp.mywarp.platform.Platform;
 import io.github.mywarp.mywarp.platform.capability.EconomyCapability;
 import io.github.mywarp.mywarp.platform.capability.LimitCapability;
 import io.github.mywarp.mywarp.platform.capability.PositionValidationCapability;
 import io.github.mywarp.mywarp.platform.capability.TimerCapability;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
-import io.github.mywarp.mywarp.warp.storage.ConnectionConfiguration;
-import io.github.mywarp.mywarp.warp.storage.RelationalDataService;
+import io.github.mywarp.mywarp.warp.storage.SqlDataService;
 
 import net.milkbowl.vault.economy.Economy;
 
@@ -135,7 +136,8 @@ public class BukkitPlatform implements Platform {
     //TimerCapability
     if (capabilityClass.isAssignableFrom(TimerCapability.class) && settings.isTimersEnabled()) {
       BundleProvider<DurationBundle>
-          durationProvider = new BundleProvider<>(settings.getTimersConfiguredDurationBundles(), settings
+          durationProvider =
+          new BundleProvider<>(settings.getTimersConfiguredDurationBundles(), settings
 
               .getTimersDefaultDurationBundle());
       TimerCapability timerCapability = new BukkitTimerCapability(plugin, durationProvider, settings);
@@ -157,13 +159,8 @@ public class BukkitPlatform implements Platform {
   }
 
   @Override
-  public RelationalDataService createDataService(ConnectionConfiguration configuration) {
-    RelationalDataService ret = new SingleConnectionDataService(configuration);
-
-    //add weak reference so it can be closed on shutdown if not done by the caller
-    plugin.registerClosable(ret);
-
-    return ret;
+  public SqlDataService createDataService(String config) throws InvalidFormatException {
+    return plugin.createDataService(JdbcConfiguration.fromString(config));
   }
 
   @Override

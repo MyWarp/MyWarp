@@ -22,8 +22,7 @@ package io.github.mywarp.mywarp.platform;
 import io.github.mywarp.mywarp.platform.capability.EconomyCapability;
 import io.github.mywarp.mywarp.platform.capability.LimitCapability;
 import io.github.mywarp.mywarp.platform.capability.TimerCapability;
-import io.github.mywarp.mywarp.warp.storage.ConnectionConfiguration;
-import io.github.mywarp.mywarp.warp.storage.RelationalDataService;
+import io.github.mywarp.mywarp.warp.storage.SqlDataService;
 
 import java.io.File;
 import java.util.Optional;
@@ -79,12 +78,20 @@ public interface Platform {
   <C> Optional<C> getCapability(Class<C> capabilityClass);
 
   /**
-   * Creates a {@link RelationalDataService} as described by the given {@code config}.
+   * Creates a {@link SqlDataService} as described by the given {@code config}.
    *
-   * @param configuration the configuration
-   * @return the {@code RelationalDataService}
+   * <p>The configuration is given as a String. This allows implementations to decide, how the String should be
+   * formatted as implementations might need different options or provide different bundled configurations (such as
+   * aliases).</p>
+   *
+   * <p>If the given String is invalid, a {@link InvalidFormatException} may be thrown. This exception allows callers
+   * to get the expected format in human readable form.</p>
+   *
+   * @param config the configuration string
+   * @return the {@code SqlDataService}
+   * @throws InvalidFormatException if the given String has an invalid format
    */
-  RelationalDataService createDataService(ConnectionConfiguration configuration);
+  SqlDataService createDataService(String config) throws InvalidFormatException;
 
   /**
    * Called when MyWarp is reloaded. By this state, Warps are no longer available; any services that depend on

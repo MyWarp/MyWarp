@@ -21,30 +21,33 @@ package io.github.mywarp.mywarp.command.parametric.provider;
 
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
-import com.sk89q.intake.parametric.ProvisionException;
 
-import io.github.mywarp.mywarp.warp.storage.ConnectionConfiguration;
+import io.github.mywarp.mywarp.command.parametric.provider.exception.InvalidDataServiceConfigException;
+import io.github.mywarp.mywarp.platform.InvalidFormatException;
+import io.github.mywarp.mywarp.platform.Platform;
+import io.github.mywarp.mywarp.warp.storage.SqlDataService;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
- * Provides {@link ConnectionConfiguration} instances.
+ * Provides {@link SqlDataService} instances.
  */
-class ConnectionConfigurationProvider extends NonSuggestiveProvider<ConnectionConfiguration> {
+class DataServiceProvider extends NonSuggestiveProvider<SqlDataService> {
+
+  private final Platform platform;
+
+  DataServiceProvider(Platform platform) {
+    this.platform = platform;
+  }
 
   @Override
-  public ConnectionConfiguration get(CommandArgs arguments, List<? extends Annotation> modifiers)
-      throws ArgumentException, ProvisionException {
-    ConnectionConfiguration config = new ConnectionConfiguration(arguments.next());
-
-    if (config.supportsSchemas()) {
-      config.setSchema(arguments.next());
+  public SqlDataService get(CommandArgs arguments, List<? extends Annotation> modifiers) throws ArgumentException {
+    String config = arguments.next();
+    try {
+      return platform.createDataService(config);
+    } catch (InvalidFormatException e) {
+      throw new InvalidDataServiceConfigException(config, e.getExpectedFormat());
     }
-    if (config.supportsAuthentication()) {
-      config.setUser(arguments.next());
-      config.setPassword(arguments.next());
-    }
-    return config;
   }
 }

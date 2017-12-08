@@ -19,7 +19,9 @@
 
 package io.github.mywarp.mywarp.warp.storage;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static org.jooq.SQLDialect.MARIADB;
+import static org.jooq.SQLDialect.MYSQL;
+import static org.jooq.SQLDialect.SQLITE;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.name;
 import static org.jooq.impl.DSL.table;
@@ -36,16 +38,21 @@ import io.github.mywarp.mywarp.util.MyWarpLogger;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpBuilder;
 
+import org.jooq.Allow;
 import org.jooq.Configuration;
 import org.jooq.Name;
 import org.jooq.Record13;
+import org.jooq.Require;
 import org.jooq.Result;
 import org.jooq.SQLDialect;
 import org.jooq.conf.Settings;
 import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultConfiguration;
+import org.jooq.tools.jdbc.JDBCUtils;
 import org.slf4j.Logger;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -54,6 +61,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
 import javax.sql.DataSource;
 
 /**
@@ -62,38 +70,65 @@ import javax.sql.DataSource;
  * <p>The legacy database stores player and world names as strings, instead of using unique IDs. Calling {@link
  * #getWarps()} will convert both. Player names are acquired by calling the configured {@link PlayerNameResolver}, witch
  * may result in a blocking call.</p>
+ *
+ * <p>Call {@link #from(DataSource, String, String)} to create instances.</p>
  */
 @SuppressWarnings("checkstyle:indentation")
-public class LegacyWarpSource implements WarpSource {
+@Allow({SQLITE, MYSQL, MARIADB})
+@Require({SQLITE, MYSQL, MARIADB})
+public final class LegacyWarpSource implements WarpSource {
 
   private static final Logger log = MyWarpLogger.getLogger(LegacyWarpSource.class);
-  private static final ImmutableSet<SQLDialect>
-      SUPPORTED_DIALECTS =
-      ImmutableSet.of(SQLDialect.MYSQL, SQLDialect.SQLITE);
+  private static final ImmutableSet<SQLDialect> SUPPORTED_DIALECTS = ImmutableSet.of(MYSQL, MARIADB, SQLITE);
 
   private final Splitter splitter = Splitter.on(',').omitEmptyStrings().trimResults();
-  private final ImmutableMap<String, UUID> worldsSnapshot;
   private final Configuration configuration;
   private final Name tableName;
-  private final PlayerNameResolver playerNameResolver;
+  private final PlayerNameResolver playerResolver;
+  private final ImmutableMap<String, UUID> worldMap;
+
+  private LegacyWarpSource(Configuration configuration, Name name, PlayerNameResolver resolver,
+                           Map<String, UUID> worldMap) {
+    this.configuration = configuration;
+    this.tableName = name;
+    this.playerResolver = resolver;
+    this.worldMap = ImmutableMap.copyOf(worldMap);
+  }
 
   /**
-   * Creates an instance from the given DataSource with the given configuration.
+   * Creates a builder for creating a new LegacyWarpSource instance.
    *
-   * @param dataSource         the DataSource that connects to the database to use
-   * @param config             the configuration to use for connection
-   * @param tableName          the name of the MySQL table to use
-   * @param playerNameResolver the PlayerNameResolver to create Profiles on import
-   * @param worldsSnapshot     a snapshot of existing worlds used to convert the positions of imported warps
+   * <p>This instance will import warps from the given {@code dataSource}, using the given {@code tableName} and, if
+   * not null, {@code databaseName}.</p>
+   *
+   * @param dataSource   the DataSource that provides a connection to the DBMS
+   * @param tableName    the name of the DB table that contains the warps
+   * @param databaseName the name of the database (somtimes also called schema that contains the table. May be {@code
+   *                     null} if the DBMS does not support multiple databases.
+   * @return a builder step
+   * @throws StorageInitializationException if the given dataSource does not connect to a DBMS or the DBMS is not
+   *                                        supported
    */
-  public LegacyWarpSource(DataSource dataSource, ConnectionConfiguration config, String tableName,
-                          PlayerNameResolver playerNameResolver, Map<String, UUID> worldsSnapshot) {
-    checkArgument(SUPPORTED_DIALECTS.contains(config.getDialect()));
+  public static LegacyWarpImporterBuilder from(DataSource dataSource, String tableName, @Nullable String databaseName)
+      throws StorageInitializationException {
+    return from(dataSource, databaseName != null ? name(databaseName, tableName) : name(tableName));
+  }
 
-    this.configuration = new DefaultConfiguration().set(config.getDialect()).set(new Settings()).set(dataSource);
-    this.tableName = config.supportsSchemas() ? name(config.getSchema(), tableName) : name(tableName);
-    this.playerNameResolver = playerNameResolver;
-    this.worldsSnapshot = ImmutableMap.copyOf(worldsSnapshot);
+  private static LegacyWarpImporterBuilder from(DataSource source, Name tableName)
+      throws StorageInitializationException {
+    SQLDialect dialect;
+    try (Connection conn = source.getConnection()) {
+      dialect = JDBCUtils.dialect(conn);
+
+      if (!SUPPORTED_DIALECTS.contains(dialect)) {
+        throw new StorageInitializationException(String.format("%s is not supported!", dialect.getName()));
+      }
+
+    } catch (SQLException e) {
+      throw new StorageInitializationException("Failed to connect due to an SQLException.", e);
+    }
+    return new LegacyWarpImporterBuilder(new DefaultConfiguration().set(dialect).set(new Settings()).set(source),
+                                         tableName);
   }
 
   @Override
@@ -120,20 +155,20 @@ public class LegacyWarpSource implements WarpSource {
     // @formatter:on
     log.info("{} entries found.", results.size());
 
-    Set<String> playerNames = new HashSet<String>(results.getValues("creator", String.class));
+    Set<String> playerNames = new HashSet<>(results.getValues("creator", String.class));
     for (String invitedPlayers : results.getValues("permissions", String.class)) {
       Iterables.addAll(playerNames, splitter.split(invitedPlayers));
     }
     log.info("Looking up unique IDs for {} unique players.", playerNames.size());
 
-    ImmutableMap<String, UUID> cache = playerNameResolver.getByName(playerNames);
+    ImmutableMap<String, UUID> cache = playerResolver.getByName(playerNames);
     log.info("{} unique IDs found.", cache.size());
 
     // the legacy database may contain player-names with a wrong case, so the lookup must be case insensitive
-    TreeMap<String, UUID> profileLookup = new TreeMap<String, UUID>(String.CASE_INSENSITIVE_ORDER);
+    TreeMap<String, UUID> profileLookup = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     profileLookup.putAll(cache);
 
-    List<Warp> ret = new ArrayList<Warp>(results.size());
+    List<Warp> ret = new ArrayList<>(results.size());
 
     for (Record13<String, String, Boolean, Double, Double, Double, Float, Float, String, Integer, String, String,
         String> r : results) {
@@ -153,7 +188,7 @@ public class LegacyWarpSource implements WarpSource {
       Vector2f rotation = new Vector2f(r.value8(), r.value7());
 
       String worldName = r.value9();
-      UUID worldId = worldsSnapshot.get(worldName);
+      UUID worldId = worldMap.get(worldName);
       if (worldId == null) {
         log.warn("For the world of '{}' ({}) no unique ID could be found. The warp will be ignored.", warpName,
                  worldName);
@@ -185,5 +220,32 @@ public class LegacyWarpSource implements WarpSource {
 
     log.info("{} warps exported from source.", ret.size());
     return ret;
+  }
+
+  /**
+   * Builder class for {@link LegacyWarpSource}s.
+   *
+   * @see LegacyWarpSource#from(DataSource, String, String)
+   */
+  public static class LegacyWarpImporterBuilder {
+
+    private final Configuration configuration;
+    private final Name tableName;
+
+    private LegacyWarpImporterBuilder(Configuration configuration, Name tableName) {
+      this.configuration = configuration;
+      this.tableName = tableName;
+    }
+
+    /**
+     * Creates a WarpSource that converts warps using the given {@code resolver} and {@code worldMap}.
+     *
+     * @param resolver the PlayerNameResolver to resolve player names found in legacy warps
+     * @param worldMap the map of existing worlds to resolve world names found in legacy warps
+     * @return a WarpSource of the old database
+     */
+    public WarpSource using(PlayerNameResolver resolver, Map<String, UUID> worldMap) {
+      return new LegacyWarpSource(configuration, tableName, resolver, worldMap);
+    }
   }
 }

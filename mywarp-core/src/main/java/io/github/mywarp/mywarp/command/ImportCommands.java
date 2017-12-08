@@ -20,27 +20,23 @@
 package io.github.mywarp.mywarp.command;
 
 import com.sk89q.intake.Command;
-import com.sk89q.intake.CommandException;
 import com.sk89q.intake.Require;
+import com.sk89q.intake.parametric.annotation.OptArg;
 
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalWorld;
-import io.github.mywarp.mywarp.platform.Platform;
 import io.github.mywarp.mywarp.platform.PlayerNameResolver;
 import io.github.mywarp.mywarp.util.Message;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
-import io.github.mywarp.mywarp.warp.storage.ConnectionConfiguration;
 import io.github.mywarp.mywarp.warp.storage.LegacyWarpSource;
-import io.github.mywarp.mywarp.warp.storage.RelationalDataService;
+import io.github.mywarp.mywarp.warp.storage.SqlDataService;
 import io.github.mywarp.mywarp.warp.storage.StorageInitializationException;
 import io.github.mywarp.mywarp.warp.storage.WarpSource;
 import io.github.mywarp.mywarp.warp.storage.WarpStorageFactory;
 
-import java.io.File;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -57,7 +53,6 @@ public final class ImportCommands {
   private static final String IMPORT_PERMISSION = "mywarp.cmd.import";
   private static final DynamicMessages msg = new DynamicMessages(CommandHandler.RESOURCE_BUNDLE_NAME);
 
-  private final Platform platform;
   private final PlayerNameResolver playerNameResolver;
   private final WarpManager warpManager;
   private final Game game;
@@ -66,12 +61,10 @@ public final class ImportCommands {
    * Creates an instance.
    *
    * @param warpManager        the WarpManager used by commands
-   * @param platform           the Platform used by commands
    * @param playerNameResolver the PlayerNameResolver used by commands
    * @param game               the Game used by commands
    */
-  ImportCommands(WarpManager warpManager, Platform platform, PlayerNameResolver playerNameResolver, Game game) {
-    this.platform = platform;
+  ImportCommands(WarpManager warpManager, PlayerNameResolver playerNameResolver, Game game) {
     this.playerNameResolver = playerNameResolver;
     this.warpManager = warpManager;
     this.game = game;
@@ -79,53 +72,24 @@ public final class ImportCommands {
 
   @Command(aliases = {"current", "curr"}, desc = "import.current.description", help = "import.current.help")
   @Require(IMPORT_PERMISSION)
-  public void current(Actor actor, ConnectionConfiguration configuration) throws CommandException {
-    RelationalDataService dataService = platform.createDataService(configuration);
-    try {
-      start(actor, dataService, WarpStorageFactory.create(dataService.getDataSource(), configuration));
-    } catch (StorageInitializationException | SQLException e) {
-      throw new CommandException(msg.getString("import.no-connection", e.getMessage()));
-    }
+  public void current(Actor actor, SqlDataService dataService) throws StorageInitializationException {
+    WarpSource source = WarpStorageFactory.create(dataService);
+    start(actor, dataService, source);
   }
 
-  @Command(aliases = {"pre3-sqlite"}, desc = "import.pre3-sqlite.description", help = "import.pre3-sqlite.help")
+  @Command(aliases = {"legacy"}, desc = "import.legacy.description", help = "import.legacy.help")
   @Require(IMPORT_PERMISSION)
-  public void pre3Sqlite(Actor actor, File database) throws CommandException {
-    ConnectionConfiguration configuration = new ConnectionConfiguration("jdbc:sqlite:" + database.getAbsolutePath());
-    try {
-      RelationalDataService dataService = platform.createDataService(configuration);
-      start(actor, dataService,
-            new LegacyWarpSource(dataService.getDataSource(), configuration, "warpTable", playerNameResolver,
-                                 getWorldSnapshot()));
-    } catch (SQLException e) {
-      throw new CommandException(msg.getString("import.no-connection", e.getMessage()));
-    }
+  public void legacy(Actor actor, SqlDataService dataService, @OptArg("warpTable") String tableName)
+      throws StorageInitializationException {
+    WarpSource
+        source =
+        LegacyWarpSource.from(dataService.getDataSource(), tableName, dataService.getDatabase().orElse(null))
+            .using(playerNameResolver, getWorldSnapshot());
+
+    start(actor, dataService, source);
   }
 
-  @Command(aliases = {"pre3-mysql"}, desc = "import.pre3-mysql.description", help = "import.pre3-mysql.help")
-  @Require(IMPORT_PERMISSION)
-  public void pre3Mysql(Actor actor, String dsn, String schema, String user, String password, String tableName)
-      throws CommandException {
-    ConnectionConfiguration
-        config =
-        new ConnectionConfiguration(dsn).setSchema(schema).setUser(user).setPassword(password);
-    try {
-      RelationalDataService dataService = platform.createDataService(config);
-      start(actor, dataService, new LegacyWarpSource(dataService.getDataSource(), config, tableName, playerNameResolver,
-                                                     getWorldSnapshot()));
-    } catch (SQLException e) {
-      throw new CommandException(msg.getString("import.no-connection", e.getMessage()));
-    }
-  }
-
-  /**
-   * Starts the import from the given {@code WarpSource}.
-   *
-   * @param initiator   the {@code Actor} who initated the import
-   * @param dataService the data service that sources the {@code warpSource}
-   * @param warpSource  the {@code WarpSource} to import from
-   */
-  private void start(final Actor initiator, final RelationalDataService dataService, final WarpSource warpSource) {
+  private void start(Actor initiator, SqlDataService dataService, WarpSource warpSource) {
     initiator.sendMessage(msg.getString("import.started"));
 
     ExecutorService executorService = dataService.getExecutorService();
@@ -162,11 +126,6 @@ public final class ImportCommands {
     }, game.getExecutor());
   }
 
-  /**
-   * Gets a mapping of the names to uniqueIds from all worlds currently existing.
-   *
-   * @return a mapping of the names to uniqueIds from all worlds
-   */
   private Map<String, UUID> getWorldSnapshot() {
     return game.getWorlds().stream().collect(Collectors.toMap(LocalWorld::getName, LocalWorld::getUniqueId));
   }

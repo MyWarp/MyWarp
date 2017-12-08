@@ -19,8 +19,6 @@
 
 package io.github.mywarp.mywarp.bukkit.util.jdbc;
 
-import io.github.mywarp.mywarp.warp.storage.ConnectionConfiguration;
-
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -39,31 +37,26 @@ public final class DataSourceFactory {
    * @param config the config of the relational database
    * @return a new {@code SingleConnectionDataSource}
    */
-  public static SingleConnectionDataSource createSingleConnectionDataSource(ConnectionConfiguration config) {
-    Properties properties = new Properties();
+  public static SingleConnectionDataSource createSingleConnectionDataSource(JdbcConfiguration config) {
+    Properties properties = config.getConnectionProperties();
 
     boolean driverSupportsIsValid = true;
 
-    if (config.getDriver().equals("org.sqlite.JDBC")) {
+    if (config.getProtocol().equals("sqlite")) {
       properties.setProperty("foreign_keys", "on");
 
+      //REVIEW Remove this?
       //CraftBukkit bundles SQLite 3.7.2 witch does not yet implement Connection#isValid(int)
       driverSupportsIsValid = false;
-    } else if (config.getDriver().equals("org.h2.Driver")) {
+    } else if (config.getProtocol().equals("h2")) {
       try {
         Class.forName("org.h2.Driver");
       } catch (ClassNotFoundException e) {
         //H2 is bundled on Bukkit so this should never happen.
         throw new IllegalStateException("H2 driver class not found.", e);
       }
-      properties.setProperty("user", config.getUser());
-      properties.setProperty("password", config.getPassword());
-    } else {
-      properties.setProperty("user", config.getUser());
-      properties.setProperty("password", config.getPassword());
     }
-
-    return new SingleConnectionDataSource(config.getUrl(), properties, driverSupportsIsValid);
+    return new SingleConnectionDataSource(config.getJdbcUrl(), properties, driverSupportsIsValid);
   }
 
 }

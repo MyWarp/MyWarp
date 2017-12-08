@@ -28,10 +28,12 @@ import io.github.mywarp.mywarp.MyWarp;
 import io.github.mywarp.mywarp.bukkit.settings.BukkitSettings;
 import io.github.mywarp.mywarp.bukkit.util.conversation.AcceptancePromptFactory;
 import io.github.mywarp.mywarp.bukkit.util.conversation.WelcomeEditorFactory;
+import io.github.mywarp.mywarp.bukkit.util.jdbc.JdbcConfiguration;
 import io.github.mywarp.mywarp.bukkit.util.permission.BukkitPermissionsRegistration;
 import io.github.mywarp.mywarp.bukkit.util.permission.group.GroupResolver;
 import io.github.mywarp.mywarp.bukkit.util.permission.group.GroupResolverFactory;
 import io.github.mywarp.mywarp.platform.Actor;
+import io.github.mywarp.mywarp.platform.InvalidFormatException;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
@@ -39,6 +41,7 @@ import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.i18n.FolderSourcedControl;
 import io.github.mywarp.mywarp.util.i18n.LocaleManager;
 import io.github.mywarp.mywarp.warp.Warp;
+import io.github.mywarp.mywarp.warp.storage.SqlDataService;
 import io.github.mywarp.mywarp.warp.storage.StorageInitializationException;
 
 import org.apache.commons.lang.text.StrBuilder;
@@ -59,9 +62,7 @@ import org.slf4j.Logger;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -83,7 +84,7 @@ public final class MyWarpPlugin extends JavaPlugin {
   private static final Logger log = MyWarpLogger.getLogger(MyWarpPlugin.class);
 
   private final ResourceBundle.Control control = new FolderSourcedControl(new File(getDataFolder(), "lang"));
-  private final Set<Closeable> closeables = Collections.newSetFromMap(new WeakHashMap<Closeable, Boolean>());
+  private final Set<AutoCloseable> closeables = Collections.newSetFromMap(new WeakHashMap<AutoCloseable, Boolean>());
 
   private BukkitPlatform platform;
   private MyWarp myWarp;
@@ -113,13 +114,8 @@ public final class MyWarpPlugin extends JavaPlugin {
 
     // setup the core
     try {
-      myWarp = MyWarp.initialize(platform);
-    } catch (SQLException e) {
-      log.error("Failed to connect with the database configured in the 'config.yml', are the settings correct?", e);
-      log.error("MyWarp is unable to continue and will be disabled.");
-      Bukkit.getPluginManager().disablePlugin(this);
-      return;
-    } catch (StorageInitializationException e) {
+      myWarp = MyWarp.initialize(platform, createDataService(getSettings().getJdbcStorageConfiguration()));
+    } catch (StorageInitializationException | InvalidFormatException e) {
       log.error("Failed to initialize warp storage.", e);
       log.error("MyWarp is unable to continue and will be disabled.");
       Bukkit.getPluginManager().disablePlugin(this);
@@ -141,10 +137,10 @@ public final class MyWarpPlugin extends JavaPlugin {
     unregister();
 
     //close any registered Closables
-    for (Closeable closeable : closeables) {
+    for (AutoCloseable closeable : closeables) {
       try {
         closeable.close();
-      } catch (IOException e) {
+      } catch (Exception e) {
         log.warn("Failed to close " + closeable.getClass().getCanonicalName(), e);
       }
     }
@@ -305,7 +301,7 @@ public final class MyWarpPlugin extends JavaPlugin {
    *
    * @param closeable the Closable to register
    */
-  void registerClosable(Closeable closeable) {
+  void registerClosable(AutoCloseable closeable) {
     closeables.add(closeable);
   }
 
@@ -323,6 +319,15 @@ public final class MyWarpPlugin extends JavaPlugin {
     if (marker != null) {
       marker.clear();
     }
+  }
+
+  SqlDataService createDataService(JdbcConfiguration configuration) {
+    SqlDataService ret = new SingleConnectionDataService(configuration);
+
+    //add weak reference so it can be closed on shutdown if not done by the caller
+    registerClosable(ret);
+
+    return ret;
   }
 
   /**

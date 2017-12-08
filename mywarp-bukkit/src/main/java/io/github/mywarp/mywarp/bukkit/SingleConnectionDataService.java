@@ -23,16 +23,16 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
 import io.github.mywarp.mywarp.bukkit.util.jdbc.DataSourceFactory;
+import io.github.mywarp.mywarp.bukkit.util.jdbc.JdbcConfiguration;
 import io.github.mywarp.mywarp.bukkit.util.jdbc.SingleConnectionDataSource;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
-import io.github.mywarp.mywarp.warp.storage.ConnectionConfiguration;
-import io.github.mywarp.mywarp.warp.storage.RelationalDataService;
+import io.github.mywarp.mywarp.warp.storage.SqlDataService;
 
 import org.slf4j.Logger;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -41,13 +41,13 @@ import javax.annotation.Nullable;
 import javax.sql.DataSource;
 
 /**
- * An {@link RelationalDataService} that uses a {@link SingleConnectionDataSource}.
+ * An {@link SqlDataService} that uses a {@link SingleConnectionDataSource}.
  */
-public class SingleConnectionDataService implements RelationalDataService {
+public class SingleConnectionDataService implements SqlDataService {
 
   private static final Logger log = MyWarpLogger.getLogger(SingleConnectionDataService.class);
 
-  private final ConnectionConfiguration config;
+  private final JdbcConfiguration config;
 
   @Nullable
   private SingleConnectionDataSource dataSource;
@@ -59,16 +59,21 @@ public class SingleConnectionDataService implements RelationalDataService {
    *
    * @param config the config
    */
-  SingleConnectionDataService(ConnectionConfiguration config) {
+  SingleConnectionDataService(JdbcConfiguration config) {
     this.config = config;
   }
 
   @Override
-  public DataSource getDataSource() throws SQLException {
+  public DataSource getDataSource() {
     if (dataSource == null) {
       dataSource = DataSourceFactory.createSingleConnectionDataSource(config);
     }
     return dataSource;
+  }
+
+  @Override
+  public Optional<String> getDatabase() {
+    return config.getDatabase();
   }
 
   @Override

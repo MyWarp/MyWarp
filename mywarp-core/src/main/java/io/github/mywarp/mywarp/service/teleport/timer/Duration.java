@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * An immutable representation of a duration.
  */
-//FIXME can java APi be used instead?
+//REVIEW can java APi be used instead?
 public class Duration {
 
   private static final double TICKS_PER_MILLISSECOND = 20 * 0.001;
@@ -80,10 +80,7 @@ public class Duration {
       return false;
     }
     Duration other = (Duration) obj;
-    if (durationMillis != other.durationMillis) {
-      return false;
-    }
-    return true;
+    return durationMillis == other.durationMillis;
   }
 
   @Override

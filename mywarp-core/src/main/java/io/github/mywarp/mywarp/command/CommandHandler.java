@@ -107,8 +107,7 @@ public final class CommandHandler {
 
     // create injector and register modules
     Injector injector = Intake.createInjector();
-    injector.install(new BaseModule(warpManager, authorizationResolver, playerNameResolver, game, settings, this,
-                                    platform.getDataFolder()));
+    injector.install(new BaseModule(this, platform, authorizationResolver, warpManager));
     injector.install(new PrimitivesModule());
     injector.install(new ProvidedModule());
 
@@ -158,7 +157,7 @@ public final class CommandHandler {
             .registerMethods(new ManagementCommands(warpManager, limitService))
             .registerMethods(new SocialCommands(game, playerNameResolver, limitService))
             .registerMethods(new UtilityCommands(myWarp, this, basic, game)).group("import", "migrate")
-            .registerMethods(new ImportCommands(warpManager, platform, playerNameResolver, game)).graph()
+            .registerMethods(new ImportCommands(warpManager, playerNameResolver, game)).graph()
             .getDispatcher();
   }
 

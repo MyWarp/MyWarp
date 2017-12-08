@@ -19,10 +19,8 @@
 
 package io.github.mywarp.mywarp.command.parametric.provider.exception;
 
-import io.github.mywarp.mywarp.command.CommandHandler;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.PlayerNameResolver;
-import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 
 import java.util.UUID;
 
@@ -30,8 +28,6 @@ import java.util.UUID;
  * Thrown when the given input does not match an online {@link LocalPlayer}.
  */
 public class NoSuchPlayerException extends NonMatchingInputException {
-
-  private static final DynamicMessages msg = new DynamicMessages(CommandHandler.RESOURCE_BUNDLE_NAME);
 
   /**
    * Creates an instance.

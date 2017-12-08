@@ -21,8 +21,6 @@ package io.github.mywarp.mywarp.platform;
 
 import com.google.common.collect.ImmutableSet;
 
-import io.github.mywarp.mywarp.warp.storage.ConnectionConfiguration;
-
 import java.util.Locale;
 
 /**
@@ -85,13 +83,6 @@ public interface Settings {
    * @return all warp sign identifiers
    */
   ImmutableSet<String> getWarpSignsIdentifiers();
-
-  /**
-   * Gets the {@code ConnectionConfiguration} of the underling database management system.
-   *
-   * @return the configuration
-   */
-  ConnectionConfiguration getRelationalStorageConfiguration();
 
   /**
    * Returns whether players should be informed when they are invited to or uninvited from warps.

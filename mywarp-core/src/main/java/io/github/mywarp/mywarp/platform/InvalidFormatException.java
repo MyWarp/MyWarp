@@ -17,34 +17,42 @@
  * along with MyWarp. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.mywarp.mywarp.warp.storage;
-
-import java.io.Closeable;
-import java.sql.SQLException;
-import java.util.concurrent.ExecutorService;
-
-import javax.sql.DataSource;
+package io.github.mywarp.mywarp.platform;
 
 /**
- * Provides access to a relational database.
+ * Thrown if an input does not match the required format.
  */
-public interface RelationalDataService extends Closeable {
+public class InvalidFormatException extends Exception {
+
+  private final String query;
+  private final String expectedFormat;
 
   /**
-   * Gets a {@code DataSource} that provides a connection to an SQL database.
+   * Creates an instance.
    *
-   * @return a {@code DataSource}
-   * @throws SQLException if an error occurs when accouring the DataSource
+   * @param query          the given query
+   * @param expectedFormat the expected format
    */
-  DataSource getDataSource() throws SQLException;
+  public InvalidFormatException(String query, String expectedFormat) {
+    this.query = query;
+    this.expectedFormat = expectedFormat;
+  }
 
   /**
-   * Gets a {@code ListeningExecutorService} that should execute database calls.
+   * Gets the original query.
    *
-   * @return a {@code ListeningExecutorService}
+   * @return the query
    */
-  ExecutorService getExecutorService();
+  public String getQuery() {
+    return query;
+  }
 
-  @Override
-  void close();
+  /**
+   * Gets a human readable form of the required format.
+   *
+   * @return the required format
+   */
+  public String getExpectedFormat() {
+    return expectedFormat;
+  }
 }

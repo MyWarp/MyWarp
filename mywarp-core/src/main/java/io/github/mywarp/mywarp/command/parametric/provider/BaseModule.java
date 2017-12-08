@@ -29,15 +29,13 @@ import io.github.mywarp.mywarp.command.parametric.annotation.Usable;
 import io.github.mywarp.mywarp.command.parametric.annotation.Viewable;
 import io.github.mywarp.mywarp.command.parametric.annotation.WarpName;
 import io.github.mywarp.mywarp.platform.Actor;
-import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
-import io.github.mywarp.mywarp.platform.PlayerNameResolver;
-import io.github.mywarp.mywarp.platform.Settings;
+import io.github.mywarp.mywarp.platform.Platform;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
-import io.github.mywarp.mywarp.warp.storage.ConnectionConfiguration;
+import io.github.mywarp.mywarp.warp.storage.SqlDataService;
 
 import java.io.File;
 import java.util.UUID;
@@ -50,40 +48,30 @@ public class BaseModule extends AbstractModule {
 
   private final WarpManager warpManager;
   private final AuthorizationResolver authorizationResolver;
-  private final PlayerNameResolver playerNameResolver;
-  private final Game game;
-  private final Settings settings;
-  private CommandHandler commandHandler;
-  private File base;
+  private final CommandHandler commandHandler;
+  private final Platform platform;
 
   /**
    * Creates an instance.
    *
-   * @param warpManager           the WarpManager to use
-   * @param authorizationResolver the AuthorizationResolver to use
-   * @param playerNameResolver    the PlayerNameResolver to use
-   * @param game                  the Game to use
-   * @param settings              the Settings to use
    * @param commandHandler        the CommandHandler to use
-   * @param base                  the base File to use
+   * @param platform              the platform to use
+   * @param authorizationResolver the AuthorizationResolver to use
+   * @param warpManager           the WarpManager to use
    */
-  public BaseModule(WarpManager warpManager, AuthorizationResolver authorizationResolver,
-                    PlayerNameResolver playerNameResolver, Game game, Settings settings, CommandHandler commandHandler,
-                    File base) {
-    this.warpManager = warpManager;
-    this.authorizationResolver = authorizationResolver;
-    this.playerNameResolver = playerNameResolver;
-    this.game = game;
-    this.settings = settings;
+  public BaseModule(CommandHandler commandHandler, Platform platform, AuthorizationResolver authorizationResolver,
+                    WarpManager warpManager) {
     this.commandHandler = commandHandler;
-    this.base = base;
+    this.platform = platform;
+    this.authorizationResolver = authorizationResolver;
+    this.warpManager = warpManager;
   }
 
   @Override
   protected void configure() {
     //game related objects
-    bind(LocalPlayer.class).toProvider(new PlayerProvider(game));
-    bind(UUID.class).toProvider(new PlayerIdentifierProvider(playerNameResolver));
+    bind(LocalPlayer.class).toProvider(new PlayerProvider(platform.getGame()));
+    bind(UUID.class).toProvider(new PlayerIdentifierProvider(platform.getPlayerNameResolver()));
 
     //warps
     bind(Warp.class).annotatedWith(Viewable.class).toProvider(new WarpProvider(authorizationResolver, warpManager) {
@@ -108,10 +96,10 @@ public class BaseModule extends AbstractModule {
 
     //warp name
     bind(String.class).annotatedWith(WarpName.class)
-        .toProvider(new WarpNameProvider(warpManager, commandHandler, settings));
+        .toProvider(new WarpNameProvider(warpManager, commandHandler, platform.getSettings()));
 
     //configuration
-    bind(ConnectionConfiguration.class).toProvider(new ConnectionConfigurationProvider());
-    bind(File.class).toProvider(new FileProvider(base));
+    bind(SqlDataService.class).toProvider(new DataServiceProvider(platform));
+    bind(File.class).toProvider(new FileProvider(platform.getDataFolder()));
   }
 }

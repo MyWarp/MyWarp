@@ -274,7 +274,6 @@ public interface Warp extends Comparable<Warp> {
      *
      * @return the popularity score of this Warp
      */
-    //FIXME
     private double popularityScore(Warp warp) {
       // a basic implementation of the hacker news ranking algorithm detailed
       // at http://amix.dk/blog/post/19574: Older warps receive lower scores

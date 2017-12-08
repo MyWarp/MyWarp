@@ -45,15 +45,13 @@ import io.github.mywarp.mywarp.warp.authorization.PermissionAuthorizationStrateg
 import io.github.mywarp.mywarp.warp.authorization.WarpPropertiesAuthorizationStrategy;
 import io.github.mywarp.mywarp.warp.authorization.WorldAccessAuthorizationStrategy;
 import io.github.mywarp.mywarp.warp.storage.AsyncWritingWarpStorage;
-import io.github.mywarp.mywarp.warp.storage.ConnectionConfiguration;
-import io.github.mywarp.mywarp.warp.storage.RelationalDataService;
+import io.github.mywarp.mywarp.warp.storage.SqlDataService;
 import io.github.mywarp.mywarp.warp.storage.StorageInitializationException;
 import io.github.mywarp.mywarp.warp.storage.WarpStorage;
 import io.github.mywarp.mywarp.warp.storage.WarpStorageFactory;
 
 import org.slf4j.Logger;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -71,7 +69,7 @@ public final class MyWarp {
   private static final Logger log = MyWarpLogger.getLogger(MyWarp.class);
 
   private final Platform platform;
-  private final RelationalDataService dataService;
+  private final SqlDataService dataService;
   private final WarpStorage warpStorage;
   private final PopulatableWarpManager warpManager;
   private final EventBus eventBus;
@@ -83,8 +81,19 @@ public final class MyWarp {
   @Nullable
   private InvitationInformationListener invitationInformationListener;
 
+  private MyWarp(Platform platform, SqlDataService dataService, WarpStorage warpStorage,
+                 PopulatableWarpManager warpManager, EventBus eventBus, AuthorizationResolver authorizationResolver) {
+    this.platform = platform;
+    this.dataService = dataService;
+    this.warpStorage = warpStorage;
+    this.warpManager = warpManager;
+    this.eventBus = eventBus;
+    this.authorizationResolver = authorizationResolver;
+  }
+
   /**
-   * Creates a MyWarp instance that runs on the given {@code platform}.
+   * Creates a MyWarp instance that runs on the given {@code platform} and stores warps in the given {@code
+   * dataService}.
    *
    * <p>If this method returns the instance without raising any exceptions, MyWarp's internal logic has been
    * successfully initialized and MyWarp is fully operational. Any additional service implemented by the client should
@@ -93,22 +102,16 @@ public final class MyWarp {
    * <p>Warps might no yet be available, but are scheduled to be loaded from the storage system. Once they are
    * available, {@link Platform#onWarpsLoaded()} will be called on {@code platform}.</p>
    *
-   * @param platform the platform MyWarp will run on
+   * @param platform    the platform MyWarp will run on
+   * @param dataService the SqlDataService warps are stored in
    * @return a fully operational instance of MyWarp that runs on {@code platform}
    * @throws StorageInitializationException if the Storage system could not be initialized
-   * @throws SQLException                   if the {@code DataService} offered by {@code platform} does not provide a
-   *                                        valid {@code DataSource}
    */
-  public static MyWarp initialize(Platform platform) throws StorageInitializationException, SQLException {
-
-    ConnectionConfiguration connectionConfiguration = platform.getSettings().getRelationalStorageConfiguration();
-    RelationalDataService dataService = platform.createDataService(connectionConfiguration);
-    WarpStorage warpStorage;
-
-    warpStorage =
-        new AsyncWritingWarpStorage(
-            WarpStorageFactory.createInitialized(dataService.getDataSource(), connectionConfiguration),
-            dataService.getExecutorService());
+  public static MyWarp initialize(Platform platform, SqlDataService dataService) throws StorageInitializationException {
+    WarpStorage
+        warpStorage =
+        new AsyncWritingWarpStorage(WarpStorageFactory.createAndInitialize(dataService),
+                                    dataService.getExecutorService());
 
     EventBus eventBus = new EventBus();
 
@@ -128,16 +131,6 @@ public final class MyWarp {
     myWarp.loadWarps();
 
     return myWarp;
-  }
-
-  private MyWarp(Platform platform, RelationalDataService dataService, WarpStorage warpStorage,
-                 PopulatableWarpManager warpManager, EventBus eventBus, AuthorizationResolver authorizationResolver) {
-    this.platform = platform;
-    this.dataService = dataService;
-    this.warpStorage = warpStorage;
-    this.warpManager = warpManager;
-    this.eventBus = eventBus;
-    this.authorizationResolver = authorizationResolver;
   }
 
   /**
@@ -261,7 +254,6 @@ public final class MyWarp {
   }
 
   private void loadWarps() {
-    //FIXME
     CompletableFuture.supplyAsync(warpStorage::getWarps, dataService.getExecutorService()).thenAcceptAsync(warps -> {
       warpManager.populate(warps);
 

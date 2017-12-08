@@ -19,17 +19,13 @@
 
 package io.github.mywarp.mywarp.command.parametric.provider.exception;
 
-import io.github.mywarp.mywarp.command.CommandHandler;
 import io.github.mywarp.mywarp.util.WarpUtils;
-import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.warp.Warp;
 
 /**
  * Thrown when a given input is not a valid name for a {@link Warp}.
  */
 public class InvalidWarpNameException extends NonMatchingInputException {
-
-  private static final DynamicMessages msg = new DynamicMessages(CommandHandler.RESOURCE_BUNDLE_NAME);
 
   /**
    * The reason why a String is not valid as a name for a {@link Warp}.

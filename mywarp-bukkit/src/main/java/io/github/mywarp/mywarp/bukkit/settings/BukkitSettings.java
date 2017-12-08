@@ -21,9 +21,10 @@ package io.github.mywarp.mywarp.bukkit.settings;
 
 import com.google.common.collect.ImmutableSet;
 
+import io.github.mywarp.mywarp.bukkit.util.jdbc.JdbcConfiguration;
+import io.github.mywarp.mywarp.platform.InvalidFormatException;
 import io.github.mywarp.mywarp.platform.Settings;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
-import io.github.mywarp.mywarp.warp.storage.ConnectionConfiguration;
 
 import org.apache.commons.lang.LocaleUtils;
 import org.bukkit.configuration.Configuration;
@@ -311,18 +312,14 @@ public class BukkitSettings implements Settings {
     return config.getBoolean("economy.informAfterTransaction");
   }
 
-  @Override
-  public ConnectionConfiguration getRelationalStorageConfiguration() {
-    ConnectionConfiguration config = new ConnectionConfiguration(getStorageUrl());
-
-    if (config.supportsSchemas()) {
-      config.setSchema(getStorageSchema());
-    }
-    if (config.supportsAuthentication()) {
-      config.setUser(getStorageUser());
-      config.setPassword(getStoragePassword());
-    }
-    return config;
+  /**
+   * Gets the configuration for JDBC access to the database that stores warps.
+   *
+   * @return the configuration
+   * @throws InvalidFormatException if the configuration has an invalid format
+   */
+  public JdbcConfiguration getJdbcStorageConfiguration() throws InvalidFormatException {
+    return JdbcConfiguration.fromConfig(config.getConfigurationSection("storage"));
   }
 
   @Override
@@ -425,42 +422,6 @@ public class BukkitSettings implements Settings {
    */
   public boolean isDynmapMarkerShowLable() {
     return config.getBoolean("dynmap.marker.showLabel");
-  }
-
-  /**
-   * Gets the URL of the database within that warps should be stored.
-   *
-   * @return the URL
-   */
-  private String getStorageUrl() {
-    return config.getString("storage.url");
-  }
-
-  /**
-   * Gets the schema that contains MyWarp's table structure.
-   *
-   * @return the schema
-   */
-  private String getStorageSchema() {
-    return config.getString("storage.schema");
-  }
-
-  /**
-   * Gets the user used to connect to the relational database.
-   *
-   * @return the user
-   */
-  private String getStorageUser() {
-    return config.getString("storage.user");
-  }
-
-  /**
-   * Gets the password of the user used to connect to the relational database.
-   *
-   * @return the user's password
-   */
-  private String getStoragePassword() {
-    return config.getString("storage.password");
   }
 
 }

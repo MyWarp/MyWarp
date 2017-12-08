@@ -103,12 +103,12 @@ public class SingleConnectionDataSource implements DataSource, Closeable {
   }
 
   @Override
-  public int getLoginTimeout() throws SQLException {
+  public int getLoginTimeout() {
     return 0;
   }
 
   @Override
-  public void setLoginTimeout(int timeout) throws SQLException {
+  public void setLoginTimeout(int timeout) {
     throw new UnsupportedOperationException("setLoginTimeout");
   }
 
@@ -118,17 +118,11 @@ public class SingleConnectionDataSource implements DataSource, Closeable {
   }
 
   @Override
-  public void setLogWriter(PrintWriter pw) throws SQLException {
+  public void setLogWriter(PrintWriter pw) {
     throw new UnsupportedOperationException("setLogWriter");
   }
 
-  /**
-   * This method was added to {@link javax.sql.CommonDataSource} in Java7 and is implemented for compatibility. Calling
-   * it immediately and always throws a {@link SQLFeatureNotSupportedException}.
-   *
-   * @return nothing
-   * @throws SQLFeatureNotSupportedException always
-   */
+  @Override
   public Logger getParentLogger() throws SQLFeatureNotSupportedException {
     throw new SQLFeatureNotSupportedException();
   }
@@ -144,7 +138,7 @@ public class SingleConnectionDataSource implements DataSource, Closeable {
   }
 
   @Override
-  public boolean isWrapperFor(Class<?> iface) throws SQLException {
+  public boolean isWrapperFor(Class<?> iface) {
     return iface.isInstance(this);
   }
 
@@ -180,17 +174,11 @@ public class SingleConnectionDataSource implements DataSource, Closeable {
       return conn.isValid(5);
     }
 
-    Statement statement = conn.createStatement();
-    try {
+    try (Statement statement = conn.createStatement()) {
       return statement.execute("select 1");
-    } finally {
-      statement.close();
     }
   }
 
-  /**
-   * Closes the target {@code Connection}.
-   */
   @Override
   public void close() throws IOException {
     if (target != null) {

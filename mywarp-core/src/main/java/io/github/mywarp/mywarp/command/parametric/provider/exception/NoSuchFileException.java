@@ -19,17 +19,12 @@
 
 package io.github.mywarp.mywarp.command.parametric.provider.exception;
 
-import io.github.mywarp.mywarp.command.CommandHandler;
-import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
-
 import java.io.File;
 
 /**
  * Thrown when the given input does not match an existing {@link File}.
  */
 public class NoSuchFileException extends NonMatchingInputException {
-
-  private static final DynamicMessages msg = new DynamicMessages(CommandHandler.RESOURCE_BUNDLE_NAME);
 
   /**
    * Creates an instance for the given File.
