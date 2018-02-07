@@ -157,8 +157,7 @@ public final class CommandHandler {
             .registerMethods(new ManagementCommands(warpManager, limitService))
             .registerMethods(new SocialCommands(game, playerNameResolver, limitService))
             .registerMethods(new UtilityCommands(myWarp, this, basic, game)).group("import", "migrate")
-            .registerMethods(new ImportCommands(warpManager, playerNameResolver, game)).graph()
-            .getDispatcher();
+            .registerMethods(new ImportCommands(warpManager, playerNameResolver, game)).graph().getDispatcher();
   }
 
   /**
@@ -192,12 +191,19 @@ public final class CommandHandler {
       dispatcher.call(command, createNamespace(caller), new ArrayList<>());
 
       //handle errors
-    } catch (InvocationCommandException e) {
-      // An InvocationCommandException can only be thrown if a thrown
-      // Exception is not covered by our ExceptionConverter and is
-      // therefore unintended behavior.
-      caller.sendError(msg.getString("exception.unknown"));
-      log.error(String.format("The command '%s' could not be executed.", command), e);
+    } catch (InvocationCommandException | AuthorizationException e) {
+      if (e instanceof AuthorizationException || e.getCause() instanceof AuthorizationException) {
+        //for some reason, handling AuthorizationExceptions thrown manual by commands in the ExceptionConverter has
+        // no result, hence this messy solution.
+        caller.sendError(msg.getString("exception.insufficient-permission"));
+
+      } else {
+        // An InvocationCommandException can only be thrown if a thrown
+        // Exception is not covered by our ExceptionConverter and is
+        // therefore unintended behavior.
+        caller.sendError(msg.getString("exception.unknown"));
+        log.error(String.format("The command '%s' could not be executed.", command), e);
+      }
 
     } catch (SubcommandRequiredException e) {
       Message.Builder error = createUsageString(e);
@@ -231,9 +237,6 @@ public final class CommandHandler {
 
     } catch (CommandException e) {
       caller.sendError(e.getLocalizedMessage());
-
-    } catch (AuthorizationException e) {
-      caller.sendError(msg.getString("exception.insufficient-permission"));
     }
   }
 
