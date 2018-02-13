@@ -77,10 +77,12 @@ public final class SocialCommands {
   @Billable(FeeType.GIVE)
   public void give(Actor actor, @Switch('d') boolean giveDirectly, @Switch('f') boolean ignoreLimits, UUID receiver,
                    @Modifiable Warp warp) throws CommandException, AuthorizationException, NoSuchPlayerException {
-    if (warp.isCreator(receiver)) {
-      throw new CommandException("give.is-owner");
-    }
+
     Optional<LocalPlayer> receiverPlayerOptional = game.getPlayer(receiver);
+    if (warp.isCreator(receiver)) {
+      throw new CommandException(
+          msg.getString("give.is-owner", receiverPlayerOptional.map(Actor::getName).orElse(receiver.toString())));
+    }
 
     if (!ignoreLimits && limitService != null) {
       if (!receiverPlayerOptional.isPresent()) {

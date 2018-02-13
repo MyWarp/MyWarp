@@ -193,7 +193,7 @@ public final class CommandHandler {
       //handle errors
     } catch (InvocationCommandException | AuthorizationException e) {
       if (e instanceof AuthorizationException || e.getCause() instanceof AuthorizationException) {
-        //for some reason, handling AuthorizationExceptions thrown manual by commands in the ExceptionConverter has
+        //for some reason, handling AuthorizationExceptions thrown manually by commands in the ExceptionConverter has
         // no result, hence this messy solution.
         caller.sendError(msg.getString("exception.insufficient-permission"));
 
