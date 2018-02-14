@@ -13,7 +13,8 @@ repositories {
     maven { url "http://repo.mikeprimm.com" }
     //Permission Plugins
     maven { url "http://repository-thee140.forge.cloudbees.com/release/" }
-    maven { url "http://nexus.hc.to/content/repositories/pub_releases/" }
+    //maven { url "http://nexus.hc.to/content/repositories/pub_releases/" } //official Vault repo, but currently offline
+    maven { url "http://repo.ess3.net/content/repositories/theyeticave/"} //backup for Vault, hosted by the Essentials guys
     //Intake
     maven { url "http://repository-thee140.forge.cloudbees.com/snapshot/" }
 }
