@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2017, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -57,12 +57,12 @@ public class FeeBundle extends ValueBundle {
     fees.put(FeeType.GIVE, valueOf(values.getDouble("give")));
     fees.put(FeeType.HELP, valueOf(values.getDouble("help")));
     fees.put(FeeType.INFO, valueOf(values.getDouble("info")));
-    fees.put(FeeType.INVITE, valueOf(values.getDouble("addInvitation")));
+    fees.put(FeeType.INVITE, valueOf(values.getDouble("invite")));
     fees.put(FeeType.LIST, valueOf(values.getDouble("list")));
     fees.put(FeeType.POINT, valueOf(values.getDouble("point")));
     fees.put(FeeType.PRIVATE, valueOf(values.getDouble("private")));
     fees.put(FeeType.PUBLIC, valueOf(values.getDouble("public")));
-    fees.put(FeeType.UNINVITE, valueOf(values.getDouble("removeInvitation")));
+    fees.put(FeeType.UNINVITE, valueOf(values.getDouble("uninvite")));
     fees.put(FeeType.UPDATE, valueOf(values.getDouble("update")));
     fees.put(FeeType.WARP_PLAYER, valueOf(values.getDouble("warpPlayer")));
     fees.put(FeeType.WARP_SIGN_CREATE, valueOf(values.getDouble("warpSignCreate")));
