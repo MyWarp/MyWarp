@@ -45,8 +45,13 @@ class PlayerIdProvider extends AbstractProvider<UUID> {
 
   @Override
   public UUID get(CommandArgs arguments, List<? extends Annotation> modifiers) throws ArgumentException {
-    String query = arguments.next();
-    return resolver.getByName(query).orElseThrow(() -> new NoSuchPlayerIdentifierException(query));
+    String argument = arguments.next();
+
+    if (argument.charAt(1) == ':' && argument.charAt(0) == 'u') {
+      return ProviderUtil.parseUuid(argument.substring(2));
+    }
+
+    return resolver.getByName(argument).orElseThrow(() -> new NoSuchPlayerIdentifierException(argument));
   }
 
 }
