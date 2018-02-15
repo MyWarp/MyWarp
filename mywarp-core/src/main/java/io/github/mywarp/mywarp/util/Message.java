@@ -69,6 +69,24 @@ public class Message {
     return elements;
   }
 
+
+  /**
+   * Creates a new Message from the given objects.
+   *
+   * <p>This is equivalent to creating a new {@link Builder} and calling {@link Builder#append(Object)} for each
+   * object.</p>
+   *
+   * @param objects the objects
+   * @return a new Message consisting of the given objects
+   */
+  public static Message of(Object... objects) {
+    Builder msgBuilder = builder();
+    for (Object obj : objects) {
+      msgBuilder = msgBuilder.append(obj);
+    }
+    return msgBuilder.build();
+  }
+
   /**
    * Builds {@link Message} instances.
    */
