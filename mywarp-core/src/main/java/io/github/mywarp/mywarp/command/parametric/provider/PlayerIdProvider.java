@@ -21,7 +21,6 @@ package io.github.mywarp.mywarp.command.parametric.provider;
 
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
-import com.sk89q.intake.parametric.ProvisionException;
 
 import io.github.mywarp.mywarp.command.parametric.provider.exception.NoSuchPlayerIdentifierException;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
@@ -29,36 +28,25 @@ import io.github.mywarp.mywarp.platform.PlayerNameResolver;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-
-import javax.annotation.Nullable;
 
 /**
  * Provides {@link UUID} instances that identify players.
  *
  * @see LocalPlayer#getUniqueId()
  */
-class PlayerIdentifierProvider extends NonSuggestiveProvider<UUID> {
+class PlayerIdProvider extends AbstractProvider<UUID> {
 
-  private final PlayerNameResolver playerNameResolver;
+  private final PlayerNameResolver resolver;
 
-  PlayerIdentifierProvider(PlayerNameResolver playerNameResolver) {
-    this.playerNameResolver = playerNameResolver;
+  PlayerIdProvider(PlayerNameResolver resolver) {
+    this.resolver = resolver;
   }
 
-  @Nullable
   @Override
-  public UUID get(CommandArgs arguments, List<? extends Annotation> modifiers)
-      throws ArgumentException, ProvisionException {
+  public UUID get(CommandArgs arguments, List<? extends Annotation> modifiers) throws ArgumentException {
     String query = arguments.next();
-
-    Optional<UUID> optional = playerNameResolver.getByName(query);
-
-    if (!optional.isPresent()) {
-      throw new NoSuchPlayerIdentifierException(query);
-    }
-    return optional.get();
+    return resolver.getByName(query).orElseThrow(() -> new NoSuchPlayerIdentifierException(query));
   }
 
 }

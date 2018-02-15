@@ -28,8 +28,10 @@ import com.sk89q.intake.parametric.provider.exception.NonnumericalInputException
 import com.sk89q.intake.parametric.provider.exception.OverRangeException;
 import com.sk89q.intake.parametric.provider.exception.StringFormatException;
 import com.sk89q.intake.parametric.provider.exception.UnderRangeException;
+import com.sk89q.intake.util.auth.AuthorizationException;
 
 import io.github.mywarp.mywarp.command.CommandHandler;
+import io.github.mywarp.mywarp.command.parametric.provider.exception.ArgumentAuthorizationException;
 import io.github.mywarp.mywarp.command.parametric.provider.exception.NonMatchingInputException;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 
@@ -108,6 +110,18 @@ public class ArgumentExceptionConverter extends ExceptionConverterHelper {
   @ExceptionMatch
   public void convert(NonMatchingInputException e, ExceptionContext context) throws InvalidUsageException {
     throwInvalidUsage(e.getLocalizedMessage(), context, e);
+  }
+
+  /**
+   * Converts a ArgumentAuthorizationException to an AuthorizationException.
+   *
+   * @param e       the ArgumentAuthorizationException
+   * @param context the context {@code e} was thrown in
+   * @throws AuthorizationException the converted exception
+   */
+  @ExceptionMatch
+  public void convert(ArgumentAuthorizationException e, ExceptionContext context) throws AuthorizationException {
+    throw new AuthorizationException(e);
   }
 
   /**

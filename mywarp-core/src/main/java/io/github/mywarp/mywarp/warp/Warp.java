@@ -26,7 +26,9 @@ import com.google.common.collect.ImmutableSet;
 
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalEntity;
+import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
+import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 
 import java.time.Duration;
@@ -73,52 +75,38 @@ public interface Warp extends Comparable<Warp> {
   }
 
   /**
-   * Returns whether the given unique identifier identifies a player who is invited to this Warp.
+   * Returns whether the given player is criteria to this Warp.
    *
-   * @param uniqueId the unique identifier to check
-   * @return true if the identified player is invited to this Warp
+   * @param player the player to check
+   * @return true if the identified player is criteria to this Warp
    */
-  default boolean isPlayerInvited(UUID uniqueId) {
-    return getInvitedPlayers().contains(uniqueId);
+  default boolean isInvited(LocalPlayer player) {
+    return getInvitations().stream().anyMatch(p -> p.test(player));
   }
 
   /**
-   * Returns whether the permission-group identified by the given ID is invited to this Warp.
+   * Returns whether this warp already has the given PlayerMatcher.
    *
-   * @param groupId the ID of the group
-   * @return true if group identified by the given ID is invited to this Warp
+   * @param invitation the playermatcher to check
+   * @return true if this warp already has the given playermatcher
    */
-  default boolean isGroupInvited(String groupId) {
-    return getInvitedGroups().contains(groupId);
+  default boolean hasInvitation(PlayerMatcher invitation) {
+    return getInvitations().contains(invitation);
   }
 
   /**
-   * Invites the permission-group identified by the given ID to this Warp.
+   * Adds the given playermatcher to this Warp.
    *
-   * @param groupId the ID of the group who should be invited
+   * @param invitation the playermatcher to addInvitation
    */
-  void inviteGroup(String groupId);
+  void addInvitation(PlayerMatcher invitation);
 
   /**
-   * Invites the player identified by the given unique identifier to this Warp.
+   * Removes the given playermatcher from this Warp.
    *
-   * @param uniqueId the unique identifier of the player who should be invited
+   * @param invitation the playermatcher to removeInvitation
    */
-  void invitePlayer(UUID uniqueId);
-
-  /**
-   * Uninvites the permission-group identified by the given ID from this Warp.
-   *
-   * @param groupId the ID of the group who should be uninvited
-   */
-  void uninviteGroup(String groupId);
-
-  /**
-   * Uninvites the player identified by the given unique identifier from this Warp.
-   *
-   * @param uniqueId the unique identifier of the player who should be uninvited
-   */
-  void uninvitePlayer(UUID uniqueId);
+  void removeInvitation(PlayerMatcher invitation);
 
   /**
    * Gets the unique identifier of this Warp's creator.
@@ -135,18 +123,11 @@ public interface Warp extends Comparable<Warp> {
   void setCreator(UUID uniqueId);
 
   /**
-   * Gets an unmodifiable set containing the IDs of all permission-groups invited to this Warp.
+   * Gets an unmodifiable set containing all Invitees criteria to this Warp.
    *
-   * @return a set with all IDs of groups invited to this Warp
+   * @return a set with all Invitees criteria to this Warp
    */
-  ImmutableSet<String> getInvitedGroups();
-
-  /**
-   * Gets an unmodifiable set containing the unique identifiers of all players invited to this Warp.
-   *
-   * @return a set with all unique identifers of players who are invited to this Warp
-   */
-  ImmutableSet<UUID> getInvitedPlayers();
+  ImmutableSet<PlayerMatcher> getInvitations();
 
   /**
    * Gets this Warp's name.

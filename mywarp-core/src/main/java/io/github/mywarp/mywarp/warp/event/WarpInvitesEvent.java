@@ -19,29 +19,33 @@
 
 package io.github.mywarp.mywarp.warp.event;
 
+import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
 import io.github.mywarp.mywarp.warp.Warp;
 
 /**
  * Indicates the invites for a Warp have changed in some way.
  */
-public abstract class WarpInvitesEvent extends WarpEvent {
+public class WarpInvitesEvent extends WarpEvent {
 
   private final InvitationStatus invitationStatus;
+  private final PlayerMatcher invitation;
 
   /**
-   * Constructs this event for the given warp, indicating that the particular invitee now has the given
+   * Constructs this event for the given warp, indicating that the particular playermatcher now has the given
    * InvitationStatus.
    *
    * @param warp             the warp
    * @param invitationStatus the invitationStatus
+   * @param invitation          the PlayerMatcher
    */
-  public WarpInvitesEvent(Warp warp, InvitationStatus invitationStatus) {
+  public WarpInvitesEvent(Warp warp, InvitationStatus invitationStatus, PlayerMatcher invitation) {
     super(warp);
     this.invitationStatus = invitationStatus;
+    this.invitation = invitation;
   }
 
   /**
-   * Gets the InvitationStatus of the particular invitee.
+   * Gets the InvitationStatus of the particular playermatcher.
    *
    * @return the InvitationStatus
    */
@@ -49,11 +53,15 @@ public abstract class WarpInvitesEvent extends WarpEvent {
     return invitationStatus;
   }
 
+  public PlayerMatcher getInvitation() {
+    return invitation;
+  }
+
   /**
-   * Represents the status of an Invitation that is indicated by an WarpInvitesEvent.
+   * Represents the status of an PlayerMatcher that is indicated by an WarpInvitesEvent.
    */
   public enum InvitationStatus {
-    INVITE, UNINVITE
+    ADDITION, REMOVAL
   }
 
 }

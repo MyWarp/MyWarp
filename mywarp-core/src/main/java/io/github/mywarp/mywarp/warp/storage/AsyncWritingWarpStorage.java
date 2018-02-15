@@ -19,10 +19,10 @@
 
 package io.github.mywarp.mywarp.warp.storage;
 
+import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
 import io.github.mywarp.mywarp.warp.Warp;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.Executor;
 
 /**
@@ -67,23 +67,13 @@ public class AsyncWritingWarpStorage extends ForwardingWarpStorage {
   }
 
   @Override
-  public void inviteGroup(final Warp warp, final String groupId) {
-    executor.execute(() -> delegate().inviteGroup(warp, groupId));
+  public void addInvitation(final Warp warp, final PlayerMatcher invitation) {
+    executor.execute(() -> delegate().addInvitation(warp, invitation));
   }
 
   @Override
-  public void invitePlayer(final Warp warp, final UUID uniqueId) {
-    executor.execute(() -> delegate().invitePlayer(warp, uniqueId));
-  }
-
-  @Override
-  public void uninviteGroup(final Warp warp, final String groupId) {
-    executor.execute(() -> delegate().uninviteGroup(warp, groupId));
-  }
-
-  @Override
-  public void uninvitePlayer(final Warp warp, final UUID uniqueId) {
-    executor.execute(() -> delegate().uninvitePlayer(warp, uniqueId));
+  public void removeInvitation(final Warp warp, final PlayerMatcher invitation) {
+    executor.execute(() -> delegate().removeInvitation(warp, invitation));
   }
 
   @Override

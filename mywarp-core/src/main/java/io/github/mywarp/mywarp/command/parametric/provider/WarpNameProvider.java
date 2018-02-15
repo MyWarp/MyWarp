@@ -22,7 +22,6 @@ package io.github.mywarp.mywarp.command.parametric.provider;
 import com.google.common.collect.Iterables;
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
-import com.sk89q.intake.parametric.ProvisionException;
 
 import io.github.mywarp.mywarp.command.CommandHandler;
 import io.github.mywarp.mywarp.command.parametric.provider.exception.InvalidWarpNameException;
@@ -37,7 +36,7 @@ import java.util.List;
 /**
  * Provides {@link String} instances that are valid to be used as a name for a {@link Warp}.
  */
-class WarpNameProvider extends NonSuggestiveProvider<String> {
+class WarpNameProvider extends AbstractProvider<String> {
 
   private final WarpManager warpManager;
   private final CommandHandler commandHandler;
@@ -50,8 +49,7 @@ class WarpNameProvider extends NonSuggestiveProvider<String> {
   }
 
   @Override
-  public String get(CommandArgs arguments, List<? extends Annotation> modifiers)
-      throws ArgumentException, ProvisionException {
+  public String get(CommandArgs arguments, List<? extends Annotation> modifiers) throws ArgumentException {
     final String name = arguments.next();
 
     if (existsSameNameWarp(name, settings.isCaseSensitiveWarpNames())) {

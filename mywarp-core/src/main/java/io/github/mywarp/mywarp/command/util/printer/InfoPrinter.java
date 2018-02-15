@@ -19,7 +19,7 @@
 
 package io.github.mywarp.mywarp.command.util.printer;
 
-import com.google.common.collect.Ordering;
+import com.google.common.collect.ImmutableSet;
 
 import io.github.mywarp.mywarp.command.CommandHandler;
 import io.github.mywarp.mywarp.command.util.CommandUtil;
@@ -32,6 +32,9 @@ import io.github.mywarp.mywarp.util.Message;
 import io.github.mywarp.mywarp.util.WarpUtils;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.i18n.LocaleManager;
+import io.github.mywarp.mywarp.util.playermatcher.GroupPlayerMatcher;
+import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
+import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
 
@@ -40,8 +43,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Prints information about a certain Warp.
@@ -118,27 +121,36 @@ public class InfoPrinter {
     // if the warp is modifiable, show information about invitations
     if (authorizationResolver.isModifiable(warp, receiver)) {
 
-      // invited players
+      // criteria players
       info.append(Message.Style.KEY);
       info.append(msg.getString("info.invited-players"));
       info.append(" ");
       info.append(Message.Style.VALUE);
 
-      Set<UUID> invitedPlayers = warp.getInvitedPlayers();
+      ImmutableSet<PlayerMatcher> invitations = warp.getInvitations();
+
+      List<String>
+          invitedPlayers =
+          invitations.stream().filter(UuidPlayerMatcher.class::isInstance)
+              .map(i -> CommandUtil.toName(((UuidPlayerMatcher) i).getCriteria(), playerNameResolver)).sorted()
+              .collect(Collectors.toList());
       if (invitedPlayers.isEmpty()) {
         info.append("-");
       } else {
-        info.appendWithSeparators(CommandUtil.toName(invitedPlayers, playerNameResolver));
+        info.appendWithSeparators(invitedPlayers);
       }
       info.appendNewLine();
 
-      // invited groups
+      // criteria groups
       info.append(Message.Style.KEY);
       info.append(msg.getString("info.invited-groups"));
       info.append(" ");
       info.append(Message.Style.VALUE);
 
-      List<String> invitedGroups = Ordering.natural().sortedCopy(warp.getInvitedGroups());
+      List<String>
+          invitedGroups =
+          invitations.stream().filter(GroupPlayerMatcher.class::isInstance).map(Object::toString).sorted()
+              .collect(Collectors.toList());
       if (invitedGroups.isEmpty()) {
         info.append("-");
       } else {

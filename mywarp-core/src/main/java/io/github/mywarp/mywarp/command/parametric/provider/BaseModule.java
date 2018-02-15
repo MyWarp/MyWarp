@@ -32,12 +32,12 @@ import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.Platform;
+import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
 import io.github.mywarp.mywarp.warp.storage.SqlDataService;
 
-import java.io.File;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -71,7 +71,7 @@ public class BaseModule extends AbstractModule {
   protected void configure() {
     //game related objects
     bind(LocalPlayer.class).toProvider(new PlayerProvider(platform.getGame()));
-    bind(UUID.class).toProvider(new PlayerIdentifierProvider(platform.getPlayerNameResolver()));
+    bind(UUID.class).toProvider(new PlayerIdProvider(platform.getPlayerNameResolver()));
 
     //warps
     bind(Warp.class).annotatedWith(Viewable.class).toProvider(new WarpProvider(authorizationResolver, warpManager) {
@@ -98,8 +98,10 @@ public class BaseModule extends AbstractModule {
     bind(String.class).annotatedWith(WarpName.class)
         .toProvider(new WarpNameProvider(warpManager, commandHandler, platform.getSettings()));
 
+    //Invitations
+    bind(PlayerMatcher.class).toProvider(new InvitationProvider(platform.getPlayerNameResolver()));
+
     //configuration
     bind(SqlDataService.class).toProvider(new DataServiceProvider(platform));
-    bind(File.class).toProvider(new FileProvider(platform.getDataFolder()));
   }
 }

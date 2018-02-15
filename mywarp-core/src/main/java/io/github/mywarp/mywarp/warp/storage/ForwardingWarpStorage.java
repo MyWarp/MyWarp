@@ -21,10 +21,10 @@ package io.github.mywarp.mywarp.warp.storage;
 
 import com.google.common.collect.ForwardingObject;
 
+import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
 import io.github.mywarp.mywarp.warp.Warp;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * A WarpStorage that forwards all its method calls to another WarpStorage. Subclasses should override one or more
@@ -52,23 +52,13 @@ abstract class ForwardingWarpStorage extends ForwardingObject implements WarpSto
   }
 
   @Override
-  public void inviteGroup(Warp warp, String groupId) {
-    delegate().inviteGroup(warp, groupId);
+  public void addInvitation(Warp warp, PlayerMatcher invitation) {
+    delegate().addInvitation(warp, invitation);
   }
 
   @Override
-  public void invitePlayer(Warp warp, UUID uniqueId) {
-    delegate().invitePlayer(warp, uniqueId);
-  }
-
-  @Override
-  public void uninviteGroup(Warp warp, String groupId) {
-    delegate().uninviteGroup(warp, groupId);
-  }
-
-  @Override
-  public void uninvitePlayer(Warp warp, UUID uniqueId) {
-    delegate().uninvitePlayer(warp, uniqueId);
+  public void removeInvitation(Warp warp, PlayerMatcher invitation) {
+    delegate().removeInvitation(warp, invitation);
   }
 
   @Override

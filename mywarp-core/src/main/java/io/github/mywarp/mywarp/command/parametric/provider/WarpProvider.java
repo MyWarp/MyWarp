@@ -19,13 +19,10 @@
 
 package io.github.mywarp.mywarp.command.parametric.provider;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import com.google.common.collect.Lists;
 import com.sk89q.intake.argument.CommandArgs;
 import com.sk89q.intake.argument.MissingArgumentException;
 import com.sk89q.intake.argument.Namespace;
-import com.sk89q.intake.parametric.Provider;
 
 import io.github.mywarp.mywarp.command.parametric.provider.exception.NoSuchWarpException;
 import io.github.mywarp.mywarp.command.util.Matches;
@@ -36,13 +33,12 @@ import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
  * Provides {@link Warp} instances.
  */
-abstract class WarpProvider implements Provider<Warp> {
+abstract class WarpProvider extends AbstractProvider<Warp> {
 
   private final AuthorizationResolver authorizationResolver;
   private final WarpManager warpManager;
@@ -52,8 +48,16 @@ abstract class WarpProvider implements Provider<Warp> {
     this.warpManager = warpManager;
   }
 
-  private Predicate<Warp> isValid(Namespace namespace) {
-    return isValid(authorizationResolver, getActor(namespace));
+  @Override
+  public Warp get(CommandArgs arguments, List<? extends Annotation> modifiers)
+      throws MissingArgumentException, NoSuchWarpException {
+    String query = arguments.next();
+
+    Matches<Warp>
+        matches =
+        Matches.from(warpManager.getAll(isValid(arguments.getNamespace()))).withStringFunction(Warp::getName)
+            .withValueComparator(new Warp.PopularityComparator()).forQuery(query);
+    return matches.getExactMatch().orElseThrow(() -> new NoSuchWarpException(query, matches.getSortedMatches()));
   }
 
   /**
@@ -68,25 +72,8 @@ abstract class WarpProvider implements Provider<Warp> {
    */
   abstract Predicate<Warp> isValid(AuthorizationResolver resolver, Actor actor);
 
-  @Override
-  public boolean isProvided() {
-    return false;
-  }
-
-  @Override
-  public Warp get(CommandArgs arguments, List<? extends Annotation> modifiers)
-      throws MissingArgumentException, NoSuchWarpException {
-    String query = arguments.next();
-
-    Matches<Warp>
-        matches = Matches.from(warpManager.getAll(isValid(arguments.getNamespace()))).withStringFunction(Warp::getName)
-            .withValueComparator(new Warp.PopularityComparator()).forQuery(query);
-    Optional<Warp> exactMatch = matches.getExactMatch();
-
-    if (!exactMatch.isPresent()) {
-      throw new NoSuchWarpException(query, matches.getSortedMatches());
-    }
-    return exactMatch.get();
+  private Predicate<Warp> isValid(Namespace namespace) {
+    return isValid(authorizationResolver, ProviderUtil.actor(namespace));
   }
 
   @Override
@@ -94,11 +81,6 @@ abstract class WarpProvider implements Provider<Warp> {
     return Lists.transform(Matches.from(warpManager.getAll(isValid(locals))).withStringFunction(Warp::getName)
                                .withValueComparator(new Warp.PopularityComparator()).forQuery(prefix)
                                .getSortedMatches(), Warp::getName);
-  }
-
-  private static Actor getActor(Namespace namespace) {
-    checkArgument(namespace.containsKey(Actor.class), "This Binding must be used by an Actor.");
-    return namespace.get(Actor.class);
   }
 
 }

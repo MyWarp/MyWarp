@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableSet;
 
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalWorld;
+import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 
 import java.time.Instant;
@@ -41,8 +42,7 @@ class SimpleWarp extends AbstractWarp {
 
   private final String name;
   private final Instant creationDate;
-  private final Set<UUID> invitedPlayers;
-  private final Set<String> invitedGroups;
+  private final Set<PlayerMatcher> invited;
 
   private volatile UUID creator;
   private volatile Warp.Type type;
@@ -57,8 +57,7 @@ class SimpleWarp extends AbstractWarp {
    *
    * @param name            the warp's name
    * @param creationDate    the warp's creation date
-   * @param invitedPlayers  a Set of player profiles invited to this warp
-   * @param invitedGroups   a set of group identifiers invited to this warp
+   * @param invited         a Set of Invitees criteria to this warp
    * @param creator         the profile of the warp's creator
    * @param type            the warp's type
    * @param worldIdentifier the identifier of the world that holds the warp
@@ -69,20 +68,18 @@ class SimpleWarp extends AbstractWarp {
    * @throws NullPointerException     if one of the given values is {@code null}
    * @throws IllegalArgumentException if {@code invitedPlayers} or {@code invitedGroups} contains {@code null}
    */
-  SimpleWarp(String name, Instant creationDate, Set<UUID> invitedPlayers, Set<String> invitedGroups, UUID creator,
-             Type type, UUID worldIdentifier, Vector3d position, Vector2f rotation, int visits, String welcomeMessage) {
+  SimpleWarp(String name, Instant creationDate, Set<PlayerMatcher> invited, UUID creator, Type type,
+             UUID worldIdentifier, Vector3d position, Vector2f rotation, int visits, String welcomeMessage) {
     this.name = checkNotNull(name);
     this.creationDate = checkNotNull(creationDate);
-    checkArgument(!checkNotNull(invitedPlayers).contains(null), "'invitedPlayers' must not contain null.");
-    this.invitedPlayers = invitedPlayers;
-    checkArgument(!checkNotNull(invitedGroups).contains(null), "'invitedGroups' must not contain null.");
-    this.invitedGroups = invitedGroups;
+    checkArgument(!checkNotNull(invited).contains(null), "'criteria' must not contain null.");
+    this.invited = invited;
     this.creator = checkNotNull(creator);
     this.type = checkNotNull(type);
     this.worldIdentifier = checkNotNull(worldIdentifier);
     this.position = checkNotNull(position);
     this.rotation = checkNotNull(rotation);
-    this.visits = checkNotNull(visits);
+    this.visits = visits;
     this.welcomeMessage = checkNotNull(welcomeMessage);
   }
 
@@ -97,23 +94,13 @@ class SimpleWarp extends AbstractWarp {
   }
 
   @Override
-  public void inviteGroup(String groupId) {
-    invitedGroups.add(groupId);
+  public void addInvitation(PlayerMatcher invitation) {
+    invited.add(invitation);
   }
 
   @Override
-  public void invitePlayer(UUID uniqueId) {
-    invitedPlayers.add(uniqueId);
-  }
-
-  @Override
-  public void uninviteGroup(String groupId) {
-    invitedGroups.remove(groupId);
-  }
-
-  @Override
-  public void uninvitePlayer(UUID uniqueId) {
-    invitedPlayers.remove(uniqueId);
+  public void removeInvitation(PlayerMatcher invitation) {
+    invited.remove(invitation);
   }
 
   @Override
@@ -127,13 +114,8 @@ class SimpleWarp extends AbstractWarp {
   }
 
   @Override
-  public ImmutableSet<String> getInvitedGroups() {
-    return ImmutableSet.copyOf(invitedGroups);
-  }
-
-  @Override
-  public ImmutableSet<UUID> getInvitedPlayers() {
-    return ImmutableSet.copyOf(invitedPlayers);
+  public ImmutableSet<PlayerMatcher> getInvitations() {
+    return ImmutableSet.copyOf(invited);
   }
 
   @Override
@@ -195,9 +177,9 @@ class SimpleWarp extends AbstractWarp {
 
   @Override
   public String toString() {
-    return "SimpleWarp{" + "name='" + name + '\'' + ", creationDate=" + creationDate + ", invitedPlayers="
-           + invitedPlayers + ", invitedGroups=" + invitedGroups + ", creator=" + creator + ", type=" + type
-           + ", worldIdentifier=" + worldIdentifier + ", position=" + position + ", rotation=" + rotation + ", visits="
-           + visits + ", welcomeMessage='" + welcomeMessage + '\'' + '}';
+    return "SimpleWarp{" + "name='" + name + '\'' + ", creationDate=" + creationDate + ", criteria=" + invited
+           + ", creator=" + creator + ", type=" + type + ", worldIdentifier=" + worldIdentifier + ", position="
+           + position + ", rotation=" + rotation + ", visits=" + visits + ", welcomeMessage='" + welcomeMessage + '\''
+           + '}';
   }
 }

@@ -85,7 +85,7 @@ public interface Settings {
   ImmutableSet<String> getWarpSignsIdentifiers();
 
   /**
-   * Returns whether players should be informed when they are invited to or uninvited from warps.
+   * Returns whether players should be informed when they are criteria to or uninvited from warps.
    *
    * @return {@code true} if players should be informed
    */

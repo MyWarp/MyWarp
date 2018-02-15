@@ -27,7 +27,8 @@ import io.github.mywarp.mywarp.warp.Warp;
 /**
  * Resolves a user's authentication for a certain warp based on properties of the warp.<ul> <li>A warp is
  * <i>modifiable</i> if the Actor is the creator,</li> <li>A warp is <i>usable</i> if the entity is the creator, or is
- * an invited player, or the warp is public,</li> <li>A warp is viewable if the Actor is an entity who can use the warp,
+ * an criteria player, or the warp is public,</li> <li>A warp is viewable if the Actor is an entity who can use the
+ * warp,
  * or the warp is public.</li> </ul>
  */
 public class WarpPropertiesAuthorizationStrategy implements AuthorizationStrategy {
@@ -42,20 +43,10 @@ public class WarpPropertiesAuthorizationStrategy implements AuthorizationStrateg
     if (entity instanceof Actor && isModifiable(warp, (Actor) entity)) {
       return true;
     }
+    if (entity instanceof LocalPlayer && warp.isInvited((LocalPlayer) entity)) {
+      return true;
 
-    if (entity instanceof LocalPlayer) {
-      LocalPlayer player = (LocalPlayer) entity;
-
-      if (warp.isPlayerInvited(player.getUniqueId())) {
-        return true;
-      }
-      for (String groupId : warp.getInvitedGroups()) {
-        if (player.hasGroup(groupId)) {
-          return true;
-        }
-      }
     }
-
     return warp.isType(Warp.Type.PUBLIC);
   }
 

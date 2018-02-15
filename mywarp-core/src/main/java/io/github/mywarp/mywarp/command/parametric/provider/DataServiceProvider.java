@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * Provides {@link SqlDataService} instances.
  */
-class DataServiceProvider extends NonSuggestiveProvider<SqlDataService> {
+class DataServiceProvider extends AbstractProvider<SqlDataService> {
 
   private final Platform platform;
 

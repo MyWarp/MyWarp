@@ -22,8 +22,6 @@ package io.github.mywarp.mywarp.command.parametric.provider;
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
 import com.sk89q.intake.argument.Namespace;
-import com.sk89q.intake.parametric.Provider;
-import com.sk89q.intake.parametric.ProvisionException;
 
 import io.github.mywarp.mywarp.command.parametric.provider.exception.NoSuchPlayerException;
 import io.github.mywarp.mywarp.command.util.Matches;
@@ -33,15 +31,12 @@ import io.github.mywarp.mywarp.platform.LocalPlayer;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.annotation.Nullable;
 
 /**
  * Provides {@link LocalPlayer} instances.
  */
-class PlayerProvider implements Provider<LocalPlayer> {
+class PlayerProvider extends AbstractProvider<LocalPlayer> {
 
   private final Game game;
 
@@ -50,25 +45,10 @@ class PlayerProvider implements Provider<LocalPlayer> {
   }
 
   @Override
-  public boolean isProvided() {
-    return false;
-  }
-
-  @Nullable
-  @Override
-  public LocalPlayer get(CommandArgs arguments, List<? extends Annotation> modifiers)
-      throws ArgumentException, ProvisionException {
+  public LocalPlayer get(CommandArgs arguments, List<? extends Annotation> modifiers) throws ArgumentException {
     String query = arguments.next();
-
-    Optional<LocalPlayer>
-        playerOptional =
-        Matches.from(game.getPlayers()).withStringFunction(Actor::getName).forQuery(query).getExactMatch();
-
-    if (!playerOptional.isPresent()) {
-      throw new NoSuchPlayerException(query);
-    }
-
-    return playerOptional.get();
+    return Matches.from(game.getPlayers()).withStringFunction(Actor::getName).forQuery(query).getExactMatch()
+        .orElseThrow(() -> new NoSuchPlayerException(query));
   }
 
   @Override

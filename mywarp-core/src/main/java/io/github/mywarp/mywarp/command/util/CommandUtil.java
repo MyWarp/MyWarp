@@ -19,20 +19,16 @@
 
 package io.github.mywarp.mywarp.command.util;
 
-import com.google.common.collect.ImmutableMap;
-
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.PlayerNameResolver;
+import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
+import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
 import io.github.mywarp.mywarp.warp.Warp;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-
-import javax.annotation.Nullable;
+import java.util.stream.Collectors;
 
 /**
  * Utilities for writing commands.
@@ -63,20 +59,8 @@ public class CommandUtil {
    * @return a sorted list of readable names
    */
   public static List<String> toName(Iterable<UUID> uniqueIds, PlayerNameResolver resolver) {
-    List<String> ret = new ArrayList<String>();
-
-    ImmutableMap<UUID, String> map = resolver.getByUniqueId(uniqueIds);
-
-    for (UUID uniqueId : uniqueIds) {
-      @Nullable String name = map.get(uniqueId);
-      if (name != null) {
-        ret.add(name);
-      } else {
-        ret.add(uniqueId.toString());
-      }
-    }
-    Collections.sort(ret);
-    return ret;
+    return resolver.getByUniqueId(uniqueIds).entrySet().stream()
+        .map(e -> e.getValue() != null ? e.getValue() : e.getKey().toString()).sorted().collect(Collectors.toList());
   }
 
   /**
@@ -104,12 +88,7 @@ public class CommandUtil {
    * @see Game#getWorld(UUID)
    */
   public static LocalWorld toWorld(UUID worldIdentifier, Game game) throws NoSuchWorldException {
-    Optional<LocalWorld> worldOptional = game.getWorld(worldIdentifier);
-
-    if (!worldOptional.isPresent()) {
-      throw new NoSuchWorldException(worldIdentifier);
-    }
-    return worldOptional.get();
+    return game.getWorld(worldIdentifier).orElseThrow(() -> new NoSuchWorldException(worldIdentifier));
   }
 
   /**
@@ -121,10 +100,20 @@ public class CommandUtil {
    * @return the world's name
    */
   public static String toWorldName(UUID worldIdentifier, Game game) {
-    Optional<LocalWorld> worldOptional = game.getWorld(worldIdentifier);
-    if (worldOptional.isPresent()) {
-      return worldOptional.get().getName();
+    return game.getWorld(worldIdentifier).map(LocalWorld::getName).orElse(worldIdentifier.toString());
+  }
+
+  /**
+   * Returns the name of given playermatcher in a human readable form.
+   *
+   * @param invitation the playermatcher
+   * @param resolver   the resolver used to resolve the player's name
+   * @return a readable name
+   */
+  public static String toName(PlayerMatcher invitation, PlayerNameResolver resolver) {
+    if (invitation instanceof UuidPlayerMatcher) {
+      return toName(((UuidPlayerMatcher) invitation).getCriteria(), resolver);
     }
-    return worldIdentifier.toString();
+    return invitation.toString();
   }
 }

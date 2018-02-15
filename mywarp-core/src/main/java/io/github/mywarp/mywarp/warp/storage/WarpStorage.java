@@ -19,9 +19,8 @@
 
 package io.github.mywarp.mywarp.warp.storage;
 
+import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
 import io.github.mywarp.mywarp.warp.Warp;
-
-import java.util.UUID;
 
 /**
  * A connection to a data storage, e.g. a rational database.
@@ -43,36 +42,20 @@ public interface WarpStorage extends WarpSource {
   void removeWarp(Warp warp);
 
   /**
-   * Adds the given {@code groupId} to the list of invited groupIds for the given {@code Warp}.
+   * Adds the given playermatcher to the given {@code Warp}.
    *
-   * @param warp    the {@code Warp}
-   * @param groupId the identifier of the group to add
+   * @param warp       the {@code Warp}
+   * @param invitation the playermatcher to add
    */
-  void inviteGroup(Warp warp, String groupId);
+  void addInvitation(Warp warp, PlayerMatcher invitation);
 
   /**
-   * Adds the given unique identifier to the invited identifiers for the given {@code Warp}.
+   * Removes the given playermatcher from the given {@code Warp}.
    *
-   * @param warp     the {@code Warp}
-   * @param uniqueId the unique identifier to add
+   * @param warp       the {@code Warp}
+   * @param invitation the playermatcher to remove
    */
-  void invitePlayer(Warp warp, UUID uniqueId);
-
-  /**
-   * Removes the given {@code groupId} from the list of invited groupIds for the given {@code Warp}.
-   *
-   * @param warp    the {@code Warp}
-   * @param groupId the identifier of the group to remove
-   */
-  void uninviteGroup(Warp warp, String groupId);
-
-  /**
-   * Removes the given unique identifer from the invited identifiers for the given {@code Warp}.
-   *
-   * @param warp     the {@code Warp}
-   * @param uniqueId the unique identifier to remove
-   */
-  void uninvitePlayer(Warp warp, UUID uniqueId);
+  void removeInvitation(Warp warp, PlayerMatcher invitation);
 
   /**
    * Updates the creator of the given {@code Warp}.

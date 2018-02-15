@@ -24,6 +24,7 @@ import com.flowpowered.math.vector.Vector3d;
 
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalWorld;
+import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 import io.github.mywarp.mywarp.warp.storage.WarpStorage;
 
@@ -103,31 +104,15 @@ public class StoragePopulatableWarpManager extends ForwardingPopulatableWarpMana
     }
 
     @Override
-    public void inviteGroup(String groupId) {
-      super.inviteGroup(groupId);
-      storage.inviteGroup(delegate(), groupId);
-
+    public void addInvitation(PlayerMatcher invitation) {
+      super.addInvitation(invitation);
+      storage.addInvitation(delegate(), invitation);
     }
 
     @Override
-    public void invitePlayer(UUID uniqueId) {
-      super.invitePlayer(uniqueId);
-      storage.invitePlayer(delegate(), uniqueId);
-
-    }
-
-    @Override
-    public void uninviteGroup(String groupId) {
-      super.uninviteGroup(groupId);
-      storage.uninviteGroup(delegate(), groupId);
-
-    }
-
-    @Override
-    public void uninvitePlayer(UUID uniqueId) {
-      super.uninvitePlayer(uniqueId);
-      storage.uninvitePlayer(delegate(), uniqueId);
-
+    public void removeInvitation(PlayerMatcher invitation) {
+      super.removeInvitation(invitation);
+      storage.removeInvitation(delegate(), invitation);
     }
 
     @Override

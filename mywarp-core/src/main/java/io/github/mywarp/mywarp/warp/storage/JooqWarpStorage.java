@@ -32,6 +32,9 @@ import static org.jooq.impl.DSL.val;
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
 
+import io.github.mywarp.mywarp.util.playermatcher.GroupPlayerMatcher;
+import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
+import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.Warp.Type;
 import io.github.mywarp.mywarp.warp.WarpBuilder;
@@ -55,8 +58,10 @@ import org.jooq.types.UInteger;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -89,12 +94,27 @@ class JooqWarpStorage implements WarpStorage {
   public void addWarp(final Warp warp) {
     final Vector3d position = warp.getPosition();
     final Vector2f rotation = warp.getRotation();
+
+    final Set<UUID> invitedPlayerIds = new HashSet<>();
+    final Set<String> invitedGroupIds = new HashSet<>();
+
+    warp.getInvitations().forEach(i -> {
+      if (i instanceof UuidPlayerMatcher) {
+        invitedPlayerIds.add(((UuidPlayerMatcher) i).getCriteria());
+      } else if (i instanceof GroupPlayerMatcher) {
+        invitedGroupIds.add(((GroupPlayerMatcher) i).getCriteria());
+      } else {
+        assert false;
+      }
+    });
+
+    //all required playerIds
     final List<UUID> playerIds = new ArrayList<>();
     playerIds.add(warp.getCreator());
-    playerIds.addAll(warp.getInvitedPlayers());
+    playerIds.addAll(invitedPlayerIds);
 
     // @formatter:off
-    create(configuration).transaction(configuration -> {
+    create(configuration).transaction((Configuration configuration) -> {
 
       //Insert all players
       List<Insert<Record>> playerInserts = new ArrayList<>();
@@ -134,14 +154,14 @@ class JooqWarpStorage implements WarpStorage {
 
       //Insert all groups
       List<Insert<Record>> groupInserts = new ArrayList<>();
-      for (String groupName : warp.getInvitedGroups()) {
+      for (String groupName : invitedGroupIds) {
         groupInserts.add(insertOrIgnore(configuration, GROUP, GROUP.NAME, groupName));
       }
       create(configuration).batch(groupInserts).execute();
 
       //insert all player-invitations
       List<InsertSetMoreStep<Record>> warpPlayerInserts = new ArrayList<>();
-      for (UUID invited : warp.getInvitedPlayers()) {
+      invitedPlayerIds.forEach(playerId -> {
         warpPlayerInserts.add(create(configuration)
           .insertInto(WARP_PLAYER_MAP)
           .set(WARP_PLAYER_MAP.WARP_ID,
@@ -153,16 +173,16 @@ class JooqWarpStorage implements WarpStorage {
           .set(WARP_PLAYER_MAP.PLAYER_ID,
                select(PLAYER.PLAYER_ID)
                .from(PLAYER)
-               .where(PLAYER.UUID.eq(invited))
+               .where(PLAYER.UUID.eq(playerId))
                .limit(1)
           )
         );
-      }
+      });
       create(configuration).batch(warpPlayerInserts).execute();
 
       //insert all group-invitations
       List<InsertSetMoreStep<Record>> warpGroupInserts = new ArrayList<>();
-      for (String groupName : warp.getInvitedGroups()) {
+      invitedGroupIds.forEach(groupName -> {
         warpGroupInserts.add(create(configuration)
           .insertInto(WARP_GROUP_MAP)
           .set(WARP_GROUP_MAP.WARP_ID,
@@ -178,7 +198,7 @@ class JooqWarpStorage implements WarpStorage {
                .limit(1)
           )
         );
-      }
+      });
       create(configuration).batch(warpGroupInserts).execute();
     });
     // @formatter:on
@@ -241,13 +261,13 @@ class JooqWarpStorage implements WarpStorage {
 
       for (@Nullable String groupName : r.getValues(GROUP.NAME)) {
         if (groupName != null) {
-          builder.addInvitedGroup(groupName);
+          builder.addInvitation(new GroupPlayerMatcher(groupName));
         }
       }
 
       for (@Nullable UUID inviteeUniqueId : r.getValues(PLAYER.UUID)) {
         if (inviteeUniqueId != null) {
-          builder.addInvitedPlayer(inviteeUniqueId);
+          builder.addInvitation(new UuidPlayerMatcher(inviteeUniqueId));
         }
       }
 
@@ -256,35 +276,31 @@ class JooqWarpStorage implements WarpStorage {
   }
 
   @Override
-  public void inviteGroup(final Warp warp, final String groupId) {
-    create(configuration).transaction(configuration -> {
-      // @formatter:off
-      insertOrIgnore(configuration, GROUP, GROUP.NAME, groupId).execute();
-
-      create(configuration)
-          .insertInto(WARP_GROUP_MAP)
-          .set(WARP_GROUP_MAP.WARP_ID,
-               select(WARP.WARP_ID)
-                .from(WARP)
-                .where(WARP.NAME.eq(warp.getName()))
-                .limit(1)
-          )
-          .set(WARP_GROUP_MAP.GROUP_ID,
-               select(GROUP.GROUP_ID)
-               .from(GROUP)
-               .where(GROUP.NAME.eq(groupId))
-               .limit(1)
-          )
-      .execute();
-      // @formatter:on
-    });
+  public void addInvitation(Warp warp, PlayerMatcher invitation) {
+    if (invitation instanceof UuidPlayerMatcher) {
+      addPlayerInvitation(warp, (UuidPlayerMatcher) invitation);
+    } else if (invitation instanceof GroupPlayerMatcher) {
+      addGroupInvitation(warp, (GroupPlayerMatcher) invitation);
+    } else {
+      assert false;
+    }
   }
 
   @Override
-  public void invitePlayer(final Warp warp, final UUID uniqueId) {
+  public void removeInvitation(Warp warp, PlayerMatcher invitation) {
+    if (invitation instanceof UuidPlayerMatcher) {
+      removePlayerInvitation(warp, (UuidPlayerMatcher) invitation);
+    } else if (invitation instanceof GroupPlayerMatcher) {
+      removeGroupInvitation(warp, (GroupPlayerMatcher) invitation);
+    } else {
+      assert false;
+    }
+  }
+
+  private void addPlayerInvitation(final Warp warp, final UuidPlayerMatcher invitation) {
     create(configuration).transaction(configuration -> {
       // @formatter:off
-      insertOrIgnore(configuration, PLAYER, PLAYER.UUID, uniqueId).execute();
+      insertOrIgnore(configuration, PLAYER, PLAYER.UUID, invitation.getCriteria()).execute();
 
       create(configuration)
           .insertInto(WARP_PLAYER_MAP)
@@ -297,7 +313,7 @@ class JooqWarpStorage implements WarpStorage {
           .set(WARP_PLAYER_MAP.PLAYER_ID,
                select(PLAYER.PLAYER_ID)
                .from(PLAYER)
-               .where(PLAYER.UUID.eq(uniqueId))
+               .where(PLAYER.UUID.eq(invitation.getCriteria()))
                .limit(1)
           )
       .execute();
@@ -305,30 +321,7 @@ class JooqWarpStorage implements WarpStorage {
     });
   }
 
-  @Override
-  public void uninviteGroup(final Warp warp, final String groupId) {
-    // @formatter:off
-    create(configuration)
-        .delete(WARP_GROUP_MAP)
-        .where(
-            WARP_GROUP_MAP.WARP_ID.eq(
-              select(WARP.WARP_ID)
-              .from(WARP)
-              .where(WARP.NAME.eq(warp.getName()))
-              .limit(1))
-            .and(WARP_GROUP_MAP.GROUP_ID.eq(
-              select(GROUP.GROUP_ID)
-              .from(GROUP)
-              .where(GROUP.NAME.eq(groupId))
-              .limit(1))
-            )
-        )
-    .execute();
-    // @formatter:on
-  }
-
-  @Override
-  public void uninvitePlayer(final Warp warp, final UUID uniqueId) {
+  private void removePlayerInvitation(final Warp warp, final UuidPlayerMatcher invitation) {
     // @formatter:off
     create(configuration)
         .delete(WARP_PLAYER_MAP)
@@ -341,7 +334,52 @@ class JooqWarpStorage implements WarpStorage {
             .and(WARP_PLAYER_MAP.PLAYER_ID.eq(
               select(PLAYER.PLAYER_ID)
               .from(PLAYER)
-              .where(PLAYER.UUID.eq(uniqueId))
+              .where(PLAYER.UUID.eq(invitation.getCriteria()))
+              .limit(1))
+            )
+        )
+    .execute();
+    // @formatter:on
+  }
+
+  private void addGroupInvitation(final Warp warp, final GroupPlayerMatcher invitation) {
+    create(configuration).transaction(configuration -> {
+      // @formatter:off
+      insertOrIgnore(configuration, GROUP, GROUP.NAME, invitation.getCriteria()).execute();
+
+      create(configuration)
+          .insertInto(WARP_GROUP_MAP)
+          .set(WARP_GROUP_MAP.WARP_ID,
+               select(WARP.WARP_ID)
+                .from(WARP)
+                .where(WARP.NAME.eq(warp.getName()))
+                .limit(1)
+          )
+          .set(WARP_GROUP_MAP.GROUP_ID,
+               select(GROUP.GROUP_ID)
+               .from(GROUP)
+               .where(GROUP.NAME.eq(invitation.getCriteria()))
+               .limit(1)
+          )
+      .execute();
+      // @formatter:on
+    });
+  }
+
+  private void removeGroupInvitation(final Warp warp, final GroupPlayerMatcher invitation) {
+    // @formatter:off
+    create(configuration)
+        .delete(WARP_GROUP_MAP)
+        .where(
+            WARP_GROUP_MAP.WARP_ID.eq(
+              select(WARP.WARP_ID)
+              .from(WARP)
+              .where(WARP.NAME.eq(warp.getName()))
+              .limit(1))
+            .and(WARP_GROUP_MAP.GROUP_ID.eq(
+              select(GROUP.GROUP_ID)
+              .from(GROUP)
+              .where(GROUP.NAME.eq(invitation.getCriteria()))
               .limit(1))
             )
         )

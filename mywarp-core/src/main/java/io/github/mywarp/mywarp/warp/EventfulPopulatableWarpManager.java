@@ -25,13 +25,12 @@ import com.google.common.eventbus.EventBus;
 
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalWorld;
+import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 import io.github.mywarp.mywarp.warp.event.WarpAdditionEvent;
 import io.github.mywarp.mywarp.warp.event.WarpDeletionEvent;
 import io.github.mywarp.mywarp.warp.event.WarpEvent;
-import io.github.mywarp.mywarp.warp.event.WarpGroupInvitesEvent;
 import io.github.mywarp.mywarp.warp.event.WarpInvitesEvent;
-import io.github.mywarp.mywarp.warp.event.WarpPlayerInvitesEvent;
 import io.github.mywarp.mywarp.warp.event.WarpUpdateEvent;
 
 import java.util.UUID;
@@ -115,31 +114,15 @@ public class EventfulPopulatableWarpManager extends ForwardingPopulatableWarpMan
     }
 
     @Override
-    public void inviteGroup(String groupId) {
-      super.inviteGroup(groupId);
-      eventBus.post(new WarpGroupInvitesEvent(this, WarpInvitesEvent.InvitationStatus.INVITE, groupId));
-
+    public void addInvitation(PlayerMatcher invitation) {
+      super.addInvitation(invitation);
+      eventBus.post(new WarpInvitesEvent(this, WarpInvitesEvent.InvitationStatus.ADDITION, invitation));
     }
 
     @Override
-    public void invitePlayer(UUID uniqueId) {
-      super.invitePlayer(uniqueId);
-      eventBus.post(new WarpPlayerInvitesEvent(this, WarpInvitesEvent.InvitationStatus.INVITE, uniqueId));
-
-    }
-
-    @Override
-    public void uninviteGroup(String groupId) {
-      super.uninviteGroup(groupId);
-      eventBus.post(new WarpGroupInvitesEvent(this, WarpInvitesEvent.InvitationStatus.UNINVITE, groupId));
-
-    }
-
-    @Override
-    public void uninvitePlayer(UUID uniqueId) {
-      super.uninvitePlayer(uniqueId);
-      eventBus.post(new WarpPlayerInvitesEvent(this, WarpInvitesEvent.InvitationStatus.UNINVITE, uniqueId));
-
+    public void removeInvitation(PlayerMatcher invitation) {
+      super.removeInvitation(invitation);
+      eventBus.post(new WarpInvitesEvent(this, WarpInvitesEvent.InvitationStatus.REMOVAL, invitation));
     }
 
     @Override

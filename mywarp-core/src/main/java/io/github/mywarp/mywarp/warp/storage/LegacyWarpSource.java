@@ -35,6 +35,8 @@ import com.google.common.collect.Iterables;
 
 import io.github.mywarp.mywarp.platform.PlayerNameResolver;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
+import io.github.mywarp.mywarp.util.playermatcher.GroupPlayerMatcher;
+import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpBuilder;
 
@@ -202,16 +204,17 @@ public final class LegacyWarpSource implements WarpSource {
       builder.setVisits(r.value10());
       builder.setWelcomeMessage(r.value11());
 
-      builder.addInvitedGroups(splitter.split(r.value13()));
+      splitter.split(r.value13()).forEach(g -> builder.addInvitation(new GroupPlayerMatcher(g)));
 
       for (String playerName : splitter.split(r.value12())) {
         UUID invitee = profileLookup.get(playerName);
         if (invitee == null) {
-          log.warn("{}, who is invited to '{}' does not have a unique ID. The invitation will be ignored.", playerName,
+          log.warn("{}, who is criteria to '{}' does not have a unique ID. The playermatcher will be ignored.",
+                   playerName,
                    warpName);
           continue;
         }
-        builder.addInvitedPlayer(invitee);
+        builder.addInvitation(new UuidPlayerMatcher(invitee));
       }
 
       ret.add(builder.build());

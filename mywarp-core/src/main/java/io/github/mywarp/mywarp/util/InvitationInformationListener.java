@@ -24,13 +24,7 @@ import com.google.common.eventbus.Subscribe;
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
-import io.github.mywarp.mywarp.warp.event.WarpGroupInvitesEvent;
 import io.github.mywarp.mywarp.warp.event.WarpInvitesEvent;
-import io.github.mywarp.mywarp.warp.event.WarpPlayerInvitesEvent;
-
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Listens for (un)invitations and informs affected players.
@@ -51,55 +45,30 @@ public class InvitationInformationListener {
   }
 
   /**
-   * Called whenever players are invited to or uninvited from warps.
+   * Called whenever players are criteria to or uninvited from warps.
    *
    * @param event the event
    * @deprecated will be privatized once support for old Guava versions is removed
    */
   @Deprecated
   @Subscribe
-  public void onPlayerInvite(WarpPlayerInvitesEvent event) {
-    Optional<LocalPlayer> playerOptional = game.getPlayer(event.getUniqueId());
-    if (!playerOptional.isPresent()) {
-      return;
-    }
-    inform(event.getInvitationStatus(), event.getWarp().getName(), playerOptional.get());
-  }
-
-  /**
-   * Called whenever groups are invited to or uninvited from warps.
-   *
-   * @param event the event
-   * @deprecated will be privatized once support for old Guava versions is removed
-   */
-  @Deprecated
-  @Subscribe
-  public void onGroupInvite(final WarpGroupInvitesEvent event) {
-    inform(event.getInvitationStatus(), event.getWarp().getName(),
-           game.getPlayers().stream().filter(p -> p.hasGroup(event.getGroupId())).collect(Collectors.toList()));
-  }
-
-  private void inform(WarpInvitesEvent.InvitationStatus status, String warpName, LocalPlayer... players) {
-    inform(status, warpName, Arrays.asList(players));
-  }
-
-  private void inform(WarpInvitesEvent.InvitationStatus status, String warpName, Iterable<LocalPlayer> players) {
+  public void onInvitationAddition(WarpInvitesEvent event) {
     Message.Builder builder = Message.builder().append(Message.Style.INFO);
 
+    WarpInvitesEvent.InvitationStatus status = event.getInvitationStatus();
+    String warpName = event.getWarp().getName();
+
     switch (status) {
-      case INVITE:
+      case ADDITION:
         builder.append(msg.getString("player.invited", warpName));
         break;
-      case UNINVITE:
+      case REMOVAL:
         builder.append(msg.getString("player.uninvited", warpName));
         break;
       default:
         assert false : status;
     }
 
-    for (LocalPlayer player : players) {
-      player.sendMessage(builder.build());
-    }
+    event.getInvitation().allMatches(game).forEach((LocalPlayer p) -> p.sendMessage(builder.build()));
   }
-
 }

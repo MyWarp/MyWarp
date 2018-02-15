@@ -25,7 +25,9 @@ import com.google.common.collect.ForwardingObject;
 import com.google.common.collect.ImmutableSet;
 
 import io.github.mywarp.mywarp.platform.LocalEntity;
+import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
+import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 
 import java.time.Instant;
@@ -118,33 +120,18 @@ abstract class ForwardingPopulatableWarpManager extends ForwardingObject impleme
     }
 
     @Override
-    public boolean isPlayerInvited(UUID uniqueId) {
-      return delegate().isPlayerInvited(uniqueId);
+    public boolean isInvited(LocalPlayer player) {
+      return delegate().isInvited(player);
     }
 
     @Override
-    public boolean isGroupInvited(String groupId) {
-      return delegate().isGroupInvited(groupId);
+    public void addInvitation(PlayerMatcher invitation) {
+      delegate().addInvitation(invitation);
     }
 
     @Override
-    public void inviteGroup(String groupId) {
-      delegate().inviteGroup(groupId);
-    }
-
-    @Override
-    public void invitePlayer(UUID uniqueId) {
-      delegate().invitePlayer(uniqueId);
-    }
-
-    @Override
-    public void uninviteGroup(String groupId) {
-      delegate().uninviteGroup(groupId);
-    }
-
-    @Override
-    public void uninvitePlayer(UUID uniqueId) {
-      delegate().uninvitePlayer(uniqueId);
+    public void removeInvitation(PlayerMatcher invitation) {
+      delegate().removeInvitation(invitation);
     }
 
     @Override
@@ -163,13 +150,8 @@ abstract class ForwardingPopulatableWarpManager extends ForwardingObject impleme
     }
 
     @Override
-    public ImmutableSet<String> getInvitedGroups() {
-      return delegate().getInvitedGroups();
-    }
-
-    @Override
-    public ImmutableSet<UUID> getInvitedPlayers() {
-      return delegate().getInvitedPlayers();
+    public ImmutableSet<PlayerMatcher> getInvitations() {
+      return delegate().getInvitations();
     }
 
     @Override

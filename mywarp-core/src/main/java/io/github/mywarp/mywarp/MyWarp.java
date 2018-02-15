@@ -129,7 +129,6 @@ public final class MyWarp {
     MyWarp myWarp = new MyWarp(platform, dataService, warpStorage, warpManager, eventBus, authorizationResolver);
     myWarp.initializeMutableFields();
     myWarp.loadWarps();
-
     return myWarp;
   }
 

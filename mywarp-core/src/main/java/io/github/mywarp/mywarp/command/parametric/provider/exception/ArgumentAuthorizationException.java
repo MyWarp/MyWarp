@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2017, MyWarp team and contributors
+ * Copyright (C) 2011 - 2018, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -17,28 +17,13 @@
  * along with MyWarp. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.mywarp.mywarp.command.parametric.provider;
+package io.github.mywarp.mywarp.command.parametric.provider.exception;
 
-import com.sk89q.intake.argument.Namespace;
-import com.sk89q.intake.parametric.Provider;
-
-import java.util.Collections;
-import java.util.List;
+import com.sk89q.intake.argument.ArgumentException;
 
 /**
- * A provider that does not make any suggestions.
- *
- * @see Provider#getSuggestions(String, Namespace)
+ * Thrown if a given argument requires a permission, but the command sender does not have this permission.
  */
-abstract class NonSuggestiveProvider<T> implements Provider<T> {
+public class ArgumentAuthorizationException extends ArgumentException {
 
-  @Override
-  public boolean isProvided() {
-    return false;
-  }
-
-  @Override
-  public List<String> getSuggestions(String prefix, Namespace locals) {
-    return Collections.emptyList();
-  }
 }
