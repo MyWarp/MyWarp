@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2017, MyWarp team and contributors
+ * Copyright (C) 2011 - 2018, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -61,9 +61,7 @@ class BukkitSign implements Sign {
 
     if (signMat.isWallSign()) {
       Optional<BlockFace> adapt = BukkitAdapter.adapt(signMat.getAttachedFace());
-      if (adapt.isPresent() && adapt.get().equals(blockFace)) {
-        return true;
-      }
+      return adapt.isPresent() && adapt.get().equals(blockFace);
     }
     return false;
   }

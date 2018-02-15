@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2017, MyWarp team and contributors
+ * Copyright (C) 2011 - 2018, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -36,6 +36,20 @@ import java.util.stream.Collectors;
 public class CommandUtil {
 
   private CommandUtil() {
+  }
+
+  /**
+   * Returns the name of given playermatcher in a human readable form.
+   *
+   * @param invitation the playermatcher
+   * @param resolver   the resolver used to resolve the player's name
+   * @return a readable name
+   */
+  public static String toName(PlayerMatcher invitation, PlayerNameResolver resolver) {
+    if (invitation instanceof UuidPlayerMatcher) {
+      return toName(((UuidPlayerMatcher) invitation).getCriteria(), resolver);
+    }
+    return invitation.toString();
   }
 
   /**
@@ -101,19 +115,5 @@ public class CommandUtil {
    */
   public static String toWorldName(UUID worldIdentifier, Game game) {
     return game.getWorld(worldIdentifier).map(LocalWorld::getName).orElse(worldIdentifier.toString());
-  }
-
-  /**
-   * Returns the name of given playermatcher in a human readable form.
-   *
-   * @param invitation the playermatcher
-   * @param resolver   the resolver used to resolve the player's name
-   * @return a readable name
-   */
-  public static String toName(PlayerMatcher invitation, PlayerNameResolver resolver) {
-    if (invitation instanceof UuidPlayerMatcher) {
-      return toName(((UuidPlayerMatcher) invitation).getCriteria(), resolver);
-    }
-    return invitation.toString();
   }
 }

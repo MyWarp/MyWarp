@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2017, MyWarp team and contributors
+ * Copyright (C) 2011 - 2018, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -50,12 +50,9 @@ abstract class AbstractWarp implements Warp {
     }
     SimpleWarp other = (SimpleWarp) obj;
     if (getName() == null) {
-      if (other.getName() != null) {
-        return false;
-      }
-    } else if (!getName().equals(other.getName())) {
-      return false;
+      return other.getName() == null;
+    } else {
+      return getName().equals(other.getName());
     }
-    return true;
   }
 }

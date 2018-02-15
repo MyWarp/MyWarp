@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2017, MyWarp team and contributors
+ * Copyright (C) 2011 - 2018, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,10 +21,8 @@ package io.github.mywarp.mywarp.command.parametric.namespace;
 
 import static com.google.common.base.Preconditions.checkState;
 
-import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
 import com.sk89q.intake.argument.Namespace;
-import com.sk89q.intake.parametric.ProvisionException;
 
 import io.github.mywarp.mywarp.platform.Actor;
 
@@ -37,8 +35,7 @@ import java.util.List;
 class ActorProvider extends NonProvidingProvider<Actor> {
 
   @Override
-  public Actor get(CommandArgs arguments, List<? extends Annotation> modifiers)
-      throws ArgumentException, ProvisionException {
+  public Actor get(CommandArgs arguments, List<? extends Annotation> modifiers) {
     Namespace namespace = arguments.getNamespace();
     checkState(namespace.containsKey(Actor.class), "Namespace does not contain an Actor");
 

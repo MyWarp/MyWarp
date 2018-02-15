@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2017, MyWarp team and contributors
+ * Copyright (C) 2011 - 2018, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -48,8 +48,7 @@ class CraftBukkitLocaleResolver implements LocaleResolver {
     this.localeField = localeField;
   }
 
-  static LocaleResolver create(Class<? extends Player> p)
-      throws ClassNotFoundException, NoSuchFieldException, NoSuchMethodException {
+  static LocaleResolver create(Class<? extends Player> p) throws NoSuchFieldException, NoSuchMethodException {
     Method handleMethod = p.getMethod(METHOD_NAME);
     handleMethod.setAccessible(true);
 

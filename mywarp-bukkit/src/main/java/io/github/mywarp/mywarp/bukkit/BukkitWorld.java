@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2017, MyWarp team and contributors
+ * Copyright (C) 2011 - 2018, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -81,7 +81,7 @@ public class BukkitWorld implements LocalWorld {
   @Override
   public Optional<Sign> getSign(Vector3i position) {
     //Generics are stupid and throw an error when not casting
-    return Optional.ofNullable((Sign) getBukkitSign(position));
+    return Optional.ofNullable(getBukkitSign(position));
   }
 
   @Override
@@ -90,7 +90,7 @@ public class BukkitWorld implements LocalWorld {
 
     if (sign != null && sign.isAttachedTo(blockFace)) {
       //Generics are stupid and throw an error when not casting
-      return Optional.of((Sign) sign);
+      return Optional.of(sign);
     }
     return Optional.empty();
   }

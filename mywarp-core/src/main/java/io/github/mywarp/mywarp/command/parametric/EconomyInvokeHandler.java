@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2017, MyWarp team and contributors
+ * Copyright (C) 2011 - 2018, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,8 +19,6 @@
 
 package io.github.mywarp.mywarp.command.parametric;
 
-import com.sk89q.intake.CommandException;
-import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
 import com.sk89q.intake.parametric.ArgumentParser;
 import com.sk89q.intake.parametric.handler.AbstractInvokeListener;
@@ -59,14 +57,13 @@ public class EconomyInvokeHandler extends AbstractInvokeListener implements Invo
   }
 
   @Override
-  public boolean preProcess(List<? extends Annotation> annotations, ArgumentParser parser, CommandArgs commandArgs)
-      throws CommandException, ArgumentException {
+  public boolean preProcess(List<? extends Annotation> annotations, ArgumentParser parser, CommandArgs commandArgs) {
     return true;
   }
 
   @Override
   public boolean preInvoke(List<? extends Annotation> annotations, ArgumentParser parser, Object[] args,
-                           CommandArgs commandArgs) throws CommandException, ArgumentException {
+                           CommandArgs commandArgs) {
     Optional<Billable> billable = findFirst(annotations, Billable.class);
     if (!billable.isPresent()) {
       return true;
@@ -83,7 +80,7 @@ public class EconomyInvokeHandler extends AbstractInvokeListener implements Invo
 
   @Override
   public void postInvoke(List<? extends Annotation> annotations, ArgumentParser parser, Object[] args,
-                         CommandArgs commandArgs) throws CommandException, ArgumentException {
+                         CommandArgs commandArgs) {
     Optional<Billable> billable = findFirst(annotations, Billable.class);
     if (!billable.isPresent()) {
       return;
