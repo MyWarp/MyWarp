@@ -39,6 +39,7 @@ import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.TreeSet;
 
@@ -61,7 +62,8 @@ public class WarpSignHandler {
 
   private static final DynamicMessages msg = new DynamicMessages("io.github.mywarp.mywarp.lang.WarpSigns");
 
-  private final TreeSet<String> identifiers = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+  private final TreeSet<String> identifiers = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+  private final boolean caseSensitiveWarpNames;
   private final AuthorizationResolver authorizationResolver;
   private final WarpManager warpManager;
   private final TeleportService teleportService;
@@ -77,35 +79,20 @@ public class WarpSignHandler {
    * @param economyCapability the EconomyCapability used by this instance - can be null if no economy should be used
    */
   public WarpSignHandler(Iterable<String> identifiers, MyWarp myWarp, @Nullable EconomyCapability economyCapability) {
-    this(identifiers, myWarp.getAuthorizationResolver(), createEconomyService(economyCapability),
-         createTeleportService(myWarp, economyCapability), myWarp.getWarpManager());
+    this(identifiers, myWarp.getSettings().isCaseSensitiveWarpNames(), myWarp.getAuthorizationResolver(),
+         createEconomyService(economyCapability), createTeleportService(myWarp, economyCapability),
+         myWarp.getWarpManager());
   }
 
-  private WarpSignHandler(Iterable<String> identifiers, AuthorizationResolver authorizationResolver,
-                          @Nullable EconomyService economyService, TeleportService teleportService,
-                          WarpManager warpManager) {
+  private WarpSignHandler(Iterable<String> identifiers, boolean caseSensitiveWarpNames,
+                          AuthorizationResolver authorizationResolver, @Nullable EconomyService economyService,
+                          TeleportService teleportService, WarpManager warpManager) {
     Iterables.addAll(this.identifiers, identifiers);
+    this.caseSensitiveWarpNames = caseSensitiveWarpNames;
     this.authorizationResolver = authorizationResolver;
     this.economyService = economyService;
     this.teleportService = teleportService;
     this.warpManager = warpManager;
-  }
-
-  @Nullable
-  private static EconomyService createEconomyService(@Nullable EconomyCapability economyCapability) {
-    if (economyCapability != null) {
-      return new EconomyService(economyCapability);
-    }
-    return null;
-  }
-
-  private static TeleportService createTeleportService(MyWarp myWarp, @Nullable EconomyCapability economyCapability) {
-    TeleportService ret = new HandlerTeleportService(myWarp.getTeleportHandler(), myWarp.getPlayerNameResolver());
-
-    if (economyCapability != null) {
-      ret = new EconomyTeleportService(ret, createEconomyService(economyCapability), FeeType.WARP_SIGN_USE);
-    }
-    return ret;
   }
 
   /**
@@ -133,7 +120,7 @@ public class WarpSignHandler {
       return Optional.of(false);
     }
     String name = sign.getLine(WARPNAME_LINE);
-    Optional<Warp> optional = warpManager.getByName(name);
+    Optional<Warp> optional = getWarp(name);
 
     //validate warp existence
     if (!optional.isPresent()) {
@@ -160,9 +147,69 @@ public class WarpSignHandler {
     String line = sign.getLine(IDENTIFIER_LINE);
     line = line.substring(1, line.length() - 1);
     sign.setLine(IDENTIFIER_LINE, "[" + identifiers.ceiling(line) + "]");
+    sign.setLine(WARPNAME_LINE, warp.getName());
 
     player.sendMessage(msg.getString("created-successful"));
     return Optional.of(true);
+  }
+
+  @Nullable
+  private static EconomyService createEconomyService(@Nullable EconomyCapability economyCapability) {
+    if (economyCapability != null) {
+      return new EconomyService(economyCapability);
+    }
+    return null;
+  }
+
+  private static TeleportService createTeleportService(MyWarp myWarp, @Nullable EconomyCapability economyCapability) {
+    TeleportService ret = new HandlerTeleportService(myWarp.getTeleportHandler(), myWarp.getPlayerNameResolver());
+
+    if (economyCapability != null) {
+      ret = new EconomyTeleportService(ret, createEconomyService(economyCapability), FeeType.WARP_SIGN_USE);
+    }
+    return ret;
+  }
+
+  /**
+   * Handles the interaction of the given {@code player} with the given {@code sign}. Returns {@code true} if and only
+   * if the sign is a valid warp sign.
+   *
+   * <p>If the sign is a warp sign, the player has the permission to use warp signs, the warp given on the warp sign
+   * exists and is usable by the player, he is teleported there. If any of this conditions is not met, the handling is
+   * aborted and the player is informed (if appropriate).</p>
+   *
+   * <p>Typically an interaction is a right click.</p>
+   *
+   * @param player the player who interacted with the the sign
+   * @param sign   the sign interacted with
+   * @return {@code true} if the sign is a warp sign
+   */
+  public boolean handleInteraction(LocalPlayer player, Sign sign) {
+    if (!isWarpSign(sign)) {
+      return false;
+    }
+    LocaleManager.setLocale(player.getLocale());
+    if (!player.hasPermission("mywarp.sign.use")) {
+      player.sendError(msg.getString("permission.use"));
+      return true;
+    }
+
+    String warpName = sign.getLine(WARPNAME_LINE);
+
+    Optional<Warp> optional = getWarp(warpName);
+    if (!optional.isPresent()) {
+      player.sendError(msg.getString("warp-non-existent", warpName));
+      return true;
+    }
+    final Warp warp = optional.get();
+
+    if (!authorizationResolver.isUsable(warp, player)) {
+      player.sendError(msg.getString("permission.use.to-warp", warpName));
+      return true;
+    }
+
+    teleportService.teleport(player, warp);
+    return true;
   }
 
   /**
@@ -202,46 +249,15 @@ public class WarpSignHandler {
     return !sign.isPresent() || handleInteraction(player, sign.get());
   }
 
-  /**
-   * Handles the interaction of the given {@code player} with the given {@code sign}. Returns {@code true} if and only
-   * if the sign is a valid warp sign.
-   *
-   * <p>If the sign is a warp sign, the player has the permission to use warp signs, the warp given on the warp sign
-   * exists and is usable by the player, he is teleported there. If any of this conditions is not met, the handling is
-   * aborted and the player is informed (if appropriate).</p>
-   *
-   * <p>Typically an interaction is a right click.</p>
-   *
-   * @param player the player who interacted with the the sign
-   * @param sign   the sign interacted with
-   * @return {@code true} if the sign is a warp sign
-   */
-  public boolean handleInteraction(LocalPlayer player, Sign sign) {
-    if (!isWarpSign(sign)) {
-      return false;
+  private Optional<Warp> getWarp(String warpName) {
+    if (caseSensitiveWarpNames) {
+      return warpManager.getByName(warpName);
     }
-    LocaleManager.setLocale(player.getLocale());
-    if (!player.hasPermission("mywarp.sign.use")) {
-      player.sendError(msg.getString("permission.use"));
-      return true;
+    Collection<Warp> warps = warpManager.getAll(w -> w.getName().equalsIgnoreCase(warpName));
+    if (warps.size() == 1) {
+      return Optional.of(warps.iterator().next());
     }
-
-    String warpName = sign.getLine(WARPNAME_LINE);
-
-    Optional<Warp> optional = warpManager.getByName(warpName);
-    if (!optional.isPresent()) {
-      player.sendError(msg.getString("warp-non-existent", warpName));
-      return true;
-    }
-    final Warp warp = optional.get();
-
-    if (!authorizationResolver.isUsable(warp, player)) {
-      player.sendError(msg.getString("permission.use.to-warp", warpName));
-      return true;
-    }
-
-    teleportService.teleport(player, warp);
-    return true;
+    return Optional.empty();
   }
 
   private boolean isWarpSign(Sign sign) {
