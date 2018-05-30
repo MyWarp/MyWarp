@@ -142,7 +142,7 @@ public final class MyWarpPlugin extends JavaPlugin {
       // if the configuration has an invalid format, the plugin shuts down before even initializing the core.
     }
     statisticService.addWarpChart(myWarp.getWarpManager());
-    log.info("Using %s to collect anonymous statistics about your usage of MyWarp.", statisticService.getServiceName());
+    log.info("Using {} to collect anonymous statistics about your usage of MyWarp.", statisticService.getServiceName());
   }
 
   @Override
@@ -192,7 +192,7 @@ public final class MyWarpPlugin extends JavaPlugin {
         marker.addMarker(myWarp.getWarpManager().getAll(warp -> true));
         myWarp.getEventBus().register(marker);
       } else {
-        log.error("Failed to init into Dynmap. Disabling Dynmap support.");
+        log.error("Failed to hook into Dynmap. Disabling Dynmap support.");
       }
     }
   }
