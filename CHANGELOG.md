@@ -10,12 +10,32 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 ### Changed
 * [[#143](https://github.com/TheE/MyWarp/issues/143)] - Change group-id and package structure to `io.github.mywarp.mywarp`
 * [[#71](https://github.com/TheE/MyWarp/issues/71)] - Require Java 8 to run MyWarp, update internals to use new, native Java constructs where possible
-* Update to JOOQ 3.9.3
+* Update to JOOQ 3.10.7
 * FlyWay to JOOQ 4.2.0
-* [Bukkit] Build against Bukkit 1.12-R0.1-SNAPSHOT
+* [Bukkit] Build against Bukkit 1.12.2-R0.1-SNAPSHOT
+* [[#151](https://github.com/TheE/MyWarp/issues/151)] - Use new crowdin API
+* [Spigot][[#118](https://github.com/TheE/MyWarp/issues/118)] - Use `player.getLocale()` if it exists
+* [[#160](https://github.com/TheE/MyWarp/issues/160)] - Move LocaleResolver to VersionSupport
+* [[#144](https://github.com/TheE/MyWarp/issues/140)] - Make DBMS configuration way more flexible
+* Update Gradle to 4.8 and use up-to-date versions of all plugins used in the build process
+* Groups in `/warp invite` and `/warp uninvite` have to be prefixed by `g:` rather than using the `-g` flag.
 
 ### Added
 * [[#142](https://github.com/TheE/MyWarp/issues/142)] - Add an option to disallow warps with different capitalization
+* Added acceptance of UUIDs in `/warp invite`, `/warp uninvite` and `/warp give` using the `u:` prefix
+
+### Fixed
+* [[#148](https://github.com/TheE/MyWarp/issues/148)] - `/warp list` flags are not working
+* [[#153](https://github.com/TheE/MyWarp/issues/153)] - Invalid date formatting in `/warp info`
+* [[#150](https://github.com/TheE/MyWarp/issues/150)] - slf4bukkit does not work on PaperSpigot
+* [[#157](https://github.com/TheE/MyWarp/issues/157), [[#61](https://github.com/TheE/MyWarp/issues/161)] - Issues with line endings ìn messages on Windows based servers
+* [[#166](https://github.com/TheE/MyWarp/issues/166), [[#167](https://github.com/TheE/MyWarp/issues/167)] - Dynmap shows public and private warps
+* [[#173](https://github.com/TheE/MyWarp/issues/173)] - Fix calculation of visits per day for just created warps
+* [[#156](https://github.com/TheE/MyWarp/issues/156)] - Fix teleporting with donkeys and mules on 1.12
+* Fix Guava compatibility of the Dynmap bridge
+* Fix handling of manually thrown AuthorizationExceptions in commands
+* [[#179](https://github.com/TheE/MyWarp/issues/179)] - Fix `give.is-owner error message
+* [[#182](https://github.com/TheE/MyWarp/issues/182)] - Fix warp signs when warp names are not handled case sensitive
 
 ## [3.0-beta-4] - 2017-02-26
 
@@ -30,7 +50,7 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 * Construct `MyWarp` with a factory rather than a constructor
 * [Bukkit] Overhaul Bukkit implementation
 * Unify naming of internal components, refactor most classes into a cleaner package structure
-* Make the core handled teleporting of tamed horses
+* Make the core handle teleports of tamed horses
 * [[#108](https://github.com/TheE/MyWarp/issues/108)] - Update FlyWay to 4.1.1
 * [[#86](https://github.com/TheE/MyWarp/issues/86)] - Replace EulerDirection with Vectors
 * Require at least Java8 to build (not to run) MyWarp
