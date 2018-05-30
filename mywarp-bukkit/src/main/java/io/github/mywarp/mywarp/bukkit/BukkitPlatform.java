@@ -121,10 +121,10 @@ public class BukkitPlatform implements Platform {
               new BundleProvider<>(settings.getEconomyConfiguredFeeBundles(), settings.getEconomyDefaultFeeBundle());
           economyCapability = new BukkitEconomyCapability(serviceProvider.getProvider(), feeProvider, settings);
         } else {
-          log.error("Failed to hook into Vault (Economy is null). Economy support will not be available.");
+          log.error("Failed to init into Vault (Economy is null). Economy support will not be available.");
         }
       } catch (NoClassDefFoundError e) {
-        log.error("Failed to hook into Vault (Economy Class not available). Economy support will not be available.");
+        log.error("Failed to init into Vault (Economy Class not available). Economy support will not be available.");
       }
 
       if (economyCapability != null) {

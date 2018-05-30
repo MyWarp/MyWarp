@@ -186,7 +186,12 @@ public class JdbcConfiguration {
     return jdbcUrl;
   }
 
-  String getProtocol() {
-    return protocol;
+  /**
+   * Gets the protocol of this configuration (e.g. {@code mysql}, {@code h2} or {@code sqlite}) as a lowercase string.
+   *
+   * @return the protocol
+   */
+  public String getProtocol() {
+    return protocol.toLowerCase();
   }
 }

@@ -74,7 +74,7 @@ public final class GroupResolverFactory {
     }
 
     // PermissionsEx automatically applies these
-    log.info("Using Superperms fallback ('group.[GROUPNAME]) for group support.");
+    log.info("Using Superperms fallback ('group.[GROUPNAME]') for group support.");
     return new SuperPermsResolver();
   }
 

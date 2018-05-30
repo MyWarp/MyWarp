@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 /**
- * Handles functionality that requires different implementations for different versions if Minecraft or Bukkit.
+ * Handles functionality that requires different implementations for different versions of Minecraft or Bukkit.
  */
 public final class VersionSupport {
 

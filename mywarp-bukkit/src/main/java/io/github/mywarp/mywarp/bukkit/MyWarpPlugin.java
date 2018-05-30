@@ -32,6 +32,7 @@ import io.github.mywarp.mywarp.bukkit.util.jdbc.JdbcConfiguration;
 import io.github.mywarp.mywarp.bukkit.util.permission.BukkitPermissionsRegistration;
 import io.github.mywarp.mywarp.bukkit.util.permission.group.GroupResolver;
 import io.github.mywarp.mywarp.bukkit.util.permission.group.GroupResolverFactory;
+import io.github.mywarp.mywarp.bukkit.util.stats.StatisticService;
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.InvalidFormatException;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
@@ -130,6 +131,18 @@ public final class MyWarpPlugin extends JavaPlugin {
     welcomeEditorFactory = new WelcomeEditorFactory(createConversationFactory());
 
     notifyCoreInitialized();
+
+    //Statistics
+    StatisticService statisticService = StatisticService.create(this);
+    statisticService.addFeatureChart(getSettings());
+    try {
+      statisticService.addDbmsChart(getSettings().getJdbcStorageConfiguration());
+    } catch (InvalidFormatException ignore) {
+      // This should not happen at this stage:
+      // if the configuration has an invalid format, the plugin shuts down before even initializing the core.
+    }
+    statisticService.addWarpChart(myWarp.getWarpManager());
+    log.info("Using %s to collect anonymous statistics about your usage of MyWarp.", statisticService.getServiceName());
   }
 
   @Override
@@ -179,7 +192,7 @@ public final class MyWarpPlugin extends JavaPlugin {
         marker.addMarker(myWarp.getWarpManager().getAll(warp -> true));
         myWarp.getEventBus().register(marker);
       } else {
-        log.error("Failed to hook into Dynmap. Disabling Dynmap support.");
+        log.error("Failed to init into Dynmap. Disabling Dynmap support.");
       }
     }
   }
