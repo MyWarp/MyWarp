@@ -31,10 +31,10 @@ import java.util.SortedSet;
 /**
  * Provides a managed access to {@link ValueBundle}s.
  *
- * <p>A provider instance is created with a default and multiple custom bundles. When a bundle for a player is requested
- * from the provider, it iterates over the custom bundles in the order defined for ValueBundles and returns the first
- * bundle for which the player has the permission. If he does not have a permission for any bundle, the default one is
- * returned.</p>
+ * <p>A provider instance is created with a default and multiple custom bundles. When a bundle for a player is
+ * requested from the provider, it iterates over the custom bundles in the order defined for ValueBundles and returns
+ * the first bundle for which the player has the permission. If he does not have a permission for any bundle, the
+ * default one is returned.</p>
  *
  * @param <B> the type of ValueBundle this provider provides
  */

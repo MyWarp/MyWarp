@@ -42,9 +42,9 @@ import java.util.stream.StreamSupport;
  * as required by the decorator pattern, events are implemented on top.
  *
  * <p>Events are dispatched in the {@link EventBus} given when initializing this PopulatableWarpManager. Individual
- * warps fire {@link WarpEvent}s and the manager itself fires {@link WarpAdditionEvent}s and {@link
- * WarpDeletionEvent}s when Warps are added to or removed from it. Handlers that want
- * to listen to such events need to register themselves on the EventBus.</p>
+ * warps fire {@link WarpEvent}s and the manager itself fires {@link WarpAdditionEvent}s and {@link WarpDeletionEvent}s
+ * when Warps are added to or removed from it. Handlers that want to listen to such events need to register themselves
+ * on the EventBus.</p>
  */
 public class EventfulPopulatableWarpManager extends ForwardingPopulatableWarpManager {
 

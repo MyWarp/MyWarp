@@ -48,8 +48,8 @@ import javax.annotation.Nullable;
 /**
  * Handles interaction with warp signs.
  *
- * <p>A warp sign is a sign that has an identifier (e.g. 'MyWarp') enclosed by brackets in the second and the name of an
- * existing warp in the third line. If a player interacts with a sign by clicking it, he is teleported to the warp
+ * <p>A warp sign is a sign that has an identifier (e.g. 'MyWarp') enclosed by brackets in the second and the name of
+ * an existing warp in the third line. If a player interacts with a sign by clicking it, he is teleported to the warp
  * specified on the sign, if he meets certain conditions.</p>
  *
  * <p>As of itself this class does nothing. It must be feat by a event system that tracks creation and clinking on

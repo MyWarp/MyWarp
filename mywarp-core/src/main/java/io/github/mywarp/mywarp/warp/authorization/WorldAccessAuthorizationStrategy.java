@@ -39,8 +39,8 @@ public class WorldAccessAuthorizationStrategy extends ForwardingAuthorizationStr
   private final Settings settings;
 
   /**
-   * Creates an instance using the given {@code Settings}. If the tested user may visit the world of the tested warp
-   * in question, further tests are delegated to the given {@code AuthorizationStrategy}.
+   * Creates an instance using the given {@code Settings}. If the tested user may visit the world of the tested warp in
+   * question, further tests are delegated to the given {@code AuthorizationStrategy}.
    *
    * @param delegate the strategy to delegate further tests to
    * @param game     the configured Game instance

@@ -90,8 +90,8 @@ public class WarpStorageFactory {
   }
 
   /**
-   * Creates a new {@code WarpStorage} using the given data service, attempting to create or update
-   * MyWarp's table structure if necessary.
+   * Creates a new {@code WarpStorage} using the given data service, attempting to create or update MyWarp's table
+   * structure if necessary.
    *
    * <p>Use {@link #create(SqlDataService)} to create a {@code WarpStorage} that does not create or update the
    * table structure.</p>

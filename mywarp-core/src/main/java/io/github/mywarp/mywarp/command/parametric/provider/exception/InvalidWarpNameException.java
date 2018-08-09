@@ -49,6 +49,11 @@ public class InvalidWarpNameException extends NonMatchingInputException {
 
   @Override
   public String getLocalizedMessage() {
+    return getUserMessage();
+  }
+
+  @Override
+  public String getUserMessage() {
     switch (reason) {
       case ALREADY_EXISTS:
         return msg.getString("create.warp-exists", getInput());

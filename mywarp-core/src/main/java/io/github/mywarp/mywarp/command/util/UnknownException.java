@@ -21,36 +21,26 @@ package io.github.mywarp.mywarp.command.util;
 
 import com.sk89q.intake.CommandException;
 
-import java.util.UUID;
-
 /**
- * Thrown when an attempt is made to access a world that does not exist on the server at the moment, the attempt was
- * made.
+ * Indicates an otherwise unknown exception.
+ *
+ * <p>This calss should be used as a fallback whenever multi-threaded chains may throw exceptions that are not {@link
+ * UserViewableException}s.</p>
  */
-public class NoSuchWorldException extends CommandException implements UserViewableException {
-
-  private final UUID worldIdentifier;
+public class UnknownException extends CommandException implements UserViewableException {
 
   /**
-   * Creates an instance.
+   * Creates an instance caused by the given Throwable.
    *
-   * @param worldIdentifier the world's unique identifier
+   * @param cause the cause
    */
-  NoSuchWorldException(UUID worldIdentifier) {
-    this.worldIdentifier = worldIdentifier;
-  }
-
-  /**
-   * Gets the unique identifier of the world that is unavailable.
-   *
-   * @return the identifier of the unavailable world
-   */
-  public UUID getWorldIdentifier() {
-    return worldIdentifier;
+  public UnknownException(Throwable cause) {
+    super(cause);
   }
 
   @Override
   public String getUserMessage() {
-    return msg.getString("exception.no-such-world", worldIdentifier);
+    return msg.getString("exception.unknown");
   }
+
 }

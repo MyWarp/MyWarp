@@ -17,40 +17,50 @@
  * along with MyWarp. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.mywarp.mywarp.command.parametric.provider.exception;
-
-import com.sk89q.intake.argument.ArgumentParseException;
+package io.github.mywarp.mywarp.platform;
 
 import io.github.mywarp.mywarp.command.util.UserViewableException;
 
+import java.util.UUID;
+
 /**
- * Thrown when a given input does not match the requirements.
+ * Thrown when the given input does not match an online {@link LocalPlayer}.
  */
-public abstract class NonMatchingInputException extends ArgumentParseException implements UserViewableException {
+public class NoSuchProfileException extends Exception implements UserViewableException {
 
   private final String input;
 
   /**
    * Creates an instance.
    *
-   * @param input the invalid input
+   * @param uniqueId the unique identifier of the non existing player
    */
-  NonMatchingInputException(String input) {
-    super("Invalid input: '" + input + "'");
+  public NoSuchProfileException(UUID uniqueId) {
+    this(uniqueId.toString());
+  }
+
+  /**
+   * Creates an instance.
+   *
+   * @param input the input
+   */
+  public NoSuchProfileException(String input) {
     this.input = input;
   }
 
   /**
-   * Gets the input that was invalid.
+   * Gets a string representation of the input that caused this Exception.
    *
-   * @return the invalid input
+   * <p>This may be an invalid player-name or a non-existing unique identifier.</p>
+   *
+   * @return the input causing this Exception
    */
   public String getInput() {
     return input;
   }
 
   @Override
-  public String getLocalizedMessage() {
-    return getUserMessage();
+  public String getUserMessage() {
+    return msg.getString("exception.no-such-profile", getInput());
   }
 }

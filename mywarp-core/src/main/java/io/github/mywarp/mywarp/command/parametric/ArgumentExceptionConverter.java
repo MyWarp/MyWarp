@@ -109,7 +109,7 @@ public class ArgumentExceptionConverter extends ExceptionConverterHelper {
    */
   @ExceptionMatch
   public void convert(NonMatchingInputException e, ExceptionContext context) throws InvalidUsageException {
-    throwInvalidUsage(e.getLocalizedMessage(), context, e);
+    throwInvalidUsage(e.getUserMessage(), context, e);
   }
 
   /**

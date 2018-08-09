@@ -21,9 +21,15 @@ package io.github.mywarp.mywarp.command.parametric.provider.exception;
 
 import com.sk89q.intake.argument.ArgumentException;
 
+import io.github.mywarp.mywarp.command.util.UserViewableException;
+
 /**
  * Thrown if a given argument requires a permission, but the command sender does not have this permission.
  */
-public class ArgumentAuthorizationException extends ArgumentException {
+public class ArgumentAuthorizationException extends ArgumentException implements UserViewableException {
 
+  @Override
+  public String getUserMessage() {
+    return msg.getString("exception.insufficient-permission");
+  }
 }

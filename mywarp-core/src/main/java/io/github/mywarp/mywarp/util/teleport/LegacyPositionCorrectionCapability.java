@@ -29,15 +29,16 @@ import java.util.Optional;
 /**
  * Corrects positions saved with MyWarp versions prior to version 3 if necessary.
  *
- * <p>Before version 3 the warp height was equivalent with the Y coordinate of the block. If the warp was located on top
- * of a block that was smaller than a full block (e.g. a half step, a stair, a pressured plate), the height needs to be
- * adjusted or the entity ends up <i>within</i> this block.</p>
+ * <p>Before version 3 the warp height was equivalent with the Y coordinate of the block. If the warp was located on
+ * top of a block that was smaller than a full block (e.g. a half step, a stair, a pressured plate), the height needs to
+ * be adjusted or the entity ends up <i>within</i> this block.</p>
  */
 public class LegacyPositionCorrectionCapability implements PositionValidationCapability {
 
   @Override
   public Optional<Vector3d> getValidPosition(Vector3d originalPosition, LocalWorld world) {
     if (world.isNotFullHeight(originalPosition.toInt())) {
+      //REVIEW just adding 1 makes not much sense, does it? It should probably round to the closest int...
       originalPosition = originalPosition.add(0, 1, 0);
     }
     return Optional.of(originalPosition);

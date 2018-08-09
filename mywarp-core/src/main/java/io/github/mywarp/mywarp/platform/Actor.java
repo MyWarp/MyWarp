@@ -19,6 +19,7 @@
 
 package io.github.mywarp.mywarp.platform;
 
+import io.github.mywarp.mywarp.command.util.UserViewableException;
 import io.github.mywarp.mywarp.util.Message;
 
 import java.util.Locale;
@@ -78,6 +79,10 @@ public interface Actor {
    */
   default void sendError(String msg) {
     sendMessage(Message.builder().append(Message.Style.ERROR).append(msg).build());
+  }
+
+  default void sendError(UserViewableException ex) {
+    sendError(ex.getUserMessage());
   }
 
   /**

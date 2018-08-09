@@ -17,26 +17,37 @@
  * along with MyWarp. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.mywarp.mywarp.command.parametric.provider.exception;
+package io.github.mywarp.mywarp.platform;
+
+import java.util.Optional;
+import java.util.UUID;
 
 /**
- * Thrown when a given input does not match a known player.
- * <p/>
- * Typically this is caused by a malformed query or unavailable UUID servers.
+ * A profile of a user.
  */
-public class NoSuchPlayerIdentifierException extends NonMatchingInputException {
+public interface Profile {
 
   /**
-   * Creates an instance.
+   * Gets the unique identifier of this profile.
    *
-   * @param input the input
+   * @return the unique ID
    */
-  public NoSuchPlayerIdentifierException(String input) {
-    super(input);
+  UUID getUuid();
+
+  /**
+   * Gets the name associated with this profile, if any.
+   *
+   * @return the name
+   */
+  Optional<String> getName();
+
+  /**
+   * Gets the name associated with this profile or, if no such name exists, the profile's unique ID as a String.
+   *
+   * @return name or unique ID
+   */
+  default String getNameOrId() {
+    return getName().orElse(getUuid().toString());
   }
 
-  @Override
-  public String getLocalizedMessage() {
-    return msg.getString("exception.no-such-profile", getInput());
-  }
 }

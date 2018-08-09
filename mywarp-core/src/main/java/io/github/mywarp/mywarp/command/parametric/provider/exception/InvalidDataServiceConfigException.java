@@ -42,6 +42,11 @@ public class InvalidDataServiceConfigException extends NonMatchingInputException
 
   @Override
   public String getLocalizedMessage() {
+    return getUserMessage();
+  }
+
+  @Override
+  public String getUserMessage() {
     return msg.getString("exception.invalid-data-service-config", expectedFormat, getInput());
   }
 }

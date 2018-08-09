@@ -23,7 +23,6 @@ import com.google.common.base.Objects;
 
 import io.github.mywarp.mywarp.util.MyWarpLogger;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationHandler;
@@ -47,7 +46,7 @@ import javax.sql.DataSource;
  *
  * <p>Obviously this class is not threadsafe.</p>
  */
-public class SingleConnectionDataSource implements DataSource, Closeable {
+public class SingleConnectionDataSource implements DataSource, AutoCloseable {
 
   private static final org.slf4j.Logger log = MyWarpLogger.getLogger(SingleConnectionDataSource.class);
 

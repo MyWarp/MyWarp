@@ -32,6 +32,8 @@ import io.github.mywarp.mywarp.command.parametric.annotation.Billable;
 import io.github.mywarp.mywarp.command.parametric.annotation.Viewable;
 import io.github.mywarp.mywarp.command.parametric.namespace.IllegalCommandSenderException;
 import io.github.mywarp.mywarp.command.util.CommandUtil;
+import io.github.mywarp.mywarp.command.util.UnknownException;
+import io.github.mywarp.mywarp.command.util.UserViewableException;
 import io.github.mywarp.mywarp.command.util.paginator.StringPaginator;
 import io.github.mywarp.mywarp.command.util.printer.AssetsPrinter;
 import io.github.mywarp.mywarp.command.util.printer.InfoPrinter;
@@ -41,6 +43,7 @@ import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.PlayerNameResolver;
+import io.github.mywarp.mywarp.platform.Profile;
 import io.github.mywarp.mywarp.service.economy.FeeType;
 import io.github.mywarp.mywarp.service.limit.LimitService;
 import io.github.mywarp.mywarp.util.Message;
@@ -52,10 +55,13 @@ import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -118,73 +124,94 @@ public final class InformativeCommands {
   @Command(aliases = {"list", "alist"}, desc = "list.description", help = "list.help")
   @Require("mywarp.cmd.list")
   @Billable(FeeType.LIST)
-  public void list(final Actor actor, @OptArg("1") int page, @Switch('c') final String creator,
+  public void list(final Actor actor, @OptArg("1") int page, @Switch('c') CompletableFuture<Profile> creatorFuture,
                    @Switch('n') final String name,
                    @Switch('r') @Range(min = 1, max = Integer.MAX_VALUE) final Integer radius,
-                   @Switch('w') final String world) throws IllegalCommandSenderException {
+                   @Switch('w') final String world) {
 
-    // build the listing predicate
-    Predicate<Warp> filter = authorizationResolver.isViewable(actor);
-
-    if (creator != null) {
-      filter = filter.and(input -> {
-        Optional<String> creatorName = playerNameResolver.getByUniqueId(input.getCreator());
-        return creatorName.isPresent() && StringUtils.containsIgnoreCase(creatorName.get(), creator);
-      });
+    // build the filter Predicate
+    if (creatorFuture == null) {
+      creatorFuture = CompletableFuture.completedFuture(null);
     }
+    CompletableFuture<Predicate<Warp>> filterFuture = creatorFuture.thenApplyAsync(creator -> {
+      Predicate<Warp> filter = authorizationResolver.isViewable(actor);
+      if (creator != null) {
+        filter = filter.and(w -> w.isCreator(creator.getUuid()));
+      }
+      if (name != null) {
+        filter = filter.and(input -> StringUtils.containsIgnoreCase(input.getName(), name));
+      }
+      if (radius != null) {
+        if (!(actor instanceof LocalEntity)) {
+          actor.sendError(new IllegalCommandSenderException(actor));
+          return warp -> false;
+        }
 
-    if (name != null) {
-      filter = filter.and(input -> StringUtils.containsIgnoreCase(input.getName(), name));
-    }
+        LocalEntity entity = (LocalEntity) actor;
 
-    if (radius != null) {
-      if (!(actor instanceof LocalEntity)) {
-        throw new IllegalCommandSenderException(actor);
+        final UUID worldId = entity.getWorld().getUniqueId();
+
+        final int squaredRadius = radius * radius;
+        final Vector3d position = entity.getPosition();
+        filter =
+            filter.and(input -> input.getWorldIdentifier().equals(worldId)
+                                && input.getPosition().distanceSquared(position) <= squaredRadius);
       }
 
-      LocalEntity entity = (LocalEntity) actor;
+      if (world != null) {
+        filter = filter.and(input -> {
+          Optional<LocalWorld> worldOptional = game.getWorld(input.getWorldIdentifier());
+          return worldOptional.isPresent() && StringUtils.containsIgnoreCase(worldOptional.get().getName(), world);
+        });
+      }
+      return filter;
+    }, game.getExecutor());
 
-      final UUID worldId = entity.getWorld().getUniqueId();
+    // query all matching warps
+    CompletableFuture<List<Warp>>
+        warpsFuture =
+        filterFuture.thenApply(filter -> Ordering.natural().sortedCopy(warpManager.getAll(filter)));
 
-      final int squaredRadius = radius * radius;
-      final Vector3d position = entity.getPosition();
-      filter = filter.and(input -> input.getWorldIdentifier().equals(worldId)
-                                   && input.getPosition().distanceSquared(position) <= squaredRadius);
-    }
+    // build the list of creator names
+    CompletableFuture<Map<UUID, String>>
+        creatorsFuture =
+        warpsFuture.thenApply(warps -> warps.stream().map(Warp::getCreator).collect(Collectors.toSet()))
+            .thenCompose(playerNameResolver::getByUniqueId)
+            .thenApply(set -> set.stream().collect(Collectors.toMap(Profile::getUuid, Profile::getNameOrId)));
 
-    if (world != null) {
-      filter = filter.and(input -> {
-        Optional<LocalWorld> worldOptional = game.getWorld(input.getWorldIdentifier());
-        return worldOptional.isPresent() && StringUtils.containsIgnoreCase(worldOptional.get().getName(), world);
-      });
-    }
+    //display
+    creatorsFuture.thenAcceptBothAsync(warpsFuture, (creators, warps) -> {
+      Function<Warp, Message> mapping = input -> {
+        // 'name' (world) by player
+        Message.Builder builder = Message.builder();
+        builder.append("'");
+        builder.append(input);
+        builder.append("' (");
+        builder.append(CommandUtil.toWorldName(input.getWorldIdentifier(), game));
+        builder.append(") ");
+        builder.append(msg.getString("list.by"));
+        builder.append(" ");
 
-    //query the warps
-    //noinspection RedundantTypeArguments
-    final List<Warp> warps = Ordering.natural().sortedCopy(warpManager.getAll(filter));
+        if (actor instanceof LocalPlayer && input.isCreator(((LocalPlayer) actor).getUniqueId())) {
+          builder.append(msg.getString("list.you"));
+        } else {
+          builder.append(creators.get(input.getCreator()));
+        }
+        return builder.build();
+      };
 
-    Function<Warp, Message> mapping = input -> {
-      // 'name' (world) by player
-      Message.Builder builder = Message.builder();
-      builder.append("'");
-      builder.append(input);
-      builder.append("' (");
-      builder.append(CommandUtil.toWorldName(input.getWorldIdentifier(), game));
-      builder.append(") ");
-      builder.append(msg.getString("list.by"));
-      builder.append(" ");
-
-      if (actor instanceof LocalPlayer && input.isCreator(((LocalPlayer) actor).getUniqueId())) {
-        builder.append(msg.getString("list.you"));
+      StringPaginator.of(msg.getString("list.heading"), warps).withMapping(mapping::apply).paginate()
+          .display(actor, page);
+    }, game.getExecutor()).exceptionally((ex) -> {
+      UserViewableException userViewableException;
+      if (ex.getCause() instanceof UserViewableException) {
+        userViewableException = (UserViewableException) ex.getCause();
       } else {
-        builder.append(CommandUtil.toName(input.getCreator(), playerNameResolver));
+        userViewableException = new UnknownException(ex);
       }
-      return builder.build();
-    };
-
-    // display
-    StringPaginator.of(msg.getString("list.heading"), warps).withMapping(mapping::apply).paginate()
-        .display(actor, page);
+      actor.sendError(userViewableException);
+      return null;
+    });
   }
 
   @Command(aliases = {"info", "stats"}, desc = "info.description", help = "info.help")

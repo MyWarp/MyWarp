@@ -34,6 +34,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
 import io.github.mywarp.mywarp.platform.PlayerNameResolver;
+import io.github.mywarp.mywarp.platform.Profile;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
 import io.github.mywarp.mywarp.util.playermatcher.GroupPlayerMatcher;
 import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
@@ -56,12 +57,14 @@ import org.slf4j.Logger;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Nullable;
 import javax.sql.DataSource;
@@ -105,7 +108,7 @@ public final class LegacyWarpSource implements WarpSource {
    *
    * @param dataSource   the DataSource that provides a connection to the DBMS
    * @param tableName    the name of the DB table that contains the warps
-   * @param databaseName the name of the database (somtimes also called schema that contains the table. May be {@code
+   * @param databaseName the name of the database (sometimes also called schema that contains the table. May be {@code
    *                     null} if the DBMS does not support multiple databases.
    * @return a builder step
    * @throws StorageInitializationException if the given dataSource does not connect to a DBMS or the DBMS is not
@@ -163,12 +166,26 @@ public final class LegacyWarpSource implements WarpSource {
     }
     log.info("Looking up unique IDs for {} unique players.", playerNames.size());
 
-    ImmutableMap<String, UUID> cache = playerResolver.getByName(playerNames);
+    Set<Profile> cache;
+    try {
+      //the method getWarps() should never be called on the main thread, so we simply block execution until the
+      // profiles are available.
+      cache = playerResolver.getByName(playerNames).get();
+    } catch (InterruptedException | ExecutionException e) {
+      log.error("Failed to resolve player names.", e);
+      return Collections.emptyList();
+    }
     log.info("{} unique IDs found.", cache.size());
 
     // the legacy database may contain player-names with a wrong case, so the lookup must be case insensitive
     TreeMap<String, UUID> profileLookup = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    profileLookup.putAll(cache);
+    for (Profile profile : cache) {
+      if (!profile.getName().isPresent()) {
+        //this should not happen as we generate this list using names
+        continue;
+      }
+      profileLookup.put(profile.getName().get(), profile.getUuid());
+    }
 
     List<Warp> ret = new ArrayList<>(results.size());
 
@@ -210,8 +227,7 @@ public final class LegacyWarpSource implements WarpSource {
         UUID invitee = profileLookup.get(playerName);
         if (invitee == null) {
           log.warn("{}, who is criteria to '{}' does not have a unique ID. The playermatcher will be ignored.",
-                   playerName,
-                   warpName);
+                   playerName, warpName);
           continue;
         }
         builder.addInvitation(new UuidPlayerMatcher(invitee));

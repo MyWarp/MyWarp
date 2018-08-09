@@ -21,8 +21,7 @@ package io.github.mywarp.mywarp.warp;
 
 
 /**
- * A WarpManager that can be populated and depopulated without invoking {@link #add(Warp)} or
- * {@link #remove(Warp)}.
+ * A WarpManager that can be populated and depopulated without invoking {@link #add(Warp)} or {@link #remove(Warp)}.
  *
  * <p>Implementations can define additional behavior for both methods (e.g. saving the warp in a database) and
  * callers can choose to ignore this behavior if needed b using the methods provided by this interface.</p>

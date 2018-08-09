@@ -98,8 +98,8 @@ abstract class ForwardingPopulatableWarpManager extends ForwardingObject impleme
   protected abstract PopulatableWarpManager delegate();
 
   /**
-   * Forwards all method calls to another Warp. Subclasses should override one or more methods to modify the behavior
-   * of the backing Warp as desired per the <a href="http://en.wikipedia .org/wiki/Decorator_pattern">decorator
+   * Forwards all method calls to another Warp. Subclasses should override one or more methods to modify the behavior of
+   * the backing Warp as desired per the <a href="http://en.wikipedia .org/wiki/Decorator_pattern">decorator
    * pattern</a>.
    */
   abstract class ForwardingWarp extends ForwardingObject implements Warp {

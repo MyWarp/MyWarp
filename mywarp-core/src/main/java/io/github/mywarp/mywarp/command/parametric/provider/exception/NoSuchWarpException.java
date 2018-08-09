@@ -45,6 +45,11 @@ public class NoSuchWarpException extends NonMatchingInputException {
 
   @Override
   public String getLocalizedMessage() {
+    return getUserMessage();
+  }
+
+  @Override
+  public String getUserMessage() {
     StrBuilder builder = new StrBuilder();
     builder.append(msg.getString("exception.no-such-warp", getInput()));
 

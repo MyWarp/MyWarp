@@ -65,10 +65,12 @@ public interface Limit {
     /**
      * The total limit (accounts all warps).
      */
-    TOTAL(EnumSet.allOf(Warp.Type.class)), /**
+    TOTAL(EnumSet.allOf(Warp.Type.class)),
+    /**
      * The private limit (accounts only private warps).
      */
-    PRIVATE(Warp.Type.PRIVATE), /**
+    PRIVATE(Warp.Type.PRIVATE),
+    /**
      * The public limit (accounts only public warps).
      */
     PUBLIC(Warp.Type.PUBLIC);

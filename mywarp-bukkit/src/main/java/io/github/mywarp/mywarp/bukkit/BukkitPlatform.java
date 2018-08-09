@@ -70,6 +70,7 @@ public class BukkitPlatform implements Platform {
     this.settings = new BukkitSettings(new File(dataFolder, "config.yml"), defaultConfig);
     this.game = new BukkitGame(plugin, new BukkitExecutor(plugin));
     this.profileCache = new SquirrelIdPlayerNameResolver(new File(dataFolder, "profiles.db"));
+    plugin.registerClosable(profileCache);
   }
 
   @Override

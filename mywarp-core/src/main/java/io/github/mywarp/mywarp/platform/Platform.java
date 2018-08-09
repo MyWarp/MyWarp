@@ -66,8 +66,7 @@ public interface Platform {
    * provide support.
    *
    * <p>None of the capabilities requested by calling this method are required for MyWarp to run. The following
-   * capabilities can be expected and should - if possible - be covered: <ul> <li>{@link
-   * EconomyCapability}</li>
+   * capabilities can be expected and should - if possible - be covered: <ul> <li>{@link EconomyCapability}</li>
    * <li>{@link LimitCapability}</li>
    * <li>{@link TimerCapability}</li> </ul></p>
    *

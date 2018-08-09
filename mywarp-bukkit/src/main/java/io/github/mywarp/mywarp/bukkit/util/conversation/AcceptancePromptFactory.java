@@ -155,7 +155,7 @@ public class AcceptancePromptFactory {
 
       LocaleManager.setLocale((Locale) context.getSessionData(Locale.class));
       return BukkitMessageInterpreter.interpret(new InfoPrinter(warp, authorizationResolver, game, resolver)
-                                                    .getText(plugin.wrap((Player) context.getForWhom())));
+                                                    .getTextImmediately(plugin.wrap((Player) context.getForWhom())));
     }
   }
 

@@ -25,7 +25,6 @@ import io.github.mywarp.mywarp.platform.PlayerNameResolver;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,18 +41,17 @@ import javax.annotation.Nullable;
  * <p>Placeholders are enclosed by {@code %}.</p>
  *
  * <p>The following tokens are guaranteed to be supported: <table> <tr> <th>Placeholder</th> <th>Replacement</th> </tr>
- * <tr> <td>%creator%</td> <td>warp's creator</td> </tr> <tr> <td>%loc%</td> <td>warp's location</td> </tr> <tr>
+ * <tr> <td>%loc%</td> <td>warp's location</td> </tr> <tr>
  * <td>%visits%</td> <td>the warp's visits</td> </tr> <tr> <td>%warp%</td> <td>the warp's name</td> </tr> </table> </p>
  *
  * <p>In some contexts, additional placeholders might be supported: <table> <tr> <th>Placeholder</th>
  * <th>Replacement</th> </tr> <tr> <td>%player%</td> <td>the name of an Actor that uses the warp</td> </tr> </table>
  * </p>
  */
+//REVIEW Rewrite functional style
 public class PlaceholderResolver {
 
   private static final Pattern TOKEN_PATTERN = Pattern.compile("%(.+?)%");
-
-  private final PlayerNameResolver resolver;
 
   /**
    * Creates an instance.
@@ -61,7 +59,6 @@ public class PlaceholderResolver {
    * @param resolver the PlayerNameResolver used to resolve UUIDs in the replacement process
    */
   public PlaceholderResolver(PlayerNameResolver resolver) {
-    this.resolver = resolver;
   }
 
   /**
@@ -71,7 +68,7 @@ public class PlaceholderResolver {
    * @return a usable resolver
    */
   public ConfiguredPlaceholderResolver values(Warp warp) {
-    return values(warp, null);
+    return new ConfiguredPlaceholderResolver(tokens(null), warp);
   }
 
   /**
@@ -85,16 +82,15 @@ public class PlaceholderResolver {
    * @return a usable resolver
    */
   public ConfiguredPlaceholderResolver values(Warp warp, Actor actor) {
-    return new ConfiguredPlaceholderResolver(tokens(resolver, actor), warp);
+    return new ConfiguredPlaceholderResolver(tokens(actor), warp);
   }
 
-  private Map<String, Token> tokens(PlayerNameResolver resolver, @Nullable Actor actor) {
+  private Map<String, Token> tokens(@Nullable Actor actor) {
     Set<Token> tokens = new HashSet<Token>();
 
     tokens.add(new NameToken());
     tokens.add(new LocationToken());
     tokens.add(new VisitsToken());
-    tokens.add(new CreatorToken(resolver));
 
     if (actor != null) {
       tokens.add(new ActorToken(actor.getName()));
@@ -156,26 +152,6 @@ public class PlaceholderResolver {
     @Override
     String token() {
       return "warp";
-    }
-  }
-
-  private class CreatorToken extends Token {
-
-    private final PlayerNameResolver resolver;
-
-    private CreatorToken(PlayerNameResolver resolver) {
-      this.resolver = resolver;
-    }
-
-    @Override
-    public String apply(Warp input) {
-      UUID creator = input.getCreator();
-      return resolver.getByUniqueId(creator).orElse(creator.toString());
-    }
-
-    @Override
-    String token() {
-      return "creator";
     }
   }
 

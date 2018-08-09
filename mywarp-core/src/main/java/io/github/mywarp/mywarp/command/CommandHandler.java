@@ -46,7 +46,6 @@ import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.Platform;
 import io.github.mywarp.mywarp.platform.PlayerNameResolver;
-import io.github.mywarp.mywarp.platform.Settings;
 import io.github.mywarp.mywarp.platform.capability.EconomyCapability;
 import io.github.mywarp.mywarp.platform.capability.LimitCapability;
 import io.github.mywarp.mywarp.platform.capability.TimerCapability;
@@ -98,12 +97,12 @@ public final class CommandHandler {
    */
   public CommandHandler(MyWarp myWarp, Platform platform) {
     this(myWarp, platform, myWarp.getWarpManager(), myWarp.getAuthorizationResolver(), platform.getPlayerNameResolver(),
-         platform.getGame(), platform.getSettings(), myWarp.getTeleportHandler());
+         platform.getGame(), myWarp.getTeleportHandler());
   }
 
   private CommandHandler(MyWarp myWarp, Platform platform, WarpManager warpManager,
                          AuthorizationResolver authorizationResolver, PlayerNameResolver playerNameResolver, Game game,
-                         Settings settings, TeleportHandler teleportHandler) {
+                         TeleportHandler teleportHandler) {
 
     // create injector and register modules
     Injector injector = Intake.createInjector();

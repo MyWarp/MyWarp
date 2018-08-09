@@ -128,9 +128,9 @@ public class LimitService {
    * Returns an ImmutableMap with every Limit that could affect the given player mapped to the corresponding
    * LimitValueMapping.
    *
-   * <p>Which limit actually applies to a certain player depends on the world, the check is run for. The map returned by
-   * this method contains all limits that could apply for a player; it therefore contains all possible LimitValueMapping
-   * and can be used to display a player's assets.</p>
+   * <p>Which limit actually applies to a certain player depends on the world, the check is run for. The map returned
+   * by this method contains all limits that could apply for a player; it therefore contains all possible
+   * LimitValueMapping and can be used to display a player's assets.</p>
    *
    * @param player the player
    * @return a Map that mapps every limit that could affect the given player to the corresponding LimtiValueMapping
@@ -167,10 +167,10 @@ public class LimitService {
     /**
      * Creates an instance with the given values.
      *
-     * @param exceedsLimit    whether a limit was exceeded
-     * @param exceededValue   the exceeded limit or {@code null} if no limit was exceeded
+     * @param exceedsLimit   whether a limit was exceeded
+     * @param exceededValue  the exceeded limit or {@code null} if no limit was exceeded
      * @param allowedMaximum the maximum number of warps a user can create under the exceeded limit or {@code null} if
-     *                        no limit was exceeded
+     *                       no limit was exceeded
      */
     private EvaluationResult(boolean exceedsLimit, @Nullable Value exceededValue, @Nullable Integer allowedMaximum) {
       this.exceedsLimit = exceedsLimit;

@@ -19,38 +19,34 @@
 
 package io.github.mywarp.mywarp.command.util;
 
-import com.sk89q.intake.CommandException;
-
-import java.util.UUID;
+import io.github.mywarp.mywarp.platform.Profile;
+import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
 
 /**
- * Thrown when an attempt is made to access a world that does not exist on the server at the moment, the attempt was
- * made.
+ * Matches players using a Profile's unique identifier.
+ *
+ * <p>Unless a Profile is already available, {@link UuidPlayerMatcher} should be used instead.</p>
  */
-public class NoSuchWorldException extends CommandException implements UserViewableException {
+public class ProfilePlayerMatcher extends UuidPlayerMatcher {
 
-  private final UUID worldIdentifier;
+  private final Profile profile;
 
   /**
-   * Creates an instance.
+   * Creates an instance that will match the player who has the unique identifer of the given profile.
    *
-   * @param worldIdentifier the world's unique identifier
+   * @param profile the profile
    */
-  NoSuchWorldException(UUID worldIdentifier) {
-    this.worldIdentifier = worldIdentifier;
+  public ProfilePlayerMatcher(Profile profile) {
+    super(profile.getUuid());
+    this.profile = profile;
   }
 
   /**
-   * Gets the unique identifier of the world that is unavailable.
+   * Gets the Profile of the player who this matcher matches.
    *
-   * @return the identifier of the unavailable world
+   * @return the profile
    */
-  public UUID getWorldIdentifier() {
-    return worldIdentifier;
-  }
-
-  @Override
-  public String getUserMessage() {
-    return msg.getString("exception.no-such-world", worldIdentifier);
+  public Profile getProfile() {
+    return profile;
   }
 }

@@ -21,14 +21,9 @@ package io.github.mywarp.mywarp.command.util;
 
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalWorld;
-import io.github.mywarp.mywarp.platform.PlayerNameResolver;
-import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
-import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
 import io.github.mywarp.mywarp.warp.Warp;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Utilities for writing commands.
@@ -36,45 +31,6 @@ import java.util.stream.Collectors;
 public class CommandUtil {
 
   private CommandUtil() {
-  }
-
-  /**
-   * Returns the name of given playermatcher in a human readable form.
-   *
-   * @param invitation the playermatcher
-   * @param resolver   the resolver used to resolve the player's name
-   * @return a readable name
-   */
-  public static String toName(PlayerMatcher invitation, PlayerNameResolver resolver) {
-    if (invitation instanceof UuidPlayerMatcher) {
-      return toName(((UuidPlayerMatcher) invitation).getCriteria(), resolver);
-    }
-    return invitation.toString();
-  }
-
-  /**
-   * Returns the name of the player identified by the given unique identifier or, if the name is not available, the
-   * identifier as String.
-   *
-   * @param uniqueId the player's unique identifer
-   * @param resolver the resolver used to resolve the player's name
-   * @return a readable name
-   */
-  public static String toName(UUID uniqueId, PlayerNameResolver resolver) {
-    return resolver.getByUniqueId(uniqueId).orElse(uniqueId.toString());
-  }
-
-  /**
-   * Returns a alphabetically sorted List with the name of each  player identified by the given unique identifier or,
-   * if the name is not available, the identifier as String.
-   *
-   * @param uniqueIds the unique identifiers
-   * @param resolver  the resolver used to resolve the player's name
-   * @return a sorted list of readable names
-   */
-  public static List<String> toName(Iterable<UUID> uniqueIds, PlayerNameResolver resolver) {
-    return resolver.getByUniqueId(uniqueIds).entrySet().stream()
-        .map(e -> e.getValue() != null ? e.getValue() : e.getKey().toString()).sorted().collect(Collectors.toList());
   }
 
   /**
@@ -92,8 +48,7 @@ public class CommandUtil {
   }
 
   /**
-   * Returns the loaded world identified the given identifier or raises an Exception if the
-   * world is not loaded.
+   * Returns the loaded world identified the given identifier or raises an Exception if the world is not loaded.
    *
    * @param worldIdentifier the identifier
    * @param game            the Game to acquire the world from
@@ -106,8 +61,8 @@ public class CommandUtil {
   }
 
   /**
-   * Returns the name of the world identified by the given identifier or, if such a world is not loaded, the
-   * identifier as string.
+   * Returns the name of the world identified by the given identifier or, if such a world is not loaded, the identifier
+   * as string.
    *
    * @param worldIdentifier the identifier
    * @param game            the Game to acquire the world from

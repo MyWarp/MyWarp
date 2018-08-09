@@ -35,6 +35,11 @@ public class InvalidUuidFormatException extends NonMatchingInputException {
 
   @Override
   public String getLocalizedMessage() {
+    return getUserMessage();
+  }
+
+  @Override
+  public String getUserMessage() {
     return msg.getString("exception.invalid-uuid", getInput());
   }
 }

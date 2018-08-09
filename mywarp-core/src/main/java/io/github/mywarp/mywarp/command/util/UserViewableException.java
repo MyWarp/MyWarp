@@ -19,34 +19,25 @@
 
 package io.github.mywarp.mywarp.command.util;
 
-import com.sk89q.intake.CommandException;
-
 import io.github.mywarp.mywarp.command.CommandHandler;
-import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 
 /**
- * Indicates that an action exceeds a limit of somebody else than the initiator.
+ * An Exception that includes a message to be displayed to users.
  *
- * @see ExceedsInitiatorLimitException for an Exception thrown when the limit of the initiator is exceeded
+ * <p>This interface should only be implemented by classes that also extend {@link Exception}.</p>
+ *
+ * @see io.github.mywarp.mywarp.platform.Actor#sendError(UserViewableException)
  */
-public class ExceedsLimitException extends CommandException implements UserViewableException {
+public interface UserViewableException {
 
-  private static final DynamicMessages msg = new DynamicMessages(CommandHandler.RESOURCE_BUNDLE_NAME);
-
-  private final LocalPlayer subject;
+  DynamicMessages msg = new DynamicMessages(CommandHandler.RESOURCE_BUNDLE_NAME);
 
   /**
-   * Constructs an instance.
+   * Gets a localised string to be send to users informing them about the error.
    *
-   * @param subject the subject whose limit are or would be exceeded
+   * @return a user-readable information about the exception
    */
-  public ExceedsLimitException(LocalPlayer subject) {
-    this.subject = subject;
-  }
+  String getUserMessage();
 
-  @Override
-  public String getUserMessage() {
-    return msg.getString("exception.exceeds-limit", subject.getName());
-  }
 }

@@ -50,13 +50,16 @@ public interface TeleportHandler {
     /**
      * The teleport was not executed as the requested world does not exist.
      */
-    NO_SUCH_WORLD(false), /**
+    NO_SUCH_WORLD(false),
+    /**
      * The entity has not been teleported.
      */
-    NONE(false), /**
+    NONE(false),
+    /**
      * The entity has been teleported to the desired position.
      */
-    ORIGINAL(true), /**
+    ORIGINAL(true),
+    /**
      * The entity has been teleported, but the position is not equal to the desired one.
      */
     MODIFIED(true);

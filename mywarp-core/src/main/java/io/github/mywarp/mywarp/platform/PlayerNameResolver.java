@@ -19,10 +19,9 @@
 
 package io.github.mywarp.mywarp.platform;
 
-import com.google.common.collect.ImmutableMap;
-
-import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Resolve player names form unique identifiers and vice-versa.
@@ -30,48 +29,54 @@ import java.util.UUID;
 public interface PlayerNameResolver {
 
   /**
-   * Gets an Optional with the name of the player with the given unique identifier, if available in this cache.
+   * Gets an CompletableFuture with the Profile of the player with the given unique identifier.
+   *
+   * <p>If the cache does not contain the profile, the Future will throw a
+   * {@link java.util.concurrent.CompletionException} caused by a {@link NoSuchProfileException}.</p>
    *
    * @param uniqueId the unique identifier
-   * @return an Optional with the corresponding name
+   * @return a Future with the corresponding Profile, if available
    */
-  Optional<String> getByUniqueId(UUID uniqueId);
+  CompletableFuture<Profile> getByUniqueId(UUID uniqueId);
 
   /**
-   * Gets all names of players with the given unique identifiers, if available in this cache. If none of the given
-   * unique identifiers has a cached name, an empty Map will be returned.
+   * Gets an CompletableFuture with a Set of Profiles of the players with the given unique identifiers, if available on
+   * this cache.
+   *
+   * <p>If the cache does not contain a Profile for a given unique identifier, it will not be present in the returned
+   * Set. Alas, if none of the the given unique identifiers has a cached Profile, an empty Set will be returned.</p>
    *
    * @param uniqueIds an Iterable of unique identifiers
-   * @return a Map with the unique identifier and the corresponding name
+   * @return a Future with Set of corresponding Profiles, if available
    */
-  ImmutableMap<UUID, String> getByUniqueId(Iterable<UUID> uniqueIds);
+  CompletableFuture<Set<Profile>> getByUniqueId(Iterable<UUID> uniqueIds);
 
   /**
-   * Gets an Optional containing the unique identifier of a player of the given name, if such a player exists.
+   * Gets an CompletableFuture with the Profile of the player of the given name, if such a player exists.
    *
-   * <p>Since Minecraft usernames are case-insensitive, calling {@link #getByUniqueId(UUID)} with the value returned by
-   * this method may return a String with a different case than the String given to this method.</p>
+   * <p>If the profile does not exist, the Future will throw a
+   * {@link java.util.concurrent.CompletionException} caused by a {@link NoSuchProfileException}.</p>
    *
-   * <p>Calling this method might result in a blocking call to a remote server to get the Profiles.</p>
+   * <p>This method may connect to a remote server in order to get the appropriate Profile.</p>
    *
    * @param name the name
-   * @return an Optional containing the unique identifier
+   * @return a Future with the corresponding Profile, if available
    */
-  Optional<UUID> getByName(String name);
+  CompletableFuture<Profile> getByName(String name);
 
   /**
-   * Gets the unique identifiers for all players of the given names, if such a player exists. If none of the given names
-   * has a unique identifier, an empty Map will be returned.
+   * Gets an CompletableFuture with a Set of Profiles of the players with the given unique identifiers, if available on
+   * this cache.
    *
-   * <p>Minecraft usernames are case-insensitive; the map returned by this method must make sure that each player's
-   * identifier is returned regardless of the case of the requested String. However the Map returned by this method
-   * contains the name with the case that was originally given to this method.</p>
+   * <p>If a Profile for a given name does not exist, it will not be present in the returned
+   * Set. Alas, if none of the the given names has a Profile, an empty Set will be returned.</p>
    *
-   * <p>Calling this method might result in a blocking call to a remote server to get the Profiles.</p>
+   * <p>This method may connect to a remote server in order to get the appropriate Profile.</p>
    *
    * @param names an Iterable of names
-   * @return a Map with the name originally given and the corresponding unique identifier
+   * @return a Future with a Set of corresponding Profiles
    */
-  ImmutableMap<String, UUID> getByName(Iterable<String> names);
+  CompletableFuture<Set<Profile>> getByName(Iterable<String> names);
+
 
 }

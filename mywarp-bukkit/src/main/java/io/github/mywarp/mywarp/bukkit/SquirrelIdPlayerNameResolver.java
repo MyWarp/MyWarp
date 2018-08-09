@@ -19,9 +19,8 @@
 
 package io.github.mywarp.mywarp.bukkit;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSortedMap;
+import com.google.common.collect.Iterables;
 import com.sk89q.squirrelid.Profile;
 import com.sk89q.squirrelid.cache.HashMapCache;
 import com.sk89q.squirrelid.cache.ProfileCache;
@@ -32,6 +31,7 @@ import com.sk89q.squirrelid.resolver.CombinedProfileService;
 import com.sk89q.squirrelid.resolver.HttpRepositoryService;
 
 import io.github.mywarp.mywarp.bukkit.util.AbstractListener;
+import io.github.mywarp.mywarp.platform.NoSuchProfileException;
 import io.github.mywarp.mywarp.platform.PlayerNameResolver;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
 
@@ -42,18 +42,26 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.annotation.Nullable;
 
 /**
  * A PlayerNameResolver implementation that uses the SquirrelID library to lookup UUIDs.
  */
-class SquirrelIdPlayerNameResolver extends AbstractListener implements PlayerNameResolver {
+class SquirrelIdPlayerNameResolver extends AbstractListener implements PlayerNameResolver, AutoCloseable {
 
   private static final Logger log = MyWarpLogger.getLogger(SquirrelIdPlayerNameResolver.class);
 
+  private final ExecutorService executorService = Executors.newCachedThreadPool();
   private final CacheForwardingService resolver;
   private ProfileCache cache;
 
@@ -75,73 +83,71 @@ class SquirrelIdPlayerNameResolver extends AbstractListener implements PlayerNam
   }
 
   @Override
-  public Optional<String> getByUniqueId(UUID uniqueId) {
-    Profile profile = cache.getIfPresent(uniqueId);
-
-    if (profile != null) {
-      return Optional.of(profile.getName());
-    }
-    return Optional.empty();
+  public CompletableFuture<io.github.mywarp.mywarp.platform.Profile> getByUniqueId(UUID uniqueId) {
+    return CompletableFuture.supplyAsync(() -> {
+      Profile profile = cache.getIfPresent(uniqueId);
+      if (profile == null) {
+        throw new CompletionException(new NoSuchProfileException(uniqueId));
+      }
+      return BukkitProfile.of(profile);
+    }, executorService);
   }
 
   @Override
-  public ImmutableMap<UUID, String> getByUniqueId(Iterable<UUID> uniqueIds) {
-    ImmutableMap.Builder<UUID, String> builder = ImmutableMap.builder();
-    ImmutableMap<UUID, Profile> allPresent = cache.getAllPresent(uniqueIds);
+  public CompletableFuture<Set<io.github.mywarp.mywarp.platform.Profile>> getByUniqueId(Iterable<UUID> uniqueIds) {
+    return CompletableFuture.supplyAsync(() -> {
+      ImmutableMap<UUID, Profile> allPresent = cache.getAllPresent(uniqueIds);
+      Set<io.github.mywarp.mywarp.platform.Profile> ret = new HashSet<>();
 
-    for (UUID uniqueId : uniqueIds) {
-      Profile profile = allPresent.get(uniqueId);
-      if (profile != null) {
-        builder.put(uniqueId, profile.getName());
-      }
-    }
-    return builder.build();
-  }
-
-  @Override
-  public Optional<UUID> getByName(String name) {
-    try {
-      Profile profile = resolver.findByName(name);
-      if (profile != null) {
-        return Optional.of(profile.getUniqueId());
-      }
-    } catch (IOException e) {
-      log.error(String.format("Failed to find UUID for '%s'.", name), e);
-    } catch (InterruptedException e) {
-      log.error(String.format("Failed to find UUID for '%s' as the process was interrupted.", name), e);
-    }
-    return Optional.empty();
-  }
-
-  @Override
-  public ImmutableMap<String, UUID> getByName(Iterable<String> names) {
-    Set<String> lookup = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-
-    for (String name : names) {
-      // 'names' can contain duplicates as well as the same name with different cases.
-      // User names in Minecraft are case-insensitive so we do not need to lookup these duplicates.
-      if (!lookup.contains(name)) {
-        lookup.add(name);
-      }
-    }
-
-    final ImmutableMap.Builder<String, UUID> builder = ImmutableSortedMap.orderedBy(String.CASE_INSENSITIVE_ORDER);
-
-    try {
-      resolver.findAllByName(lookup, new Predicate<Profile>() {
-        @Override
-        public boolean apply(Profile input) {
-          builder.put(input.getName(), input.getUniqueId());
-          return true;
+      uniqueIds.forEach(uuid -> {
+        Profile profile = allPresent.get(uuid);
+        if (profile != null) {
+          ret.add(BukkitProfile.of(profile));
         }
       });
-    } catch (IOException e) {
-      log.error("Failed to lookup UUIDs.", e);
-    } catch (InterruptedException e) {
-      log.error("Failed to lookup UUIDs as the process was interrupted.", e);
-    }
 
-    return builder.build();
+      return ret;
+    }, executorService);
+  }
+
+  @Override
+  public CompletableFuture<io.github.mywarp.mywarp.platform.Profile> getByName(String name) {
+    return CompletableFuture.supplyAsync(() -> {
+      try {
+        Profile profile = resolver.findByName(name);
+        if (profile != null) {
+          return BukkitProfile.of(profile);
+        }
+      } catch (IOException | InterruptedException e) {
+        log.error(String.format("Failed to find UUID for '%s'.", name), e);
+      }
+      throw new CompletionException(new NoSuchProfileException(name));
+    }, executorService);
+  }
+
+  @Override
+  public CompletableFuture<Set<io.github.mywarp.mywarp.platform.Profile>> getByName(Iterable<String> names) {
+    return CompletableFuture.supplyAsync(() -> {
+      // 'names' can contain duplicates as well as the same name with different cases.
+      // User names in Minecraft are case-insensitive so we do not need to lookup these duplicates.
+      Set<String> lookup = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+      Iterables.addAll(lookup, names);
+
+      Set<io.github.mywarp.mywarp.platform.Profile> ret = new HashSet<>();
+
+      try {
+        resolver.findAllByName(lookup, input -> {
+          if (input != null) {
+            ret.add(BukkitProfile.of(input));
+          }
+          return true;
+        });
+      } catch (IOException | InterruptedException e) {
+        log.error("Failed to lookup UUIDs.", e);
+      }
+
+      return ret;
+    }, executorService);
   }
 
   /**
@@ -156,5 +162,36 @@ class SquirrelIdPlayerNameResolver extends AbstractListener implements PlayerNam
     }
     //SquirrelID's cache is thread-safe
     cache.put(new Profile(event.getUniqueId(), event.getName()));
+  }
+
+  @Override
+  public void close() {
+    executorService.shutdown();
+  }
+
+  static class BukkitProfile implements io.github.mywarp.mywarp.platform.Profile {
+
+    private final UUID uniqueId;
+    @Nullable
+    private final String name;
+
+    BukkitProfile(UUID uniqueId, @Nullable String name) {
+      this.uniqueId = uniqueId;
+      this.name = name;
+    }
+
+    static BukkitProfile of(Profile sqProfile) {
+      return new BukkitProfile(sqProfile.getUniqueId(), sqProfile.getName());
+    }
+
+    @Override
+    public UUID getUuid() {
+      return uniqueId;
+    }
+
+    @Override
+    public Optional<String> getName() {
+      return Optional.ofNullable(name);
+    }
   }
 }

@@ -55,12 +55,12 @@ import javax.annotation.Nullable;
 /**
  * Displays markers for warps using <a href="https://github.com/webbukkit/dynmap">dynmap</a>.
  *
- * <p>Warps are only displayed if they match a filter ({@link Predicate#test(Object)})  returns {@code true}) given when
- * an instance is created.</p>
+ * <p>Warps are only displayed if they match a filter ({@link Predicate#test(Object)})  returns {@code true}) given
+ * when an instance is created.</p>
  *
  * <p>In addition to using the provided methods to manually add or remove warps, instances can be registered at an
- * {@link EventBus} that raises {@link WarpEvent}s to
- * automatically add, update or delete warps when the appropriate events are raised.</p>
+ * {@link EventBus} that raises {@link WarpEvent}s to automatically add, update or delete warps when the appropriate
+ * events are raised.</p>
  */
 public class DynmapMarker {
 
