@@ -73,14 +73,4 @@ public interface LocalWorld {
    */
   void playTeleportEffect(Vector3d position);
 
-  /**
-   * Returns whether the block at the given {@code position} within this world is smaller than a single full block.
-   *
-   * @param position the position to check
-   * @return {@code true} if this particular block is smaller than a normal block
-   * @deprecated This method exists only to support warps created in legacy versions and may be removed at any time.
-   */
-  @Deprecated
-  boolean isNotFullHeight(Vector3i position);
-
 }

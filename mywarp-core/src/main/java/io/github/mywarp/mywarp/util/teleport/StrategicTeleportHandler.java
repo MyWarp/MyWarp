@@ -21,18 +21,17 @@ package io.github.mywarp.mywarp.util.teleport;
 
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
-import com.google.common.collect.Lists;
 
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.Settings;
 import io.github.mywarp.mywarp.platform.capability.PositionValidationCapability;
-import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
-import io.github.mywarp.mywarp.warp.Warp;
 
 import java.util.Optional;
 import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 /**
  * Parses teleport positions against a {@link PositionValidationCapability}. If a valid position exists, the entity is
@@ -40,41 +39,20 @@ import java.util.UUID;
  */
 public class StrategicTeleportHandler implements TeleportHandler {
 
-  private static final DynamicMessages msg = new DynamicMessages(Warp.RESOURCE_BUNDLE_NAME);
-
-  private final Iterable<PositionValidationCapability> strategies;
+  @Nullable
+  private final PositionValidationCapability strategy;
   private final Settings settings;
   private final Game game;
 
-
   /**
-   * Creates an instance that uses the given strategies to validate teleport positions.
+   * Creates an instance that uses the given strategy to validate teleport positions.
    *
-   * <p>The strategies are evaluated in the order of the given elements until either a strategy returns no valid
-   * position or all strategies have evaluated the position. If a strategy returns an alternate position, following
-   * strategies will check this position opposed to the original one. </p>
-   *
-   * @param settings   the settings instance to use
-   * @param game       the game instance to use
-   * @param strategies the strategies to use
+   * @param settings the settings instance to use
+   * @param game     the game instance to use
+   * @param strategy the strategy to use. May be null if no strategy should be used.
    */
-  public StrategicTeleportHandler(Settings settings, Game game, PositionValidationCapability... strategies) {
-    this(settings, game, Lists.newArrayList(strategies));
-  }
-
-  /**
-   * Creates an instance that uses the given strategies to validate teleport positions.
-   *
-   * <p>The strategies are evaluated in the order of the elements in the given Iterable until either a strategy returns
-   * no valid position or all strategies have evaluated the position. If a strategy returns an alternate position,
-   * following strategies will check this position opposed to the original one. </p>
-   *
-   * @param settings   the settings instance to use
-   * @param game       the game instance to use
-   * @param strategies the strategies to use
-   */
-  public StrategicTeleportHandler(Settings settings, Game game, Iterable<PositionValidationCapability> strategies) {
-    this.strategies = strategies;
+  public StrategicTeleportHandler(Settings settings, Game game, @Nullable PositionValidationCapability strategy) {
+    this.strategy = strategy;
     this.settings = settings;
     this.game = game;
   }
@@ -88,13 +66,15 @@ public class StrategicTeleportHandler implements TeleportHandler {
     }
     LocalWorld world = worldOptional.get();
 
-    Optional<Vector3d> optional = getValidPosition(world, position);
+    Vector3d validPosition = position;
+    if (strategy != null) {
+      Optional<Vector3d> optional = strategy.getValidPosition(position, world);
 
-    if (!optional.isPresent()) {
-      return TeleportStatus.NONE;
+      if (!optional.isPresent()) {
+        return TeleportStatus.NONE;
+      }
+      validPosition = optional.get();
     }
-
-    Vector3d validPosition = optional.get();
 
     if (settings.isShowTeleportEffect()) {
       world.playTeleportEffect(entity.getPosition());
@@ -105,16 +85,5 @@ public class StrategicTeleportHandler implements TeleportHandler {
       return TeleportStatus.MODIFIED;
     }
     return TeleportStatus.ORIGINAL;
-  }
-
-  private Optional<Vector3d> getValidPosition(LocalWorld world, Vector3d originalPosition) {
-    Optional<Vector3d> ret = Optional.of(originalPosition);
-    for (PositionValidationCapability strategy : strategies) {
-      if (!ret.isPresent()) {
-        return ret;
-      }
-      ret = strategy.getValidPosition(ret.get(), world);
-    }
-    return ret;
   }
 }

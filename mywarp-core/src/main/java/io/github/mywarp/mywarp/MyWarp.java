@@ -32,7 +32,6 @@ import io.github.mywarp.mywarp.sign.WarpSignHandler;
 import io.github.mywarp.mywarp.util.InvitationInformationListener;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
-import io.github.mywarp.mywarp.util.teleport.LegacyPositionCorrectionCapability;
 import io.github.mywarp.mywarp.util.teleport.StrategicTeleportHandler;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 import io.github.mywarp.mywarp.warp.EventfulPopulatableWarpManager;
@@ -52,8 +51,6 @@ import io.github.mywarp.mywarp.warp.storage.WarpStorageFactory;
 
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.Nullable;
@@ -238,11 +235,9 @@ public final class MyWarp {
   }
 
   private void initializeMutableFields() {
-    List<PositionValidationCapability> validationStrategies = new ArrayList<PositionValidationCapability>();
-    validationStrategies.add(new LegacyPositionCorrectionCapability());
-    platform.getCapability(PositionValidationCapability.class).ifPresent(validationStrategies::add);
-
-    teleportHandler = new StrategicTeleportHandler(getSettings(), getGame(), validationStrategies);
+    teleportHandler =
+        new StrategicTeleportHandler(getSettings(), getGame(),
+                                     platform.getCapability(PositionValidationCapability.class).orElse(null));
 
     commandHandler = new CommandHandler(this, platform);
 

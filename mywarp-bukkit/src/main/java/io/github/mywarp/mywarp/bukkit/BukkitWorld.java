@@ -64,11 +64,6 @@ public class BukkitWorld implements LocalWorld {
   }
 
   @Override
-  public boolean isNotFullHeight(Vector3i position) {
-    return MaterialInfo.isNotFullHeight(MyWarpPlugin.getMaterial(this, position));
-  }
-
-  @Override
   public void playTeleportEffect(Vector3d position) {
     Location loc = new Location(getLoadedWorld(), position.getX(), position.getY(), position.getZ());
 
@@ -80,7 +75,6 @@ public class BukkitWorld implements LocalWorld {
 
   @Override
   public Optional<Sign> getSign(Vector3i position) {
-    //Generics are stupid and throw an error when not casting
     return Optional.ofNullable(getBukkitSign(position));
   }
 
@@ -89,7 +83,6 @@ public class BukkitWorld implements LocalWorld {
     BukkitSign sign = getBukkitSign(position);
 
     if (sign != null && sign.isAttachedTo(blockFace)) {
-      //Generics are stupid and throw an error when not casting
       return Optional.of(sign);
     }
     return Optional.empty();

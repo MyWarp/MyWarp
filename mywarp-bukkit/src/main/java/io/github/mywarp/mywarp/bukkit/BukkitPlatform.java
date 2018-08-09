@@ -25,6 +25,7 @@ import com.google.common.collect.MutableClassToInstanceMap;
 import io.github.mywarp.mywarp.bukkit.settings.BukkitSettings;
 import io.github.mywarp.mywarp.bukkit.settings.DurationBundle;
 import io.github.mywarp.mywarp.bukkit.settings.FeeBundle;
+import io.github.mywarp.mywarp.bukkit.util.CubicSafetyValidationCapability;
 import io.github.mywarp.mywarp.bukkit.util.jdbc.JdbcConfiguration;
 import io.github.mywarp.mywarp.bukkit.util.permission.BundleProvider;
 import io.github.mywarp.mywarp.platform.InvalidFormatException;
@@ -144,7 +145,6 @@ public class BukkitPlatform implements Platform {
       TimerCapability timerCapability = new BukkitTimerCapability(plugin, durationProvider, settings);
       registeredCapabilities.putInstance(TimerCapability.class, timerCapability);
       registered = (C) timerCapability;
-
     }
 
     //PositionSafetyCapability

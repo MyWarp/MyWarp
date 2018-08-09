@@ -21,9 +21,6 @@ package io.github.mywarp.mywarp.bukkit;
 
 import static com.google.common.base.Preconditions.checkState;
 
-import com.flowpowered.math.vector.Vector3i;
-import com.google.common.primitives.Ints;
-
 import io.github.mywarp.mywarp.MyWarp;
 import io.github.mywarp.mywarp.bukkit.settings.BukkitSettings;
 import io.github.mywarp.mywarp.bukkit.util.conversation.AcceptancePromptFactory;
@@ -35,7 +32,6 @@ import io.github.mywarp.mywarp.bukkit.util.permission.group.GroupResolverFactory
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.InvalidFormatException;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
-import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.i18n.FolderSourcedControl;
@@ -46,7 +42,6 @@ import io.github.mywarp.mywarp.warp.storage.StorageInitializationException;
 
 import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -328,18 +323,6 @@ public final class MyWarpPlugin extends JavaPlugin {
     registerClosable(ret);
 
     return ret;
-  }
-
-  /**
-   * Gets the {@code Material} of the block at the given position within the given world.
-   *
-   * @param world    the world
-   * @param position the position
-   * @return the Material of the block at the given position
-   */
-  static Material getMaterial(LocalWorld world, Vector3i position) {
-    return BukkitAdapter.adapt(world).getBlockAt(Ints.checkedCast(position.getX()), Ints.checkedCast(position.getY()),
-                                                 Ints.checkedCast(position.getZ())).getType();
   }
 
 }

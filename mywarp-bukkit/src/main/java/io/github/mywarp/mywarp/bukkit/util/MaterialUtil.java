@@ -17,16 +17,22 @@
  * along with MyWarp. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.mywarp.mywarp.bukkit;
+package io.github.mywarp.mywarp.bukkit.util;
+
+import com.flowpowered.math.vector.Vector3i;
+import com.google.common.primitives.Ints;
+
+import io.github.mywarp.mywarp.bukkit.BukkitAdapter;
+import io.github.mywarp.mywarp.platform.LocalWorld;
 
 import org.bukkit.Material;
 
 /**
  * Provides information about Materials.
  */
-class MaterialInfo {
+class MaterialUtil {
 
-  private MaterialInfo() {
+  private MaterialUtil() {
   }
 
   //   For reference, all Materials added since 1.7 (taken directly from Spigot's source code):
@@ -170,49 +176,14 @@ class MaterialInfo {
   }
 
   /**
-   * Returns whether a block of the given material is smaller than a normal full block.
+   * Gets the {@code Material} of the block at the given position within the given world.
    *
-   * @param material the material to check
-   * @return {@code true} if this particular block is smaller than a normal block
+   * @param world    the world
+   * @param position the position
+   * @return the Material of the block at the given position
    */
-  static boolean isNotFullHeight(Material material) {
-    switch (material) {
-      // -- 1.7 (and before)
-      case BED_BLOCK:
-      case STEP:
-      case WOOD_STAIRS:
-      case CHEST:
-      case COBBLESTONE_STAIRS:
-      case CAKE_BLOCK:
-      case TRAP_DOOR:
-      case BRICK_STAIRS:
-      case SMOOTH_STAIRS:
-      case NETHER_BRICK_STAIRS:
-      case ENCHANTMENT_TABLE:
-      case BREWING_STAND:
-      case CAULDRON:
-      case WOOD_STEP:
-      case SANDSTONE_STAIRS:
-      case ENDER_CHEST:
-      case SPRUCE_WOOD_STAIRS:
-      case BIRCH_WOOD_STAIRS:
-      case JUNGLE_WOOD_STAIRS:
-      case SKULL:
-      case TRAPPED_CHEST:
-      case DAYLIGHT_DETECTOR:
-      case QUARTZ_STAIRS:
-      case ACACIA_STAIRS:
-      case DARK_OAK_STAIRS:
-        // -- 1.8
-      case IRON_TRAPDOOR:
-      case DAYLIGHT_DETECTOR_INVERTED:
-      case RED_SANDSTONE_STAIRS:
-        // -- 1.9
-      case PURPUR_STAIRS:
-      case PURPUR_SLAB:
-        return true;
-      default:
-        return false;
-    }
+  static Material getMaterial(LocalWorld world, Vector3i position) {
+    return BukkitAdapter.adapt(world).getBlockAt(Ints.checkedCast(position.getX()), Ints.checkedCast(position.getY()),
+                                                 Ints.checkedCast(position.getZ())).getType();
   }
 }
