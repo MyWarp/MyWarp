@@ -67,3 +67,10 @@ shadowJar {
     relocate("com.sk89q.squirrelid", "io.github.mywarp.mywarp.internal.squirrelid")
 }
 build.dependsOn(shadowJar)
+
+artifacts {
+    archives jar
+    archives shadowJar
+    archives sourcesJar
+    archives javadocJar
+}
