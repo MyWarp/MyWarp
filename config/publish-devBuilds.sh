@@ -46,6 +46,7 @@ commit:
   author: ${authorName}
 EOF
 
+  git add -f ${filename}
   echo -e "$filename written.\n"
   
   # Copy the binaries
