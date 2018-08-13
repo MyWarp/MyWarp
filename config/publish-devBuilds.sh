@@ -2,6 +2,9 @@
 #
 # Publish SNAPSHOT binaries to https://mywarp.github.io/builds/
 
+MYWARP_COMMIT_HASH_SHORT=$(git rev-parse --short HEAD)
+MYWARP_COMMIT_AUTHOR_NAME=$(git log -1 $TRAVIS_COMMIT --pretty="%aN")
+
 destinationBranch="src"
 binaryDestination="source/builds/${TRAVIS_BUILD_NUMBER}_${MYWARP_COMMIT_HASH_SHORT}"
 storeBinaries=("mywarp-core/build/libs/mywarp-core-3.0-SNAPSHOT.jar" "mywarp-bukkit/build/libs/mywarp-bukkit-3.0-SNAPSHOT-all.jar")
@@ -11,7 +14,7 @@ if [ "$TRAVIS_REPO_SLUG" == "MyWarp/MyWarp" ] && \
    [ "$TRAVIS_PULL_REQUEST" == "false" ] &&  \
    [ "$TRAVIS_BRANCH" == "master" ]; then
 
-  echo -e "Publishing builds...\n"
+  echo -e "Publishing builds for '${MYWARP_COMMIT_HASH_SHORT}'...\n"
   
   # Cloning the website's repository
   git config --global user.email "deploy@travis-ci.org"
@@ -22,13 +25,15 @@ if [ "$TRAVIS_REPO_SLUG" == "MyWarp/MyWarp" ] && \
   echo -e "Repository cloned (branch $destinationBranch).\n"
   
   # Create a YAML file with build information...
-  filename="data/builds/${TRAVIS_BUILD_NUMBER}_${MYWARP_COMMIT_HASH_SHORT}.yml"
+  filepath="data/builds"
+  filename="${filepath}/${TRAVIS_BUILD_NUMBER}_${MYWARP_COMMIT_HASH_SHORT}.yml"
   buildDate=$(date +'%d\%m\%Y')
   authorName=$MYWARP_COMMIT_AUTHOR_NAME
   if [ -z ${authorName+x} ];
     then authorName="n/a";
   fi
   
+  mkdir -p $filepath
   cat > $filename << EOF
 build:
   by: ${ciName}
