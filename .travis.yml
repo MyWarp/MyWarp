@@ -5,8 +5,6 @@ jdk:
 - oraclejdk8
 install: gradle assemble -PcrowdinKey=${CROWDIN_API_KEY} -PbuildNumber=${TRAVIS_BUILD_NUMBER} -PciSystem=travis -Pcommit=${TRAVIS_COMMIT}
 before_script:
-- chmod +x config/env-variables.sh
-- config/env-variables.sh
 - chmod +x config/publish-javadoc.sh
 - chmod +x config/publish-devBuilds.sh
 after_success:

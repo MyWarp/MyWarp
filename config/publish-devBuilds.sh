@@ -47,16 +47,14 @@ commit:
 EOF
 
   echo -e "$filename written.\n"
-
+  
   # Copy the binaries
+  mkdir -p ${binaryDestination}
   for binary in "${storeBinaries[@]}"; do
-    mkdir -p ${binaryDestination}
-    git rm -rf ${binaryDestination}/*
-
     cp -Rf $TRAVIS_BUILD_DIR/$binary ${binaryDestination}
-    git add -f ${binaryDestination}
     echo -e "'${binary}' copied to '${binaryDestination}'."
   done
+  git add -f ${binaryDestination}
 
   # Commit and push changes
   git commit -m "Binaries of successful travis build $TRAVIS_BUILD_NUMBER auto-pushed to mywarp.github.io."
