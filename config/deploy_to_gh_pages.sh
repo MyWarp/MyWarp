@@ -9,7 +9,7 @@ gh_pages_branch="src"
 binary_destination="source/builds/${TRAVIS_BUILD_NUMBER}_${MYWARP_COMMIT_HASH_SHORT}"
 yml_parent_folder="data/builds"
 
-echo "Deploying binaries from build #'${TRAVIS_BUILD_NUMBER}' to GH Pages..."
+echo "Deploying binaries from build #${TRAVIS_BUILD_NUMBER} to GH Pages..."
 
 # Clone the GP Pages repository
 git config --global user.email "deploy@travis-ci.org"

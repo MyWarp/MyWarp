@@ -7,7 +7,7 @@ MyWarp is an extension for the Minecraft multiplayer that allows players to crea
 * Create public warps, usable by everybody or private ones, only usable by the creator and invited players.
 * Profit from intelligent matching mechanisms that complete warp names while typing.
 * Use buttons or pressure plates to access warps.
-* Limit the number of warps a user can create: Per type and even per world.
+* Limit the number of warps a user can create: per type and even per world.
 * Charge users for creating, managing or using warps.
 * Make users wait before or after being teleported.
 * Translate or fine-tune every message.
