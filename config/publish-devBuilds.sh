@@ -3,7 +3,7 @@
 # Publish SNAPSHOT binaries to https://mywarp.github.io/builds/
 
 destinationBranch="src"
-binaryDestination="source/builds/${TRAVIS_BUILD_NUMBER}_${TRAVIS_COMMIT}"
+binaryDestination="source/builds/${TRAVIS_BUILD_NUMBER}_${MYWARP_COMMIT_HASH_SHORT}"
 storeBinaries=("mywarp-core/build/libs/mywarp-core-3.0-SNAPSHOT.jar" "mywarp-bukkit/build/libs/mywarp-bukkit-3.0-SNAPSHOT-all.jar")
 ciName="Travis"
 
@@ -17,33 +17,34 @@ if [ "$TRAVIS_REPO_SLUG" == "MyWarp/MyWarp" ] && \
   git config --global user.email "deploy@travis-ci.org"
   git config --global user.name "Deployment Bot"
   git clone --quiet --branch=${destinationBranch} https://${GITHUB_TOKEN}@github.com/MyWarp/mywarp.github.io $HOME/web > /dev/null
-  cd $HOME/web
+  cd $HOME/web2
 
   echo -e "Repository cloned (branch $destinationBranch).\n"
   
   # Create a YAML file with build information...
-  filename="data/builds/${TRAVIS_BUILD_NUMBER}_${TRAVIS_COMMIT}.yml"
+  filename="data/builds/${TRAVIS_BUILD_NUMBER}_${MYWARP_COMMIT_HASH_SHORT}.yml"
   buildDate=$(date +'%d\%m\%Y')
   authorName=$MYWARP_COMMIT_AUTHOR_NAME
   if [ -z ${authorName+x} ];
     then authorName="n/a";
   fi
+  
+  cat > $filename << EOF
+build:
+  by: ${ciName}
+  number: ${TRAVIS_BUILD_NUMBER}
+  succesfull: true
+  date: ${buildDate}
+commit:
+  shorthash: ${MYWARP_COMMIT_HASH_SHORT}
+  message: ${TRAVIS_COMMIT_MESSAGE}
+  author: ${authorName}
+EOF
 
-  touch $filename
-  echo "build:" >> $filename
-  echo "  by: ${ciName}" >> $filename
-  echo "  number: ${TRAVIS_BUILD_NUMBER}" >> $filename
-  echo "  succesfull: true" >> $filename #For now we only publish succesfull builds
-  echo "  date: ${buildDate}">> $filename
-  echo "commit:" >> $filename
-  echo "  shorthash: ${TRAVIS_COMMIT}">> $filename
-  echo "  message: ${TRAVIS_COMMIT_MESSAG}">> $filename
-  echo "  author: ${authorName}">> $filename
-  echo "" >> $filename
   echo -e "$filename written.\n"
 
   # Copy the binaries
-  for binary in $"{storeBinaries[@]}"; do
+  for binary in "${storeBinaries[@]}"; do
     mkdir -p ${binaryDestination}
     git rm -rf ${binaryDestination}/*
 
