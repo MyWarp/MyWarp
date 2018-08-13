@@ -16,7 +16,7 @@ if [ "$TRAVIS_REPO_SLUG" == "MyWarp/MyWarp" ] && \
   # Cloning the website's repository
   git config --global user.email "deploy@travis-ci.org"
   git config --global user.name "Deployment Bot"
-  git clone --quiet --branch=${destinationBranch} https://${GITHUB_TOKEN}@github.com/MyWarp/mywarp.github.io $HOME/web > /dev/null
+  git clone --quiet --branch=${destinationBranch} https://${GITHUB_TOKEN}@github.com/MyWarp/mywarp.github.io $HOME/web2 > /dev/null
   cd $HOME/web2
 
   echo -e "Repository cloned (branch $destinationBranch).\n"
