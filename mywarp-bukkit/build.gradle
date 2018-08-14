@@ -22,8 +22,8 @@ dependencies {
     compile "org.anjocaido:essentialsgroupmanager:2.10.1"
     compile "de.bananaco:bpermissions:2.10.5"
     compile "us.dynmap:DynmapCoreAPI:1.9.4"
-    runtime "com.h2database:h2:1.3.176"
     runtime "info.ronjenkins:slf4bukkit:1.0.0"
+    runtime "com.h2database:h2:1.4.+"
 }
 
 processResources {
