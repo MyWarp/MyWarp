@@ -41,7 +41,7 @@ build:
   date: ${build_date}
 commit:
   short_hash: ${MYWARP_COMMIT_HASH_SHORT}
-  message: ${TRAVIS_COMMIT_MESSAGE}
+  message: ${MYWARP_COMMIT_SUBJECT}
   author: ${author_name}
 EOF
 
