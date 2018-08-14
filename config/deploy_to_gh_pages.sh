@@ -33,16 +33,17 @@ if [ "$TRAVIS_REPO_SLUG" == "MyWarp/MyWarp" ] && \
     yml_path="${yml_parent_folder}/${TRAVIS_BUILD_NUMBER}_${MYWARP_COMMIT_HASH_SHORT}.yml"
 
     mkdir -p ${yml_parent_folder}
+    #the following should probably make use of yq (or jq)
     cat > ${yml_path} << EOF
 build:
-  by: ${ci_name}
+  by: "${ci_name}"
   number: ${TRAVIS_BUILD_NUMBER}
   successful: true
-  date: ${build_date}
+  date: "${build_date}"
 commit:
-  short_hash: ${MYWARP_COMMIT_HASH_SHORT}
-  message: ${MYWARP_COMMIT_SUBJECT}
-  author: ${author_name}
+  short_hash: "${MYWARP_COMMIT_HASH_SHORT}"
+  message: "${MYWARP_COMMIT_SUBJECT}"
+  author: "${author_name}"
 EOF
 
     git add -f ${yml_path}
