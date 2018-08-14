@@ -11,10 +11,7 @@ repositories {
     maven { url "https://raw.github.com/rjenkinsjr/maven2/repo" }
     //DynmapAPI
     maven { url "http://repo.mikeprimm.com" }
-    //Permission Plugins
-    maven { url "http://repository-thee140.forge.cloudbees.com/release/" }
     maven { url "http://nexus.hc.to/content/repositories/pub_releases/" }
-    maven { url "http://repository-thee140.forge.cloudbees.com/snapshot/" }
 }
 
 dependencies {
@@ -53,7 +50,7 @@ shadowJar {
         include(dependency("org.slf4j:slf4j-api"))
         include(dependency("info.ronjenkins:slf4bukkit"))
         include(dependency("com.sk89q:squirrelid"))
-        include(dependency("io.github.mywarp.intake:intake"))
+        include(dependency("com.github.mywarp.intake:intake"))
         include(dependency("com.h2database:h2"))
         include(dependency("com.flowpowered:flow-math"))
     }

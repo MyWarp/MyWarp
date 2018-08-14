@@ -44,6 +44,8 @@ subprojects {
     // Project repositories
     repositories {
         jcenter()
+        maven { url "https://jitpack.io" }
+        maven { url 'https://raw.github.com/mywarp/repo/releases' }
     }
 
     checkstyle {
