@@ -162,7 +162,7 @@ public class WarpSignHandler {
   }
 
   private static TeleportService createTeleportService(MyWarp myWarp, @Nullable EconomyCapability economyCapability) {
-    TeleportService ret = new HandlerTeleportService(myWarp.getTeleportHandler(), myWarp.getPlayerNameResolver());
+    TeleportService ret = new HandlerTeleportService(myWarp.getTeleportHandler());
 
     if (economyCapability != null) {
       ret = new EconomyTeleportService(ret, createEconomyService(economyCapability), FeeType.WARP_SIGN_USE);

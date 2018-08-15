@@ -76,7 +76,6 @@ public class DynmapMarker {
   private final Plugin plugin;
   private final MarkerAPI api;
   private final Predicate<Warp> filter;
-  private final PlaceholderResolver tokenizer;
 
   /**
    * Creates an instance that works on the given {@code DynmapCommonAPI} implementation, uses the given {@code
@@ -88,17 +87,14 @@ public class DynmapMarker {
    * @param filter   the filter warps must matched in order to be displayed
    */
   DynmapMarker(DynmapCommonAPI dynmap, MyWarpPlugin plugin, BukkitPlatform platform, Predicate<Warp> filter) {
-    this(dynmap.getMarkerAPI(), plugin, platform.getSettings(), platform.getGame(),
-         new PlaceholderResolver(platform.getPlayerNameResolver()), filter);
+    this(dynmap.getMarkerAPI(), plugin, platform.getSettings(), platform.getGame(), filter);
   }
 
-  private DynmapMarker(MarkerAPI api, MyWarpPlugin plugin, BukkitSettings settings, Game game,
-                       PlaceholderResolver tokenizer, Predicate<Warp> filter) {
+  private DynmapMarker(MarkerAPI api, MyWarpPlugin plugin, BukkitSettings settings, Game game, Predicate<Warp> filter) {
     this.api = api;
     this.plugin = plugin;
     this.game = game;
     this.settings = settings;
-    this.tokenizer = tokenizer;
     this.filter = filter;
   }
 
@@ -319,7 +315,7 @@ public class DynmapMarker {
    * @see Marker#getLabel()
    */
   private String label(Warp warp) {
-    return tokenizer.values(warp)
+    return PlaceholderResolver.from(warp)
         .resolvePlaceholders(MESSAGES.getString("marker.label", settings.getLocalizationDefaultLocale()));
   }
 

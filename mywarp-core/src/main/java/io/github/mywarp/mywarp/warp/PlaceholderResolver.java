@@ -19,16 +19,14 @@
 
 package io.github.mywarp.mywarp.warp;
 
-import io.github.mywarp.mywarp.platform.Actor;
-import io.github.mywarp.mywarp.platform.PlayerNameResolver;
+import com.flowpowered.math.vector.Vector3d;
+import com.google.common.collect.ImmutableMap;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
+import io.github.mywarp.mywarp.platform.Actor;
+
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -36,7 +34,7 @@ import javax.annotation.Nullable;
  * Resolves placeholders in a String by replacing them with the appropriate values from a given Warp.
  *
  * <p>After an instance has been created, the Warp whose values should be used as replacements can be set by using
- * {@link #values(Warp)}.</p>
+ * {@link #from(Warp)}.</p>
  *
  * <p>Placeholders are enclosed by {@code %}.</p>
  *
@@ -48,17 +46,20 @@ import javax.annotation.Nullable;
  * <th>Replacement</th> </tr> <tr> <td>%player%</td> <td>the name of an Actor that uses the warp</td> </tr> </table>
  * </p>
  */
-//REVIEW Rewrite functional style
 public class PlaceholderResolver {
 
   private static final Pattern TOKEN_PATTERN = Pattern.compile("%(.+?)%");
 
-  /**
-   * Creates an instance.
-   *
-   * @param resolver the PlayerNameResolver used to resolve UUIDs in the replacement process
-   */
-  public PlaceholderResolver(PlayerNameResolver resolver) {
+  private final Warp warp;
+  @Nullable
+  private final Actor actor;
+
+  private final ImmutableMap<String, Supplier<String>> tokens;
+
+  private PlaceholderResolver(Warp warp, @Nullable Actor actor) {
+    this.warp = warp;
+    this.actor = actor;
+    this.tokens = tokens();
   }
 
   /**
@@ -67,138 +68,54 @@ public class PlaceholderResolver {
    * @param warp the Warp
    * @return a usable resolver
    */
-  public ConfiguredPlaceholderResolver values(Warp warp) {
-    return new ConfiguredPlaceholderResolver(tokens(null), warp);
+  public static PlaceholderResolver from(Warp warp) {
+    return new PlaceholderResolver(warp, null);
   }
 
   /**
    * Returns a usable resolver that generates replacements from the given {@code Warp} and from the given {@code
    * Actor}.
    *
-   * <p>This method is only used internally when resolving warp welcome messages.</p>
-   *
    * @param warp  the Warp
    * @param actor the Actor
    * @return a usable resolver
    */
-  public ConfiguredPlaceholderResolver values(Warp warp, Actor actor) {
-    return new ConfiguredPlaceholderResolver(tokens(actor), warp);
-  }
-
-  private Map<String, Token> tokens(@Nullable Actor actor) {
-    Set<Token> tokens = new HashSet<Token>();
-
-    tokens.add(new NameToken());
-    tokens.add(new LocationToken());
-    tokens.add(new VisitsToken());
-
-    if (actor != null) {
-      tokens.add(new ActorToken(actor.getName()));
-    }
-
-    return tokens.stream().collect(Collectors.toMap(Token::token, i -> i));
+  public static PlaceholderResolver from(Warp warp, Actor actor) {
+    return new PlaceholderResolver(warp, actor);
   }
 
   /**
-   * A PlaceholderResolver that has been configured to use a certain Warp's values for replacements.
+   * Resolves all placeholders in the given String.
    *
-   * @see PlaceholderResolver To create an instance, use a PlaceholderResolver.
+   * @param template the template String
+   * @return a String with resolved placeholders
    */
-  public class ConfiguredPlaceholderResolver {
-
-    private final Map<String, Token> tokens;
-    private final Warp warp;
-
-    private ConfiguredPlaceholderResolver(Map<String, Token> tokens, Warp warp) {
-      this.tokens = tokens;
-      this.warp = warp;
-    }
-
-    /**
-     * Resolves all placeholders in the given String.
-     *
-     * @param template the template String
-     * @return a String with resolved placeholders
-     */
-    public String resolvePlaceholders(String template) {
-      Matcher matcher = TOKEN_PATTERN.matcher(template);
-      StringBuffer buffer = new StringBuffer();
-      while (matcher.find()) {
-        if (tokens.containsKey(matcher.group(1))) {
-          String replacement = tokens.get(matcher.group(1)).apply(warp);
-          // Matcher.quoteReplacement() to work properly with $ and {,} signs
-          matcher.appendReplacement(buffer, replacement != null ? Matcher.quoteReplacement(replacement) : "null");
-        }
+  public String resolvePlaceholders(String template) {
+    Matcher matcher = TOKEN_PATTERN.matcher(template);
+    StringBuffer buffer = new StringBuffer();
+    while (matcher.find()) {
+      if (tokens.containsKey(matcher.group(1))) {
+        String replacement = tokens.get(matcher.group(1)).get();
+        // Matcher.quoteReplacement(String) to work properly with $ and {,} signs
+        matcher.appendReplacement(buffer, replacement != null ? Matcher.quoteReplacement(replacement) : "null");
       }
-      matcher.appendTail(buffer);
-      return buffer.toString();
     }
-
+    matcher.appendTail(buffer);
+    return buffer.toString();
   }
 
-  private abstract class Token implements Function<Warp, String> {
-
-    abstract String token();
-
-  }
-
-  private class NameToken extends Token {
-
-    @Override
-    public String apply(Warp input) {
-      return input.getName();
+  private ImmutableMap<String, Supplier<String>> tokens() {
+    ImmutableMap.Builder<String, Supplier<String>> builder = ImmutableMap.builder();
+    builder.put("warp", warp::getName);
+    builder.put("visits", () -> Integer.toString(warp.getVisits()));
+    builder.put("loc", () -> {
+      Vector3d position = warp.getPosition();
+      return String.format("(%d, %d, %d)", position.getFloorX(), position.getFloorY(), position.getFloorZ());
+    });
+    if (actor != null) {
+      builder.put("player", actor::getName);
     }
-
-    @Override
-    String token() {
-      return "warp";
-    }
-  }
-
-  private class VisitsToken extends Token {
-
-    @Override
-    public String apply(Warp input) {
-      return String.valueOf(input.getVisits());
-    }
-
-    @Override
-    String token() {
-      return "visits";
-    }
-  }
-
-  private class LocationToken extends Token {
-
-    @Override
-    public String apply(Warp input) {
-      return "(" + input.getPosition().getFloorX() + ", " + input.getPosition().getFloorY() + ", " + input.getPosition()
-          .getFloorZ() + ")";
-    }
-
-    @Override
-    String token() {
-      return "loc";
-    }
-  }
-
-  private class ActorToken extends Token {
-
-    private final String actorName;
-
-    private ActorToken(String actorName) {
-      this.actorName = actorName;
-    }
-
-    @Override
-    public String apply(Warp input) {
-      return actorName;
-    }
-
-    @Override
-    String token() {
-      return "player";
-    }
+    return builder.build();
   }
 
 }
