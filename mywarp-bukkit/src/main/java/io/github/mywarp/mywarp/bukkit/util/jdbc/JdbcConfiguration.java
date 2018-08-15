@@ -25,6 +25,8 @@ import io.github.mywarp.mywarp.platform.InvalidFormatException;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
@@ -45,6 +47,7 @@ public class JdbcConfiguration {
 
   private final String protocol;
   private final String jdbcUrl;
+  private final Map<String, Object> connectionProperties;
 
   @Nullable
   private final String database;
@@ -54,12 +57,13 @@ public class JdbcConfiguration {
   private final String password;
 
   private JdbcConfiguration(String protocol, String jdbcUrl, @Nullable String database, @Nullable String username,
-                            @Nullable String password) {
+                            @Nullable String password, Map<String, Object> connectionProperties) {
     this.protocol = requireNonNull(protocol).toLowerCase();
     this.jdbcUrl = requireNonNull(jdbcUrl);
     this.database = nullOnEmpty(database);
     this.username = nullOnEmpty(username);
     this.password = nullOnEmpty(password);
+    this.connectionProperties = requireNonNull(connectionProperties);
   }
 
   /**
@@ -77,7 +81,7 @@ public class JdbcConfiguration {
    */
   public static JdbcConfiguration fromString(String fullUrl) throws InvalidFormatException {
     //see https://github.com/SpongePowered/SpongeCommon/blob/9cc526999effed415c23b79f222569add12a4b57/src/main/java
-    // /org/spongepowered/common/service/sql/SqlServiceImpl.java#L242, although we use a ':' to separate host and
+    // /org/spongepowered/common/service/sql/SqlServiceImpl.java#L242, although we use '//' to separate host and
     // database
     Matcher match = FULL_URL_PATTERN.matcher(fullUrl);
     if (!match.matches()) {
@@ -92,7 +96,7 @@ public class JdbcConfiguration {
     final String database = match.group(6);
 
     final String unauthedUrl = "jdbc:" + protocol + (hasSlashes ? "://" : ":") + url;
-    return new JdbcConfiguration(protocol, unauthedUrl, database, user, pass);
+    return new JdbcConfiguration(protocol, unauthedUrl, database, user, pass, Collections.emptyMap());
   }
 
   /**
@@ -102,11 +106,12 @@ public class JdbcConfiguration {
    * <ul>
    * <li>{@code url} - the JDBC connection URL to the DBMS in the form: {@code jdbc:<engine>://<host>}</li>
    * </ul>
-   * The following values may be provided by the ConfigurationSection, but are not required:
+   * The following values may be provided by the ConfigurationSection, but are optional:
    * <ul>
    * <li>{@code database} - the name of the database to use</li>
    * <li>{@code user} - the user to connect to the DBMS</li>
    * <li>{@code password} - the password to connect to the DBMS</li>
+   * <li>{@code properties} - a section of key-value pairs with connection properties for the DBMS.</li>
    * </ul>
    * </p>
    *
@@ -123,8 +128,14 @@ public class JdbcConfiguration {
       throw new InvalidFormatException(jdbcUrl, "jdbc:<engine>://<host>");
     }
     final String protocol = matcher.group(1);
+
+    Map<String, Object> connectionProperties = Collections.emptyMap();
+    final ConfigurationSection propertiesSection = section.getConfigurationSection("properties");
+    if (propertiesSection != null) {
+      connectionProperties = propertiesSection.getValues(false);
+    }
     return new JdbcConfiguration(protocol, jdbcUrl, section.getString("schema"), section.getString("user"),
-                                 section.getString("password"));
+                                 section.getString("password"), connectionProperties);
   }
 
   @Nullable
@@ -156,18 +167,19 @@ public class JdbcConfiguration {
     JdbcConfiguration that = (JdbcConfiguration) o;
     return Objects.equals(protocol, that.protocol) && Objects.equals(jdbcUrl, that.jdbcUrl) && Objects
         .equals(database, that.database) && Objects.equals(username, that.username) && Objects
-               .equals(password, that.password);
+               .equals(password, that.password) && Objects.equals(connectionProperties, that.connectionProperties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(protocol, jdbcUrl, database, username, password);
+    return Objects.hash(protocol, jdbcUrl, database, username, password, connectionProperties);
   }
 
   @Override
   public String toString() {
     return "JdbcConfiguration{" + "protocol='" + protocol + '\'' + ", jdbcUrl='" + jdbcUrl + '\'' + ", database='"
-           + database + '\'' + ", username='" + username + '\'' + ", password='" + password + '\'' + '}';
+           + database + '\'' + ", username='" + username + '\'' + ", password='" + password + '\''
+           + ", connectionProperties=" + connectionProperties + '}';
   }
 
   Properties getConnectionProperties() {
@@ -179,6 +191,7 @@ public class JdbcConfiguration {
         ret.setProperty("password", password);
       }
     }
+    connectionProperties.forEach((k, v) -> ret.setProperty(k, v.toString()));
     return ret;
   }
 

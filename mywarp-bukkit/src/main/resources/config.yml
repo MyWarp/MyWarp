@@ -9,6 +9,7 @@ storage:
   schema: 'mywarp'
   user: 'mywarp'
   password: 'mywarp'
+  properties: []
 localization:
   defaultLocale: en_US
   perPlayer: true
