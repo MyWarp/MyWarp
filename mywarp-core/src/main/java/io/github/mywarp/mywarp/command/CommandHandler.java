@@ -19,6 +19,7 @@
 
 package io.github.mywarp.mywarp.command;
 
+import com.google.common.base.Joiner;
 import com.sk89q.intake.CommandCallable;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.CommandMapping;
@@ -63,7 +64,6 @@ import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
 
-import org.apache.commons.lang.text.StrBuilder;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -304,7 +304,7 @@ public final class CommandHandler {
     if (!currentCallable.testPermission(namespace)) {
       return;
     }
-    StrBuilder builder = new StrBuilder().append(prefix).append(prefix.isEmpty() ? CMD_PREFIX : ' ');
+    StringBuilder builder = new StringBuilder().append(prefix).append(prefix.isEmpty() ? CMD_PREFIX : ' ');
 
     //subcommands
     if (currentCallable instanceof Dispatcher) {
@@ -312,7 +312,7 @@ public final class CommandHandler {
       flattenCommands(entries, namespace, builder.toString(), (Dispatcher) currentCallable);
     } else {
       // the end
-      builder.appendWithSeparators(current.getAllAliases(), "|");
+      Joiner.on('|').appendTo(builder, current.getAllAliases());
       builder.append(' ');
       builder.append(current.getDescription().getUsage());
       entries.add(builder.toString());

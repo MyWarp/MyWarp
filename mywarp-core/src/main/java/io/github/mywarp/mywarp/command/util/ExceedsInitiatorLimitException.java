@@ -23,9 +23,8 @@ import com.sk89q.intake.CommandException;
 
 import io.github.mywarp.mywarp.command.CommandHandler;
 import io.github.mywarp.mywarp.service.limit.Limit;
+import io.github.mywarp.mywarp.util.McUtil;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
-
-import org.apache.commons.lang.text.StrBuilder;
 
 /**
  * Indicates that an action exceeds or would exceed the limit of the initiator himself.
@@ -70,7 +69,7 @@ public class ExceedsInitiatorLimitException extends CommandException {
 
   @Override
   public String getLocalizedMessage() {
-    StrBuilder builder = new StrBuilder();
+    StringBuilder builder = new StringBuilder();
 
     switch (exceededLimit) {
       case TOTAL:
@@ -85,7 +84,7 @@ public class ExceedsInitiatorLimitException extends CommandException {
       default:
         assert false : exceededLimit;
     }
-    builder.appendNewLine();
+    builder.append(McUtil.lineSeparator());
     builder.append(msg.getString("exception.exceeds-initiator-limit.delete-warps"));
     return builder.toString();
   }

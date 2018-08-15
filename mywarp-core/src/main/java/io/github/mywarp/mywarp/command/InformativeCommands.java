@@ -52,8 +52,6 @@ import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -139,7 +137,7 @@ public final class InformativeCommands {
         filter = filter.and(w -> w.isCreator(creator.getUuid()));
       }
       if (name != null) {
-        filter = filter.and(input -> StringUtils.containsIgnoreCase(input.getName(), name));
+        filter = filter.and(input -> CommandUtil.containsIgnoreCase(input.getName(), name));
       }
       if (radius != null) {
         if (!(actor instanceof LocalEntity)) {
@@ -161,7 +159,7 @@ public final class InformativeCommands {
       if (world != null) {
         filter = filter.and(input -> {
           Optional<LocalWorld> worldOptional = game.getWorld(input.getWorldIdentifier());
-          return worldOptional.isPresent() && StringUtils.containsIgnoreCase(worldOptional.get().getName(), world);
+          return worldOptional.isPresent() && CommandUtil.containsIgnoreCase(worldOptional.get().getName(), world);
         });
       }
       return filter;

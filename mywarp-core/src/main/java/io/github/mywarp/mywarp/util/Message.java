@@ -88,6 +88,47 @@ public class Message {
   }
 
   /**
+   * A combination of color and emphasis to be used in a certain context.
+   */
+  public enum Style {
+    /**
+     * The default style: non emphasised, aquamarine text.
+     */
+    DEFAULT,
+    /**
+     * Indicates an error: non emphasised, light red text.
+     */
+    ERROR,
+    /**
+     * Indicates an additional information: non emphasised, grey text.
+     *
+     * <p>An additional information is a message that contains information the user might not have asked for, but that
+     * are still important for her.</p>
+     */
+    INFO,
+    /**
+     * Indicates a headline on the first level: bold, gold text.
+     *
+     * <p>Similar to {@code <h1>} in HTML.</p>
+     */
+    HEADLINE_1,
+    /**
+     * Indicates a headline on the second level: non emphasised, white text.
+     *
+     * <p>Similar to {@code <h2>} in HTML, should only be used if {@link #HEADLINE_1} has already been applied.</p>
+     */
+    HEADLINE_2,
+    /**
+     * Indicates a key of a key - value listing: non emphasised, grey text.
+     */
+    KEY,
+    /**
+     * Indicates the value of a key - value listing: non emphasised, white text.
+     */
+    VALUE
+  }
+
+  /**
    * Builds {@link Message} instances.
    */
   public static class Builder implements Appendable {
@@ -206,9 +247,7 @@ public class Message {
      * @return this Builder
      */
     public Builder appendNewLine() {
-      // Apparently MC requires '\n' only, regardless of the OS it is running on,
-      // see issues #157 and #61.
-      return append("\n");
+      return append(McUtil.lineSeparator());
     }
 
     /**
@@ -220,46 +259,5 @@ public class Message {
       return new Message(elements);
     }
 
-  }
-
-  /**
-   * A combination of color and emphasis to be used in a certain context.
-   */
-  public enum Style {
-    /**
-     * The default style: non emphasised, aquamarine text.
-     */
-    DEFAULT,
-    /**
-     * Indicates an error: non emphasised, light red text.
-     */
-    ERROR,
-    /**
-     * Indicates an additional information: non emphasised, grey text.
-     *
-     * <p>An additional information is a message that contains information the user might not have asked for, but that
-     * are still important for him.</p>
-     */
-    INFO,
-    /**
-     * Indicates a headline on the first level: bold, gold text.
-     *
-     * <p>Similar to {@code <h1>} in HTML.</p>
-     */
-    HEADLINE_1,
-    /**
-     * Indicates a headline on the second level: non emphasised, white text.
-     *
-     * <p>Similar to {@code <h2>} in HTML, should only be used if {@link #HEADLINE_1} has already been applied.</p>
-     */
-    HEADLINE_2,
-    /**
-     * Indicates a key of a key - value listing: non emphasised, grey text.
-     */
-    KEY,
-    /**
-     * Indicates the value of a key - value listing: non emphasised, white text.
-     */
-    VALUE
   }
 }

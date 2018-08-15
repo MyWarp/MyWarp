@@ -1,8 +1,6 @@
 dependencies {
     compile "org.jooq:jooq:3.11.2"
     compile "org.flywaydb:flyway-core:4.2.0"
-    // Bukkit 1.7.10 only bundles 2.3
-    compile "commons-lang:commons-lang:2.3"
     // Bukkit 1.7.10 only bundles 10.0.1
     compile "com.google.guava:guava:10.0.1"
     compile "org.slf4j:slf4j-api:1.7.25"

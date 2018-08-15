@@ -21,8 +21,6 @@ package io.github.mywarp.mywarp.command.util;
 
 import com.google.common.collect.ImmutableList;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -61,11 +59,11 @@ public class Matches<E> {
 
       if (toTest.equals(query)) {
         equalMatches.add(element);
-      } else if (StringUtils.equalsIgnoreCase(toTest, query)) {
+      } else if (toTest.equalsIgnoreCase(query)) {
         equalIgnoreCaseMatches.add(element);
       } else if (toTest.contains(query)) {
         containsMatches.add(element);
-      } else if (StringUtils.containsIgnoreCase(toTest, query)) {
+      } else if (CommandUtil.containsIgnoreCase(toTest, query)) {
         containsIgnoreCaseMatches.add(element);
       }
     }

@@ -23,6 +23,7 @@ import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.warp.Warp;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -70,5 +71,35 @@ public class CommandUtil {
    */
   public static String toWorldName(UUID worldIdentifier, Game game) {
     return game.getWorld(worldIdentifier).map(LocalWorld::getName).orElse(worldIdentifier.toString());
+  }
+
+  /**
+   * Returns true if and only if {@code searchStr} is contained within {@code str} while ignoring the cases of both
+   * strings.
+   *
+   * <p>Note that this method may produce false results for some edge cases such as the German 'ß' and 'SS' which
+   * should be equivalent, but are not accepted as equivalent by this method.</p>
+   *
+   * @param str       the string to compare to.
+   * @param searchStr the string to search.
+   * @return true if and only if {@code str} contains {@code searchStr} regardeless of the case of both
+   */
+  public static boolean containsIgnoreCase(String str, String searchStr) {
+    //this is a lot faster than using str.toLowercase().contains(seachStr.toLowercase())
+    //see https://stackoverflow.com/a/25379180.
+    Objects.requireNonNull(str);
+    Objects.requireNonNull(searchStr);
+
+    final int length = searchStr.length();
+    if (length == 0) {
+      return true;
+    }
+
+    for (int i = str.length() - length; i >= 0; i--) {
+      if (str.regionMatches(true, i, searchStr, 0, length)) {
+        return true;
+      }
+    }
+    return false;
   }
 }
