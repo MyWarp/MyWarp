@@ -69,7 +69,7 @@ public class FolderSourcedControl extends EncodedControl {
   @Nullable
   public ResourceBundle newBundle(final String baseName, final Locale locale, final String format,
                                   final ClassLoader loader, final boolean reload) throws IOException {
-    checkArgument(ResourceBundle.Control.FORMAT_PROPERTIES.contains(format), "unknown format: %s", format);
+    checkArgument(ResourceBundle.Control.FORMAT_PROPERTIES.contains(format), "unknown format: " + format);
 
     final String bundleName = toBundleName(baseName, locale);
     final String resourceName = toResourceName(bundleName, "properties");

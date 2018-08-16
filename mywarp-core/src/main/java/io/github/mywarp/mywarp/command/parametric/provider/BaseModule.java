@@ -122,7 +122,7 @@ public class BaseModule extends AbstractModule {
 
     private Type getType() {
       Type superclass = getClass().getGenericSuperclass();
-      checkArgument(superclass instanceof ParameterizedType, "%s isn't parameterized", superclass);
+      checkArgument(superclass instanceof ParameterizedType, superclass + " isn't parameterized.");
       return ((ParameterizedType) superclass).getActualTypeArguments()[0];
     }
 

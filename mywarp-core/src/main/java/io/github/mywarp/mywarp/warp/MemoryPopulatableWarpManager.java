@@ -37,7 +37,7 @@ public class MemoryPopulatableWarpManager implements PopulatableWarpManager {
 
   @Override
   public void add(Warp warp) {
-    checkArgument(!containsByName(warp.getName()), "A warp with the name '%s' does already exist!", warp.getName());
+    checkArgument(!containsByName(warp.getName()), "A warp with the name '" + warp.getName() + "' does already exist!");
     warpMap.put(warp.getName(), warp);
   }
 
