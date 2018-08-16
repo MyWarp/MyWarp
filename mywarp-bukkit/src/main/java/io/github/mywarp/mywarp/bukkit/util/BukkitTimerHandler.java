@@ -65,7 +65,7 @@ public class BukkitTimerHandler {
    */
   public <T> void start(T timedSubject, Duration duration, TimerAction<T> timer) {
     checkArgument(!has(timedSubject, timer.getClass()).isTimerRunning(),
-                  "A timer of the type %s is already running for %s.", timedSubject, timer.getClass());
+                  "A timer of the type " + timer.getClass() + " is already running for " + timedSubject);
 
     runningTimers.put(timedSubject, timer.getClass(), new SelfRunningRunnable<T>(timer, duration));
   }

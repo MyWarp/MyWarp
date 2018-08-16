@@ -1,17 +1,37 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "2.0.4"
+    id "ru.vyarus.animalsniffer" version "1.4.5"
+}
+apply plugin: "ru.vyarus.animalsniffer"
+
+configurations.create("createSignature")
+
+task sig(type: ru.vyarus.gradle.plugin.animalsniffer.signature.BuildSignatureTask) {
+    //build new signature as an extension to the JDK's
+    signatures configurations.signature
+    files configurations.createSignature
+}
+animalsniffer {
+    ignore "org.bukkit.entity.AbstractHorse" //see util.versionsupport.TamedHorseCheck112
+    ignore "org.bukkit.Material" //see util.MaterialInfo
+
+    //use the signature generated above
+    signatures = sig.outputFiles
+    excludeJars "bukkit-*"
+    excludeJars "guava-*"
+
+    //the cache cannot be used due to incompatibilities with Java 8,
+    //see https://github.com/xvik/gradle-animalsniffer-plugin/wiki/Check-task-performance#known-issues
 }
 
 repositories {
-    //Bukkit API
-    maven { url "https://hub.spigotmc.org/nexus/content/groups/public/" }
-    //SquirrelID
-    maven { url "http://maven.sk89q.com/repo/" }
-    //SLF4Bukkit
-    maven { url "https://raw.github.com/rjenkinsjr/maven2/repo" }
-    //DynmapAPI
-    maven { url "http://repo.mikeprimm.com" }
-    maven { url "http://nexus.hc.to/content/repositories/pub_releases/" }
+    maven { url 'https://raw.github.com/mywarp/repo/master/releases' }
+    maven { url 'https://raw.github.com/mywarp/repo/master/snapshots' }
+    maven { url "https://hub.spigotmc.org/nexus/content/groups/public/" } //Bukkit API
+    maven { url "http://maven.sk89q.com/repo/" } //SquirrelID
+    maven { url "https://raw.github.com/rjenkinsjr/maven2/repo" } //SLF4Bukkit
+    maven { url "http://repo.mikeprimm.com" } //DynmapAPI
+    maven { url "http://nexus.hc.to/content/repositories/pub_releases/" } //Vault
 }
 
 dependencies {
@@ -22,8 +42,13 @@ dependencies {
     compile "org.anjocaido:essentialsgroupmanager:2.10.1"
     compile "de.bananaco:bpermissions:2.10.5"
     compile "us.dynmap:DynmapCoreAPI:1.9.4"
+
     runtime "info.ronjenkins:slf4bukkit:1.0.0"
     runtime "com.h2database:h2:1.4.+"
+
+    signature "org.codehaus.mojo.signature:java18:1.0@signature" //required to build custom signature
+    createSignature "org.bukkit:bukkit:1.7.10-R0.1-SNAPSHOT" //try to stay compatible with the last 'official' version
+    createSignature "com.google.guava:guava:10.0.1" //bundled by Bukkit 1.7.10, we should try to stay compatible
 }
 
 processResources {
@@ -37,6 +62,8 @@ processResources {
 }
 
 shadowJar {
+    ext.internalPath = "io.github.mywarp.mywarp.internal"
+
     // exclude various text files from libraries
     exclude "**/META-INF/LICENSE*"
     exclude "**/META-INF/DEPENDENCIES*"
@@ -54,14 +81,14 @@ shadowJar {
         include(dependency("com.h2database:h2"))
         include(dependency("com.flowpowered:flow-math"))
     }
-    relocate("org.jooq", "io.github.mywarp.mywarp.internal.jooq")
-    relocate("org.flywaydb", "io.github.mywarp.mywarp.internal.flyway")
-    relocate("org.h2", "io.github.mywarp.mywarp.internal.h2")
-    relocate("com.flowpowered", "io.github.mywarp.mywarp.internal.flow-math")
-    relocate("org.slf4j", "io.github.mywarp.mywarp.internal.slf4j")
-    relocate("info.ronjenkins", "io.github.mywarp.mywarp.internal.slf4bukkit")
-    relocate("com.sk89q.intake", "io.github.mywarp.mywarp.internal.intake")
-    relocate("com.sk89q.squirrelid", "io.github.mywarp.mywarp.internal.squirrelid")
+    relocate("org.jooq", "${internalPath}.jooq")
+    relocate("org.flywaydb", "${internalPath}.flyway")
+    relocate("org.h2", "${internalPath}.h2")
+    relocate("com.flowpowered", "${internalPath}.flow-math")
+    relocate("org.slf4j", "${internalPath}.slf4j")
+    relocate("info.ronjenkins", "${internalPath}.slf4bukkit")
+    relocate("com.sk89q.intake", "${internalPath}.intake")
+    relocate("com.sk89q.squirrelid", "${internalPath}.squirrelid")
 }
 build.dependsOn(shadowJar)
 
