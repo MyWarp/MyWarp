@@ -22,8 +22,9 @@ package io.github.mywarp.mywarp.platform.capability;
 import static com.google.common.base.Preconditions.checkState;
 
 import io.github.mywarp.mywarp.platform.LocalPlayer;
-import io.github.mywarp.mywarp.service.teleport.timer.Duration;
 import io.github.mywarp.mywarp.service.teleport.timer.TimerAction;
+
+import java.time.Duration;
 
 import javax.annotation.Nullable;
 

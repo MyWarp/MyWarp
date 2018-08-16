@@ -27,12 +27,13 @@ import com.google.common.collect.Table;
 import io.github.mywarp.mywarp.bukkit.MyWarpPlugin;
 import io.github.mywarp.mywarp.platform.capability.TimerCapability;
 import io.github.mywarp.mywarp.service.teleport.timer.AbortableTimerAction;
-import io.github.mywarp.mywarp.service.teleport.timer.Duration;
 import io.github.mywarp.mywarp.service.teleport.timer.TimerAction;
+import io.github.mywarp.mywarp.util.McUtil;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
+import java.time.Instant;
 
 import javax.annotation.Nullable;
 
@@ -100,8 +101,8 @@ public class BukkitTimerHandler {
   private class SelfRunningRunnable<T> extends BukkitRunnable {
 
     private final TimerAction<T> runnable;
-    private final long startMillis;
-    private final long durationMillis;
+    private final Instant start;
+    private final Duration duration;
 
     @Nullable
     private final BukkitRunnable abortingCheck;
@@ -114,10 +115,10 @@ public class BukkitTimerHandler {
      */
     protected SelfRunningRunnable(TimerAction<T> runnable, Duration duration) {
       this.runnable = runnable;
-      this.durationMillis = duration.get(TimeUnit.MILLISECONDS);
+      this.duration = duration;
+      this.start = Instant.now();
 
-      this.startMillis = System.currentTimeMillis();
-      runTaskLater(plugin, duration.getTicks());
+      runTaskLater(plugin, McUtil.toTicks(duration));
 
       if (runnable instanceof AbortableTimerAction) {
         abortingCheck = new BukkitRunnable() {
@@ -141,12 +142,12 @@ public class BukkitTimerHandler {
      * Gets the time remaining until this Runnable is executed.
      *
      * <p> The returned Duration might not be entirely exact, since Minecraft's internal clock may run faster or slower
-     * than the real-world time. </p>
+     * than real-world time. </p>
      *
      * @return the time remaining
      */
     protected Duration getRemainingTime() {
-      return new Duration(durationMillis - (System.currentTimeMillis() - startMillis), TimeUnit.MILLISECONDS);
+      return Duration.between(Instant.now(), start.plus(duration));
     }
 
     @Override

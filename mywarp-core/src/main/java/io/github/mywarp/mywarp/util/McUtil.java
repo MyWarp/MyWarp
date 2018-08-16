@@ -19,10 +19,17 @@
 
 package io.github.mywarp.mywarp.util;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
+
 /**
  * Utilities for MC.
  */
 public class McUtil {
+
+  private static final int AVERAGE_TICKS_PER_SECOND = 20;
+  private static final String LINE_SEPARATOR = "\n";
 
   private McUtil() {
   }
@@ -36,7 +43,35 @@ public class McUtil {
    * @return the line separator string
    */
   public static String lineSeparator() {
-    return "\n";
+    return LINE_SEPARATOR;
+  }
+
+  /**
+   * Returns the number of server ticks that are (ideally) equivalent to the given {@code amount} of time.
+   *
+   * <p>The actual number of ticks occurring in a certain amount can very depending on the server load. Thus, the
+   * number returned by this method should be interpreted as the number of ticks that are ideally equivalent to the
+   * given amount.</p>
+   *
+   * @param amount the amount if time
+   * @return the number of ticks equivalent to the given amount
+   */
+  public static long toTicks(TemporalAmount amount) {
+    return amount.get(ChronoUnit.SECONDS) * AVERAGE_TICKS_PER_SECOND;
+  }
+
+  /**
+   * Returns the Duration that is (ideally) equivalent to the given number of server ticks.
+   *
+   * <p>The actual number of ticks occurring in a certain amount can very depending on the server load. Thus,
+   * the number returned by this method should be interpreted as the number of ticks that are ideally equivalent to the
+   * given amount.</p>
+   *
+   * @param ticks the number of ticks
+   * @return the duration equivalent to the given number of ticks
+   */
+  public static Duration fromTicks(long ticks) {
+    return Duration.ofSeconds(ticks / AVERAGE_TICKS_PER_SECOND);
   }
 
 }

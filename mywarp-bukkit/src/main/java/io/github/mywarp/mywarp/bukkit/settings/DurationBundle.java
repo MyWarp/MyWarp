@@ -24,15 +24,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableMap;
 
 import io.github.mywarp.mywarp.bukkit.util.permission.ValueBundle;
-import io.github.mywarp.mywarp.service.teleport.timer.Duration;
 import io.github.mywarp.mywarp.service.teleport.timer.TimerAction;
 import io.github.mywarp.mywarp.service.teleport.timer.WarpCooldown;
 import io.github.mywarp.mywarp.service.teleport.timer.WarpWarmup;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.time.Duration;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * A ValueBundle that bundles Durations.
@@ -76,7 +75,7 @@ public class DurationBundle extends ValueBundle {
   }
 
   private static Duration createDuration(long seconds) {
-    return new Duration(seconds, TimeUnit.SECONDS);
+    return Duration.ofSeconds(seconds);
   }
 
 }

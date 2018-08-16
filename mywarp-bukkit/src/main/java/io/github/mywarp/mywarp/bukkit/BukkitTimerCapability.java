@@ -25,8 +25,9 @@ import io.github.mywarp.mywarp.bukkit.util.BukkitTimerHandler;
 import io.github.mywarp.mywarp.bukkit.util.permission.BundleProvider;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.capability.TimerCapability;
-import io.github.mywarp.mywarp.service.teleport.timer.Duration;
 import io.github.mywarp.mywarp.service.teleport.timer.TimerAction;
+
+import java.time.Duration;
 
 /**
  * Timer compatibility for the Bukkit platform.
