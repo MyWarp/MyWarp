@@ -82,6 +82,7 @@ import javax.annotation.Nullable;
 public final class CommandHandler {
 
   public static final String RESOURCE_BUNDLE_NAME = "io.github.mywarp.mywarp.lang.Commands";
+  private static final String[] ROOT_COMMANDS = {"warp", "mywarp", "mw"};
   private static final char CMD_PREFIX = '/';
 
   private static final DynamicMessages msg = new DynamicMessages(RESOURCE_BUNDLE_NAME);
@@ -149,8 +150,7 @@ public final class CommandHandler {
     UsageCommands.DefaultUsageCommand defaultUsageCmd = usageCmd.new DefaultUsageCommand();
 
     //register commands
-    dispatcher =
-        new CommandGraph().builder(builder).commands().registerMethods(usageCmd).group("warp", "mywarp", "mw")
+    dispatcher = new CommandGraph().builder(builder).commands().registerMethods(usageCmd).group(ROOT_COMMANDS)
             .registerMethods(defaultUsageCmd).registerMethods(
             new InformativeCommands(warpManager, limitService, authorizationResolver, game, playerNameResolver))
             .registerMethods(new ManagementCommands(warpManager, limitService))
@@ -247,8 +247,7 @@ public final class CommandHandler {
    * @return {@code true} if the String is a sub command of the warp command
    */
   public boolean isSubCommand(String str) {
-    //XXX this should probably be covered by unit tests
-    CommandMapping mapping = dispatcher.get("mywarp");
+    CommandMapping mapping = dispatcher.get(ROOT_COMMANDS[0]);
     if (mapping == null || !(mapping.getCallable() instanceof Dispatcher)) {
       return false;
     }

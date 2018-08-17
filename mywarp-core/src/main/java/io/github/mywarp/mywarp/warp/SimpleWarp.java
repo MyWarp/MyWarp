@@ -34,6 +34,7 @@ import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A simple implementation that natively stores its properties.
@@ -49,7 +50,7 @@ class SimpleWarp extends AbstractWarp {
   private volatile UUID worldIdentifier;
   private volatile Vector3d position;
   private volatile Vector2f rotation;
-  private volatile int visits;
+  private volatile AtomicInteger visits;
   private volatile String welcomeMessage;
 
   /**
@@ -79,7 +80,7 @@ class SimpleWarp extends AbstractWarp {
     this.worldIdentifier = checkNotNull(worldIdentifier);
     this.position = checkNotNull(position);
     this.rotation = checkNotNull(rotation);
-    this.visits = visits;
+    this.visits = new AtomicInteger(visits);
     this.welcomeMessage = checkNotNull(welcomeMessage);
   }
 
@@ -88,7 +89,7 @@ class SimpleWarp extends AbstractWarp {
     TeleportHandler.TeleportStatus status = handler.teleport(entity, worldIdentifier, getPosition(), getRotation());
 
     if (status.isPositionModified()) {
-      visits++;
+      visits.incrementAndGet();
     }
     return status;
   }
@@ -140,7 +141,7 @@ class SimpleWarp extends AbstractWarp {
 
   @Override
   public int getVisits() {
-    return visits;
+    return visits.get();
   }
 
   @Override
