@@ -33,7 +33,7 @@ import java.util.Optional;
  */
 class MinecraftLocaleParser {
 
-  //XXX use Guava's LoadingCache once we updated to Guava 11
+  //REVIEW when Guava >10: use LoadingCache
   private static final Map<String, Locale> cache = new HashMap<>();
 
   /**

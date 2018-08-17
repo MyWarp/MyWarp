@@ -117,7 +117,7 @@ public class BaseModule extends AbstractModule {
 
   //See Guava's TypeToken (https://github.com/google/guava/wiki/ReflectionExplained#typetoken). Unfortunately it is
   // not yet present in Guava 10, so we have to use our own solution.
-  //REVIEW Use TypeToken once a more recent version of Guava is present
+  //REVIEW when Guava >10: use TypeToken instead
   private abstract class TypeCapture<C> {
 
     private Type getType() {
