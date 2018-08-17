@@ -45,8 +45,9 @@ public final class DataSourceFactory {
     if (config.getProtocol().equals("sqlite")) {
       properties.setProperty("foreign_keys", "on");
 
-      //REVIEW From 1.11 on, Bukkit bundles a SQLite > 3.7 (commit c25ddf063a8)
-      //CraftBukkit bundles SQLite 3.7.2 witch does not yet implement Connection#isValid(int)
+      //CraftBukkit < 1.11 bundled SQLite 3.7.2 witch does not yet implement Connection.isValid(int).
+      // Unfortunately there is no easy way to check the SQLite version or whether isValid() is supported,
+      // so we default to false.
       driverSupportsIsValid = false;
     } else if (config.getProtocol().equals("h2")) {
       try {

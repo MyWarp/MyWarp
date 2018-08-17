@@ -118,7 +118,7 @@ public class WarpStorageFactory {
     }
 
     try {
-      // REVIEW Remove when out of beta
+      // REVIEW when out of beta: Remove repair().
       // Fix stored checksums on databases that where created with older scripts
       flyway.repair();
       flyway.migrate();
