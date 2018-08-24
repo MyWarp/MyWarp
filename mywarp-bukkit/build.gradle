@@ -13,7 +13,6 @@ task sig(type: ru.vyarus.gradle.plugin.animalsniffer.signature.BuildSignatureTas
 }
 animalsniffer {
     ignore "org.bukkit.entity.AbstractHorse" //see util.versionsupport.TamedHorseCheck112
-    ignore "org.bukkit.Material" //see util.MaterialInfo
 
     //use the signature generated above
     signatures = sig.outputFiles
@@ -36,7 +35,7 @@ repositories {
 
 dependencies {
     compile project(":mywarp-core")
-    compile "org.bukkit:bukkit:1.12.2-R0.1-SNAPSHOT"
+    compile "org.bukkit:bukkit:1.13-R0.1-SNAPSHOT"
     compile "com.sk89q:squirrelid:0.1.0"
     compile "net.milkbowl.vault:VaultAPI:1.4"
     compile "org.anjocaido:essentialsgroupmanager:2.10.1"

@@ -26,6 +26,8 @@ import io.github.mywarp.mywarp.bukkit.settings.BukkitSettings;
 import io.github.mywarp.mywarp.bukkit.util.conversation.AcceptancePromptFactory;
 import io.github.mywarp.mywarp.bukkit.util.conversation.WelcomeEditorFactory;
 import io.github.mywarp.mywarp.bukkit.util.jdbc.JdbcConfiguration;
+import io.github.mywarp.mywarp.bukkit.util.material.ConfigurableMaterialInfo;
+import io.github.mywarp.mywarp.bukkit.util.material.MaterialInfo;
 import io.github.mywarp.mywarp.bukkit.util.permission.BukkitPermissionsRegistration;
 import io.github.mywarp.mywarp.bukkit.util.permission.group.GroupResolver;
 import io.github.mywarp.mywarp.bukkit.util.permission.group.GroupResolverFactory;
@@ -323,6 +325,10 @@ public final class MyWarpPlugin extends JavaPlugin {
     registerClosable(ret);
 
     return ret;
+  }
+
+  MaterialInfo createMaterialInformation() {
+    return new ConfigurableMaterialInfo(YamlConfiguration.loadConfiguration(this.getTextResource("material-info.yml")));
   }
 
 }

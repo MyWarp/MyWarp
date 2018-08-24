@@ -19,10 +19,9 @@
 
 package io.github.mywarp.mywarp.bukkit.util;
 
-import static io.github.mywarp.mywarp.bukkit.util.MaterialUtil.getMaterial;
-
 import com.flowpowered.math.vector.Vector3d;
 
+import io.github.mywarp.mywarp.bukkit.util.material.MaterialInfo;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.capability.PositionValidationCapability;
 
@@ -34,14 +33,17 @@ import java.util.Optional;
 public class CubicSafetyValidationCapability implements PositionValidationCapability {
 
   private final int searchRadius;
+  private MaterialInfo materialInfo;
 
   /**
    * Creates an instance that searches for safe positions within the given radius.
    *
    * @param searchRadius the radius within safe positions are searched
+   * @param materialInfo the MaterialInfo instance used to classify blocks as safe or unsafe
    */
-  public CubicSafetyValidationCapability(int searchRadius) {
+  public CubicSafetyValidationCapability(int searchRadius, MaterialInfo materialInfo) {
     this.searchRadius = searchRadius;
+    this.materialInfo = materialInfo;
   }
 
   @Override
@@ -168,13 +170,13 @@ public class CubicSafetyValidationCapability implements PositionValidationCapabi
    * @return {@code true} is the position is safe
    */
   private boolean isSafe(LocalWorld world, Vector3d position) {
-    if (!MaterialUtil.canEntitySafelyStandWithin(getMaterial(world, position.add(0, 1, 0).toInt()))) {
+    if (materialInfo.dangerousToStandWithin(world, position.add(0, 1, 0).toInt())) {
       return false;
     }
-    if (!MaterialUtil.canEntitySafelyStandWithin(getMaterial(world, position.toInt()))) {
+    if (materialInfo.dangerousToStandWithin(world, position.toInt())) {
       return false;
     }
-    return MaterialUtil.canEntitySafelyStandOn(getMaterial(world, position.sub(0, 1, 0).toInt()));
+    return materialInfo.safeToStandOn(world, position.sub(0, 1, 0).toInt());
   }
 
   /**

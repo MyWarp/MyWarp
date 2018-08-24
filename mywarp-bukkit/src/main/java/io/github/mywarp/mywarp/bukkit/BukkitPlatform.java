@@ -151,7 +151,7 @@ public class BukkitPlatform implements Platform {
     if (capabilityClass.isAssignableFrom(PositionValidationCapability.class) && settings.isSafetyEnabled()) {
       PositionValidationCapability
           positionValidationCapability =
-          new CubicSafetyValidationCapability(settings.getSafetySearchRadius());
+          new CubicSafetyValidationCapability(settings.getSafetySearchRadius(), plugin.createMaterialInformation());
       registeredCapabilities.putInstance(PositionValidationCapability.class, positionValidationCapability);
       registered = (C) positionValidationCapability;
     }

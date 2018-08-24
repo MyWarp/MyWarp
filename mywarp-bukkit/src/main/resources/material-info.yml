@@ -1,0 +1,14 @@
+standOn:
+  dangerous:
+  - CACTUS #since 1.10
+  - MAGMA # until 1.13, then renamed to MAGMA_BLOCK
+  - MAGMA_BLOCK # since 1.13
+  safe:
+  - WATER
+  - STATIONARY_WATER
+standWithin:
+  dangerous:
+  - LAVA
+  - STATIONARY_LAVA
+  - FIRE
+  safe: []
