@@ -1,3 +1,5 @@
+# Configuration for ConfigurableMaterialInfo: It should include any Material for which Bukkit's Material.isSolid()
+# returns a false result. See ConfigurableMaterialInfo's Javadocs for more information.
 standOn:
   dangerous:
   - CACTUS #since 1.10

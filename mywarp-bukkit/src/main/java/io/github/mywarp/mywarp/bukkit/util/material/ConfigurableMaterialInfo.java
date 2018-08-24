@@ -31,9 +31,46 @@ import org.slf4j.Logger;
 import javax.annotation.Nullable;
 
 /**
- * Uses information provided by a Configuration before defaulting to {@link Material#isSolid()}.
+ * Provides information about Materials depending partly on a given configuration.
+ *
+ * <p>The aim of {@link MaterialInfo} is to provide information about materials that are (1) safe to stand on and
+ * materials which are (2) dangerous to stand withing. Bukkit only provides us with {@link Material#isSolid()} which
+ * provides information about (1) and (2) for most, but not for all Materials: e.g. {@link Material#LAVA} is not solid,
+ * but still dangerous to stand in.</p>
+ *
+ * <p>This class solves this issue by only forwarding calls to {@link Material#isSolid()}, if a given Material is not
+ * explicitly present within the configuration provided upon initialization. <b>Thus, the configuration should include
+ * any Material for which {@link Material#isSolid()} returns a false result.</b></p>
+ *
+ * <p>The configuration holds the exact name of individual Materials. Materials not existing at runtime are
+ * ignored; thus the given configuration may also include Materials from other versions than the running one. Dangerous
+ * materials always take preference over safe ones.</p>
+ *
+ * <p>The following paths are expected:
+ * <table>
+ * <tr>
+ * <th>Path</th>
+ * <th>Materials that are</th>
+ * </tr>
+ * <tr>
+ * <td>{@code standOn.dangerous}</td>
+ * <td>solid but dangerous</td>
+ * </tr>
+ * <tr>
+ * <td>{@code standOn.safe}</td>
+ * <td>not solid but safe </td>
+ * </tr>
+ * <tr>
+ * <td>{@code standWithin.dangerous}</td>
+ * <td>not solid but dangerous</td>
+ * </tr>
+ * <tr>
+ * <td>{@code standWithin.safe}</td>
+ * <td>solid but safe</td>
+ * </tr>
+ * </table>
+ * See the bundled {@code material.info.yml} for examples.</p>
  */
-//REVIEW write proper documentation
 public class ConfigurableMaterialInfo implements MaterialInfo {
 
   private static final Logger log = MyWarpLogger.getLogger(ConfigurableMaterialInfo.class);
@@ -44,7 +81,7 @@ public class ConfigurableMaterialInfo implements MaterialInfo {
   private final ImmutableSet<Material> safeToStandWithin;
 
   /**
-   * Creates an instance from the given configuration.
+   * Creates an instance using the given configuration.
    *
    * @param config the configuration
    */
@@ -70,11 +107,11 @@ public class ConfigurableMaterialInfo implements MaterialInfo {
 
   @Override
   public boolean safeToStandOn(Material material) {
-    if (safeToStandOn.contains(material)) {
-      return true;
-    }
     if (dangerousToStandOn.contains(material)) {
       return false;
+    }
+    if (safeToStandOn.contains(material)) {
+      return true;
     }
     return material.isSolid();
   }
