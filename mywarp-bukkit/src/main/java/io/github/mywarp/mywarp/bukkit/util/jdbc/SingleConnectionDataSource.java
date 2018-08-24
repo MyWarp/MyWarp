@@ -243,6 +243,8 @@ public class SingleConnectionDataSource implements DataSource, AutoCloseable {
           return null;
         case "isClosed":
           return false;
+        default:
+          //fall though
       }
 
       // Invoke method on target Connection.
