@@ -20,7 +20,6 @@
 package io.github.mywarp.mywarp.bukkit;
 
 import com.flowpowered.math.vector.Vector3i;
-import com.google.common.collect.ImmutableSet;
 
 import io.github.mywarp.mywarp.bukkit.util.AbstractListener;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
@@ -28,7 +27,6 @@ import io.github.mywarp.mywarp.sign.WarpSignHandler;
 import io.github.mywarp.mywarp.util.BlockFace;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
@@ -36,7 +34,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Attachable;
+import org.bukkit.material.Button;
+import org.bukkit.material.Lever;
 import org.bukkit.material.MaterialData;
+import org.bukkit.material.PressurePlate;
 
 import java.util.Optional;
 
@@ -44,13 +45,6 @@ import java.util.Optional;
  * Listens for events involving signs and feats them to a {@link WarpSignHandler}.
  */
 class WarpSignListener extends AbstractListener {
-
-  private static final ImmutableSet<Material>
-      SUPPORTED_ATTACHABLES =
-      ImmutableSet.of(Material.STONE_BUTTON, Material.WOOD_BUTTON, Material.LEVER);
-  private static final ImmutableSet<Material>
-      SUPPORTED_PLATES =
-      ImmutableSet.of(Material.WOOD_PLATE, Material.STONE_PLATE, Material.GOLD_PLATE, Material.IRON_PLATE);
 
   private final MyWarpPlugin plugin;
   private final WarpSignHandler warpSignHandler;
@@ -105,7 +99,9 @@ class WarpSignListener extends AbstractListener {
         }
 
         //player clicked on something that might trigger a warp sign
-        if (SUPPORTED_ATTACHABLES.contains(block.getType())) {
+        MaterialData materialData = block.getState().getData();
+
+        if (materialData instanceof Button || materialData instanceof Lever) {
           Optional<BlockFace> blockFace = attachedBlockFace(block);
 
           if (blockFace.isPresent()) {
@@ -115,7 +111,7 @@ class WarpSignListener extends AbstractListener {
         break;
       case PHYSICAL:
         //player stepped on something that might trigger a warp sign
-        if (SUPPORTED_PLATES.contains(block.getType())) {
+        if (block.getState().getData() instanceof PressurePlate) {
           warpSignHandler.handleInteraction(toPlayer(event), toVector(block), BlockFace.UP);
         }
         break;
