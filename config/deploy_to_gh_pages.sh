@@ -7,7 +7,7 @@ binaries_to_store=("mywarp-core/build/libs/mywarp-core-3.0-SNAPSHOT.jar" "mywarp
 
 ci_name="Travis"
 gh_pages_branch="src"
-binary_destination="source/builds/${TRAVIS_BUILD_NUMBER}_${MYWARP_COMMIT_HASH_SHORT}"
+binary_destination="source/files/${TRAVIS_BUILD_NUMBER}_${MYWARP_COMMIT_HASH_SHORT}"
 yml_parent_folder="data/builds"
 
 if [ "$TRAVIS_REPO_SLUG" == "MyWarp/MyWarp" ] && \
