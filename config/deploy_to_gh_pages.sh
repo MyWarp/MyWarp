@@ -3,7 +3,7 @@
 # Deploy binaries to https://mywarp.github.io/builds/
 set -e
 
-binaries_to_store=("mywarp-core/build/libs/mywarp-core-3.0-SNAPSHOT.jar" "mywarp-bukkit/build/libs/mywarp-bukkit-3.0-SNAPSHOT-all.jar")
+binaries_to_store=("mywarp-bukkit/build/libs/mywarp-bukkit-3.0-SNAPSHOT-all.jar" "mywarp-bukkit/build/libs/mywarp-bukkit-3.0-SNAPSHOT.jar" "mywarp-core/build/libs/mywarp-core-3.0-SNAPSHOT.jar")
 
 ci_name="Travis"
 gh_pages_branch="src"
@@ -46,14 +46,24 @@ commit:
   author: "${author_name}"
 EOF
 
+    if [ ${#binaries_to_store[@]} -eq 0 ]; then
+        echo "artifacts: []" >> ${yml_path}
+    else
+        echo "artifacts:" >> ${yml_path}
+        for binary in "${binaries_to_store[@]}"; do
+            name=$(basename ${binary})
+            echo "  - ${name}" >> ${yml_path}
+        done
+    fi
+
     git add -f ${yml_path}
     echo "Info YML '${yml_path}' created and added."
 
     # Copy the binaries
     mkdir -p ${binary_destination}
     for binary in "${binaries_to_store[@]}"; do
-    cp -Rf ${TRAVIS_BUILD_DIR}/${binary} ${binary_destination}
-    echo -e "Copied '${binary}' to '${binary_destination}'."
+        cp -Rf ${TRAVIS_BUILD_DIR}/${binary} ${binary_destination}
+        echo -e "Copied '${binary}' to '${binary_destination}'."
     done
     git add -f ${binary_destination}
 
