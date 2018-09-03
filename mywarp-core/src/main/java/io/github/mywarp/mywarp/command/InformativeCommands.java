@@ -34,7 +34,6 @@ import io.github.mywarp.mywarp.command.parametric.namespace.IllegalCommandSender
 import io.github.mywarp.mywarp.command.util.CommandUtil;
 import io.github.mywarp.mywarp.command.util.UnknownException;
 import io.github.mywarp.mywarp.command.util.UserViewableException;
-import io.github.mywarp.mywarp.command.util.paginator.StringPaginator;
 import io.github.mywarp.mywarp.command.util.printer.AssetsPrinter;
 import io.github.mywarp.mywarp.command.util.printer.InfoPrinter;
 import io.github.mywarp.mywarp.platform.Actor;
@@ -42,6 +41,7 @@ import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
+import io.github.mywarp.mywarp.platform.Platform;
 import io.github.mywarp.mywarp.platform.PlayerNameResolver;
 import io.github.mywarp.mywarp.platform.Profile;
 import io.github.mywarp.mywarp.service.economy.FeeType;
@@ -57,7 +57,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -74,6 +73,7 @@ public final class InformativeCommands {
   private final WarpManager warpManager;
   private final Game game;
   private final PlayerNameResolver playerNameResolver;
+  private final Platform platform;
   @Nullable
   private final LimitService limitService;
 
@@ -83,13 +83,16 @@ public final class InformativeCommands {
    * @param warpManager           the WarpManager used by commands
    * @param limitService          the LimitService used by commands - may be {@code null} if no limit service is used
    * @param authorizationResolver the AuthorizationResolver used by commands
-   * @param game                  the Game used by commands
+   * @param platform              the Platform instance to be used in commands
    * @param playerNameResolver    the PlayerNameResolver used by commands
+   * @param game                  the Game used by commands
    */
   InformativeCommands(WarpManager warpManager, @Nullable LimitService limitService,
-                      AuthorizationResolver authorizationResolver, Game game, PlayerNameResolver playerNameResolver) {
+                      AuthorizationResolver authorizationResolver, Platform platform,
+                      PlayerNameResolver playerNameResolver, Game game) {
     this.authorizationResolver = authorizationResolver;
     this.warpManager = warpManager;
+    this.platform = platform;
     this.game = game;
     this.limitService = limitService;
     this.playerNameResolver = playerNameResolver;
@@ -177,29 +180,30 @@ public final class InformativeCommands {
             .thenCompose(playerNameResolver::getByUniqueId)
             .thenApply(set -> set.stream().collect(Collectors.toMap(Profile::getUuid, Profile::getNameOrId)));
 
-    //display
+    //convert to messages
     creatorsFuture.thenAcceptBothAsync(warpsFuture, (creators, warps) -> {
-      Function<Warp, Message> mapping = input -> {
-        // 'name' (world) by player
+
+      List<Message> messages = warps.stream().sorted().map(warp -> {
         Message.Builder builder = Message.builder();
         builder.append("'");
-        builder.append(input);
+        builder.append(warp);
         builder.append("' (");
-        builder.append(CommandUtil.toWorldName(input.getWorldIdentifier(), game));
+        builder.append(CommandUtil.toWorldName(warp.getWorldIdentifier(), game));
         builder.append(") ");
         builder.append(msg.getString("list.by"));
         builder.append(" ");
 
-        if (actor instanceof LocalPlayer && input.isCreator(((LocalPlayer) actor).getUniqueId())) {
+        if (actor instanceof LocalPlayer && warp.isCreator(((LocalPlayer) actor).getUniqueId())) {
           builder.append(msg.getString("list.you"));
         } else {
-          builder.append(creators.get(input.getCreator()));
+          builder.append(creators.get(warp.getCreator()));
         }
         return builder.build();
-      };
+      }).collect(Collectors.toList());
 
-      StringPaginator.of(msg.getString("list.heading"), warps).withMapping(mapping::apply).paginate()
+      platform.createPaginatedContentBuilder().withHeading(msg.getString("list.heading")).build(messages)
           .display(actor, page);
+
     }, game.getExecutor()).exceptionally((ex) -> {
       UserViewableException userViewableException;
       if (ex.getCause() instanceof UserViewableException) {

@@ -42,7 +42,7 @@ public class HandlerTeleportService implements TeleportService {
   /**
    * Creates an instance that delegates calls to the given {@code handler}.
    *
-   * @param handler            the handler to handle teleports
+   * @param handler the handler to handle teleports
    */
   public HandlerTeleportService(TeleportHandler handler) {
     this.handler = handler;

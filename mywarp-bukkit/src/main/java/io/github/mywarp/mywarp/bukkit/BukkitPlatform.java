@@ -56,7 +56,6 @@ public class BukkitPlatform implements Platform {
 
   private final MyWarpPlugin plugin;
 
-  private final File dataFolder;
   private final BukkitSettings settings;
   private final BukkitGame game;
   private final SquirrelIdPlayerNameResolver profileCache;
@@ -65,18 +64,12 @@ public class BukkitPlatform implements Platform {
 
   BukkitPlatform(MyWarpPlugin plugin, File dataFolder, FileConfiguration defaultConfig) {
     this.plugin = plugin;
-    this.dataFolder = dataFolder;
 
     //initialize platform support
     this.settings = new BukkitSettings(new File(dataFolder, "config.yml"), defaultConfig);
     this.game = new BukkitGame(plugin, new BukkitExecutor(plugin));
     this.profileCache = new SquirrelIdPlayerNameResolver(new File(dataFolder, "profiles.db"));
     plugin.registerClosable(profileCache);
-  }
-
-  @Override
-  public File getDataFolder() {
-    return dataFolder;
   }
 
   @Override

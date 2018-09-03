@@ -21,6 +21,6 @@
  * Paginates collections of objects into displayable lists of multiple pages.
  */
 @ParametersAreNonnullByDefault
-package io.github.mywarp.mywarp.command.util.paginator;
+package io.github.mywarp.mywarp.platform.paginatedcontent;
 
 import javax.annotation.ParametersAreNonnullByDefault;

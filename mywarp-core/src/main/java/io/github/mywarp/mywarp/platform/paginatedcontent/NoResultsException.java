@@ -17,26 +17,27 @@
  * along with MyWarp. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.mywarp.mywarp.command.util.paginator;
+package io.github.mywarp.mywarp.platform.paginatedcontent;
+
+import io.github.mywarp.mywarp.command.util.UserViewableException;
+import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 
 /**
  * Indicates that there are no results to be paginated.
  */
-public class NoResultsException extends Exception {
+public class NoResultsException extends Exception implements UserViewableException {
 
-  NoResultsException() {
+  protected DynamicMessages msg = new DynamicMessages(SimplePaginatedContent.RESOURCE_BUNDLE_NAME);
+
+  /**
+   * Creates an instance.
+   */
+  public NoResultsException() {
     super();
   }
 
-  NoResultsException(String message) {
-    super(message);
-  }
-
-  NoResultsException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
-  NoResultsException(Throwable cause) {
-    super(cause);
+  @Override
+  public String getUserMessage() {
+    return msg.getString("no-results");
   }
 }

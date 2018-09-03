@@ -30,16 +30,18 @@ import io.github.mywarp.mywarp.command.parametric.annotation.Usable;
 import io.github.mywarp.mywarp.command.parametric.annotation.Viewable;
 import io.github.mywarp.mywarp.command.util.CommandUtil;
 import io.github.mywarp.mywarp.command.util.NoSuchWorldException;
-import io.github.mywarp.mywarp.command.util.paginator.StringPaginator;
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
+import io.github.mywarp.mywarp.platform.Platform;
 import io.github.mywarp.mywarp.service.economy.FeeType;
 import io.github.mywarp.mywarp.service.teleport.TeleportService;
+import io.github.mywarp.mywarp.util.Message;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.warp.Warp;
 
-import java.util.Set;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Bundles utility commands.
@@ -52,6 +54,7 @@ public final class UtilityCommands {
   private final CommandHandler commandHandler;
   private final TeleportService teleportService;
   private final Game game;
+  private final Platform platform;
 
   /**
    * Creates an instance.
@@ -59,12 +62,15 @@ public final class UtilityCommands {
    * @param myWarp          the MyWarp instance used in commands
    * @param commandHandler  the CommandHandler instance used in commands
    * @param teleportService the TeleportService to be used as base in commands
+   * @param platform        the Platform instance used in commands
    * @param game            the Game instance used in commands
    */
-  UtilityCommands(MyWarp myWarp, CommandHandler commandHandler, TeleportService teleportService, Game game) {
+  UtilityCommands(MyWarp myWarp, CommandHandler commandHandler, TeleportService teleportService, Platform platform,
+                  Game game) {
     this.myWarp = myWarp;
     this.commandHandler = commandHandler;
     this.teleportService = teleportService;
+    this.platform = platform;
     this.game = game;
   }
 
@@ -72,10 +78,12 @@ public final class UtilityCommands {
   @Require("mywarp.cmd.help")
   @Billable(FeeType.HELP)
   public void help(Actor actor, @OptArg("1") int page) {
-    Set<String> usableCommands = commandHandler.getUsableCommands(actor);
+    List<Message>
+        usableCommands =
+        commandHandler.getUsableCommands(actor).stream().sorted().map(Message::of).collect(Collectors.toList());
 
-    StringPaginator.of(msg.getString("help.heading"), usableCommands).withNote(msg.getString("help.note")).paginate()
-        .display(actor, page);
+    platform.createPaginatedContentBuilder().withHeading(msg.getString("help.heading"))
+        .withNote(msg.getString("help.note")).build(usableCommands).display(actor, page);
   }
 
   @Command(aliases = {"point"}, desc = "point.description", help = "point.help")
