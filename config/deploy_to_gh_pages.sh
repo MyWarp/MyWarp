@@ -10,9 +10,9 @@ gh_pages_branch="src"
 binary_destination="source/files/${TRAVIS_BUILD_NUMBER}_${MYWARP_COMMIT_HASH_SHORT}"
 yml_parent_folder="data/builds"
 
-if [ "$TRAVIS_REPO_SLUG" == "MyWarp/MyWarp" ] && \
-   [ "$TRAVIS_PULL_REQUEST" == "false" ] &&  \
-   [ "$TRAVIS_BRANCH" == "master" ]; then
+if [[ ("$TRAVIS_BRANCH" == "master" || "$TRAVIS_BRANCH" == "$TRAVIS_TAG") && \
+    ( "$TRAVIS_REPO_SLUG" == "MyWarp/MyWarp" ) && \
+    ( "$TRAVIS_PULL_REQUEST" == "false" ) ]]; then
 
     echo "Deploying binaries from build #${TRAVIS_BUILD_NUMBER} to GH Pages..."
 
@@ -44,6 +44,7 @@ commit:
   short_hash: "${MYWARP_COMMIT_HASH_SHORT}"
   message: "${MYWARP_COMMIT_SUBJECT}"
   author: "${author_name}"
+  tags: "${TRAVIS_TAG}"
 EOF
 
     if [ ${#binaries_to_store[@]} -eq 0 ]; then
@@ -72,5 +73,8 @@ EOF
     git push -fq origin ${gh_pages_branch} > /dev/null
 
     echo "Successfully deployed binaries to mywarp.github.io."
+
+else
+    echo "Skipping deployment."
 
 fi
