@@ -3,7 +3,7 @@
 # Deploy binaries to https://mywarp.github.io/builds/
 set -e
 
-binaries_to_store=("mywarp-bukkit/build/libs/mywarp-bukkit-3.0-SNAPSHOT-all.jar" "mywarp-bukkit/build/libs/mywarp-bukkit-3.0-SNAPSHOT.jar" "mywarp-core/build/libs/mywarp-core-3.0-SNAPSHOT.jar")
+binaries_to_store=("mywarp-bukkit/build/libs/mywarp-bukkit-*-all.jar" "mywarp-bukkit/build/libs/mywarp-bukkit-*.jar" "mywarp-core/build/libs/mywarp-core-*.jar")
 
 ci_name="Travis"
 gh_pages_branch="src"
