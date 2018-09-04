@@ -10,19 +10,28 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 ### Changed
 * [[#143](https://github.com/TheE/MyWarp/issues/143)] - Change group-id and package structure to `io.github.mywarp.mywarp`
 * [[#71](https://github.com/TheE/MyWarp/issues/71)] - Require Java 8 to run MyWarp, update internals to use new, native Java constructs where possible
-* Update to JOOQ 3.10.7
-* FlyWay to JOOQ 4.2.0
-* [Bukkit] Build against Bukkit 1.12.2-R0.1-SNAPSHOT
+* Update JOOQ to 3.11
+* Update FlyWay to 4.2.0
+* [Bukkit] Build against Bukkit 1.13.2-R0.1-SNAPSHOT
 * [[#151](https://github.com/TheE/MyWarp/issues/151)] - Use new crowdin API
 * [Spigot][[#118](https://github.com/TheE/MyWarp/issues/118)] - Use `player.getLocale()` if it exists
 * [[#160](https://github.com/TheE/MyWarp/issues/160)] - Move LocaleResolver to VersionSupport
 * [[#144](https://github.com/TheE/MyWarp/issues/140)] - Make DBMS configuration way more flexible
 * Update Gradle to 4.8 and use up-to-date versions of all plugins used in the build process
 * Groups in `/warp invite` and `/warp uninvite` have to be prefixed by `g:` rather than using the `-g` flag.
+* [[#185](https://github.com/TheE/MyWarp/issues/185)] - Store all strings as `UTF8MB4` on MySQL
+* [[#145](https://github.com/TheE/MyWarp/issues/145)] - Resolve player-names and identifiers asynchronously
+* Move user downloadable development builds to [mywarp.github.io](https://mywarp.github.io/builds.html).
+* [Bukkit][[#187](https://github.com/TheE/MyWarp/issues/187)] - Update H2 to 1.4
+* [Bukkit][[#178](https://github.com/TheE/MyWarp/issues/178)] - Add a way to specify JDBC configuration options
+* [Bukkit][[#189](https://github.com/TheE/MyWarp/issues/189)] - Use MaterialData when checking for buttons and levers, improving forward compatibility
+* [[#146](https://github.com/TheE/MyWarp/issues/146)] - Optionally allow platforms to use their own service to display paginated content
 
 ### Added
 * [[#142](https://github.com/TheE/MyWarp/issues/142)] - Add an option to disallow warps with different capitalization
-* Added acceptance of UUIDs in `/warp invite`, `/warp uninvite` and `/warp give` using the `u:` prefix
+* Accept UUIDs in `/warp invite`, `/warp uninvite` and `/warp give` using the `u:` prefix
+* [[#176](https://github.com/TheE/MyWarp/issues/176)] - Validate compatibility with older versions of Bukkit and Guava using AnimalSniffer
+* [Bukkit][[#189](https://github.com/TheE/MyWarp/issues/189)] - Resolve material information from a bundled configuration file, rather than hard-coding them
 
 ### Fixed
 * [[#148](https://github.com/TheE/MyWarp/issues/148)] - `/warp list` flags are not working
@@ -36,6 +45,13 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 * Fix handling of manually thrown AuthorizationExceptions in commands
 * [[#179](https://github.com/TheE/MyWarp/issues/179)] - Fix `give.is-owner error message
 * [[#182](https://github.com/TheE/MyWarp/issues/182)] - Fix warp signs when warp names are not handled case sensitive
+* [Bukkit] Fix incompatibilities with Bukkit 1.7.10
+
+
+### Removed:
+* Remove `%creator%` placeholder from welcome messages and Dynmap markers
+* [Bukkit][[#146](https://github.com/TheE/MyWarp/issues/146)] - Remove explicit position correction for warps created in MyWarp 2 (the default warp safety algorithm is now resopinsilbe for handling these)
+* Remove dependency on commons-lang
 
 ## [3.0-beta-4] - 2017-02-26
 
