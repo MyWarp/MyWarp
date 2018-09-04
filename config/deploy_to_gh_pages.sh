@@ -1,9 +1,9 @@
 #!/bin/bash
-#
-# Deploy binaries to https://mywarp.github.io/builds/
+shopt -s extglob
+
 set -e
 
-binaries_to_store=("mywarp-bukkit/build/libs/mywarp-bukkit-*-all.jar" "mywarp-bukkit/build/libs/mywarp-bukkit-*.jar" "mywarp-core/build/libs/mywarp-core-*.jar")
+binaries_to_store=("mywarp-bukkit/build/libs/mywarp-bukkit-*-all.jar" "mywarp-bukkit/build/libs/mywarp-bukkit-!(*javadoc|*sources|*-all).jar" "mywarp-core/build/libs/mywarp-core-!(*javadoc|*sources).jar")
 
 ci_name="Travis"
 gh_pages_branch="src"
