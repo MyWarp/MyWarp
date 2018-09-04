@@ -5,7 +5,7 @@ Starting with version 3, this project adheres to [Semantic Versioning](http://se
 
 Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 
-## [Unreleased]
+## [3.0-rc-1] - 2018-09-05
 
 ### Changed
 * [[#143](https://github.com/TheE/MyWarp/issues/143)] - Change group-id and package structure to `io.github.mywarp.mywarp`
@@ -467,7 +467,8 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 * Updated for Permissions 2.5.5 or higher (tested with 2.6 and 2.7)
 * Changed update URL where MyWarp downloads sqlite libraries
 
-[Unreleased]: https://github.com/TheE/MyWarp/compare/v3.0-beta-4...HEAD
+[Unreleased]: https://github.com/TheE/MyWarp/compare/v3.0-rc-1...HEAD
+[3.0-rc-1]: https://github.com/TheE/MyWarp/compare/v3.0-beta-4...v3.0-rc-1
 [3.0-beta-4]: https://github.com/TheE/MyWarp/compare/v3.0-beta-3...v3.0-beta-4
 [3.0-beta-3]: https://github.com/TheE/MyWarp/compare/v3.0-beta-2...v3.0-beta-3
 [3.0-beta-2]: https://github.com/TheE/MyWarp/compare/v3.0-beta-1...v3.0-beta-2
