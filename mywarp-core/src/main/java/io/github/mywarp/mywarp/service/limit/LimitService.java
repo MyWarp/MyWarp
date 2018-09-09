@@ -31,7 +31,6 @@ import io.github.mywarp.mywarp.service.limit.Limit.Value;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 
-import java.util.Arrays;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -99,28 +98,8 @@ public class LimitService {
     return evaluate(creator, world, builder.build());
   }
 
-  private EvaluationResult evaluate(LocalPlayer creator, LocalWorld world, Iterable<Value> values) {
-    LimitValueWarpMapping valueWarpMapping = new LimitValueWarpMapping(warpManager, createPredicate(creator, world));
-
-    for (Value toCheck : values) {
-      if (toCheck.canDisobey(creator, world)) {
-        continue;
-      }
-      int max = capability.getLimit(creator, world).get(toCheck);
-
-      if (valueWarpMapping.atLeast(toCheck, max)) {
-        return EvaluationResult.exceeded(toCheck, max);
-      }
-    }
-    return EvaluationResult.limitMet();
-  }
-
-  private static Predicate<Warp> createPredicate(final LocalPlayer creator, LocalWorld... worlds) {
-    return createPredicate(creator, Arrays.asList(worlds));
-  }
-
-  private static Predicate<Warp> createPredicate(final LocalPlayer creator, final Iterable<LocalWorld> worlds) {
-    return input -> input.isCreator(creator.getUniqueId()) && containsIdentifiedWorld(worlds,
+  private static Predicate<Warp> createPredicate(final LocalPlayer creator, Limit limit) {
+    return input -> input.isCreator(creator.getUniqueId()) && containsIdentifiedWorld(limit.getAffectedWorlds(),
                                                                                       input.getWorldIdentifier());
   }
 
@@ -139,9 +118,27 @@ public class LimitService {
     ImmutableMap.Builder<Limit, LimitValueWarpMapping> builder = ImmutableMap.builder();
 
     for (Limit limit : capability.getEffectiveLimits(player)) {
-      builder.put(limit, new LimitValueWarpMapping(warpManager, createPredicate(player, limit.getAffectedWorlds())));
+      builder.put(limit, new LimitValueWarpMapping(warpManager, createPredicate(player, limit)));
     }
     return builder.build();
+  }
+
+  private EvaluationResult evaluate(LocalPlayer creator, LocalWorld world, Iterable<Value> values) {
+    Limit limit = capability.getLimit(creator, world);
+
+    LimitValueWarpMapping valueWarpMapping = new LimitValueWarpMapping(warpManager, createPredicate(creator, limit));
+
+    for (Value toCheck : values) {
+      if (toCheck.canDisobey(creator, world)) {
+        continue;
+      }
+      int max = limit.get(toCheck);
+
+      if (valueWarpMapping.atLeast(toCheck, max)) {
+        return EvaluationResult.exceeded(toCheck, max);
+      }
+    }
+    return EvaluationResult.limitMet();
   }
 
   private static boolean containsIdentifiedWorld(Iterable<LocalWorld> worlds, UUID worldIdentifier) {
