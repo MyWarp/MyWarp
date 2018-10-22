@@ -125,7 +125,7 @@ public final class LegacyWarpSource implements WarpSource {
     try (Connection conn = source.getConnection()) {
       dialect = JDBCUtils.dialect(conn);
 
-      if (!SUPPORTED_DIALECTS.contains(dialect)) {
+      if (SUPPORTED_DIALECTS.stream().noneMatch(dialect::supports)) {
         throw new StorageInitializationException(String.format("%s is not supported!", dialect.getName()));
       }
 

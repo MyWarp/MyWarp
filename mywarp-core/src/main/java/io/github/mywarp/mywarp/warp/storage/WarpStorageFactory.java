@@ -64,7 +64,7 @@ public class WarpStorageFactory {
     try (Connection conn = dataSource.getConnection()) {
       dialect = JDBCUtils.dialect(conn);
 
-      if (!SUPPORTED_DIALECTS.contains(dialect)) {
+      if (SUPPORTED_DIALECTS.stream().noneMatch(dialect::supports)) {
         throw new StorageInitializationException(String.format("%s is not supported!", dialect.getName()));
       }
 
@@ -141,7 +141,7 @@ public class WarpStorageFactory {
   }
 
   private String getMigrationLocation(SQLDialect dialect) throws StorageInitializationException {
-    switch (dialect) {
+    switch (dialect.family()) {
       case H2:
         return MIGRATION_PATH + "h2";
       case MARIADB:
