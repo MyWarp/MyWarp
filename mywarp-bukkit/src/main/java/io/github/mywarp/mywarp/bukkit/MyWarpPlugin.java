@@ -76,7 +76,7 @@ import javax.annotation.Nullable;
 public final class MyWarpPlugin extends JavaPlugin {
 
   public static final String CONVERSATION_RESOURCE_BUNDLE_NAME = "io.github.mywarp.mywarp.lang.Conversations";
-  public static final int CONVERSATION_TIMEOUT = 30;
+  public static final int CONVERSATION_TIMEOUT = 60;
 
   private static final Logger log = MyWarpLogger.getLogger(MyWarpPlugin.class);
 
