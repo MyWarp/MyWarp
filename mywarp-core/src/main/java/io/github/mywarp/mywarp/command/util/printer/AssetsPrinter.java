@@ -21,6 +21,7 @@ package io.github.mywarp.mywarp.command.util.printer;
 
 import static com.google.common.base.Preconditions.checkState;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
@@ -42,6 +43,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -97,33 +100,6 @@ public class AssetsPrinter {
     return new AssetsPrinter(forWhom, null, game, warpManager);
   }
 
-  /**
-   * Prints the assets to the given receiver.
-   *
-   * @param receiver the Actor who is receiving this print
-   */
-  public void print(Actor receiver) {
-    // display the heading
-    String heading = " " + msg.getString("assets.heading", creator.getName()) + " ";
-    receiver.sendMessage(Message.builder().append(Message.Style.HEADLINE_1).append(heading).build());
-
-    // display the limit
-    Map<Limit, LimitValueWarpMapping> index;
-
-    if (limitService != null) {
-      index = limitService.getAssets(creator);
-    } else {
-      assert game != null && warpManager != null;
-      index =
-          ImmutableMap.of(createDummyLimit(game),
-                          new LimitValueWarpMapping(warpManager, w -> w.isCreator(creator.getUniqueId())));
-    }
-
-    for (Map.Entry<Limit, LimitValueWarpMapping> entry : index.entrySet()) {
-      printLimit(receiver, entry.getKey(), entry.getValue());
-    }
-  }
-
   private static Limit createDummyLimit(final Game game) {
     return new Limit() {
       @Override
@@ -143,18 +119,43 @@ public class AssetsPrinter {
     };
   }
 
+  private static <I> String join(Collection<I> items, Function<I, String> mapper) {
+    return Joiner.on(", ").join(items.stream().map(mapper).sorted().collect(Collectors.toList()));
+  }
+
+  /**
+   * Prints the assets to the given receiver.
+   *
+   * @param receiver the Actor who is receiving this print
+   */
+  public void print(Actor receiver) {
+    // display the heading
+    receiver.sendMessage(Message.of(Message.Style.HEADLINE_1, msg.getString("assets.heading", creator.getName())));
+
+    // display the limit
+    Map<Limit, LimitValueWarpMapping> index;
+
+    if (limitService != null) {
+      index = limitService.getAssets(creator);
+    } else {
+      assert game != null && warpManager != null;
+      index =
+          ImmutableMap.of(createDummyLimit(game),
+                          new LimitValueWarpMapping(warpManager, w -> w.isCreator(creator.getUniqueId())));
+    }
+
+    for (Map.Entry<Limit, LimitValueWarpMapping> entry : index.entrySet()) {
+      printLimit(receiver, entry.getKey(), entry.getValue());
+    }
+  }
+
   private void printLimit(Actor receiver, Limit limit, LimitValueWarpMapping mapping) {
 
     // ...the total value (max. number & worlds)
     Message.Builder totalMsg = Message.builder();
     totalMsg.append(Message.Style.HEADLINE_2);
-
-    totalMsg.append(msg.getString("assets.total"));
-    totalMsg.append(" ");
-    totalMsg.appendWithSeparators(limit.getAffectedWorlds());
-    totalMsg.append(" ");
-    appendCurrentAndMaximum(totalMsg, mapping.get(Limit.Value.TOTAL).size(), limit.get(Limit.Value.TOTAL));
-    totalMsg.append(":");
+    totalMsg.append(msg.getString("assets.total", join(limit.getAffectedWorlds(), LocalWorld::getName),
+                                  mapping.get(Limit.Value.TOTAL).size(), limit.get(Limit.Value.TOTAL)));
 
     receiver.sendMessage(totalMsg.build());
 
@@ -164,24 +165,13 @@ public class AssetsPrinter {
 
       Message.Builder limitMsg = Message.builder();
       limitMsg.append(Message.Style.KEY);
-      limitMsg.append(msg.getString("assets." + value.lowerCaseName()));
-      limitMsg.append(" ");
-      appendCurrentAndMaximum(limitMsg, typeWarps.size(), limit.get(value));
-      limitMsg.append(": ");
+      limitMsg.append(msg.getString("assets." + value.lowerCaseName(), typeWarps.size(), limit.get(value)));
       limitMsg.append(Message.Style.VALUE);
+      limitMsg.append(" ");
       limitMsg.appendWithSeparators(typeWarps);
 
       receiver.sendMessage(limitMsg.build());
     }
   }
 
-  private Message.Builder appendCurrentAndMaximum(Message.Builder builder, int current, int max) {
-    builder.append("(");
-    builder.append(current);
-    if (0 <= max) {
-      builder.append('/').append(max);
-    }
-    builder.append(")");
-    return builder;
-  }
 }
