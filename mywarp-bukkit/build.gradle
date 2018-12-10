@@ -1,6 +1,6 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "2.0.4"
-    id "ru.vyarus.animalsniffer" version "1.4.5"
+    id "com.github.johnrengelman.shadow" version "4.0.3"
+    id "ru.vyarus.animalsniffer" version "1.4.6"
 }
 apply plugin: "ru.vyarus.animalsniffer"
 
