@@ -35,7 +35,7 @@ repositories {
 
 dependencies {
     compile project(":mywarp-core")
-    compile "org.bukkit:bukkit:1.13.1-R0.1-SNAPSHOT"
+    compile "org.bukkit:bukkit:1.13.2-R0.1-SNAPSHOT"
     compile "com.sk89q:squirrelid:0.1.0"
     compile "net.milkbowl.vault:VaultAPI:1.4"
     compile "org.anjocaido:essentialsgroupmanager:2.10.1"
