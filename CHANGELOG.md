@@ -5,6 +5,17 @@ Starting with version 3, this project adheres to [Semantic Versioning](http://se
 
 Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 
+##[Unreleased]
+
+### Changed
+* [Bukkit][[#191](https://github.com/TheE/MyWarp/issues/191)] Increase the conversation timeout to 60 seconds
+* [[#191](https://github.com/TheE/MyWarp/issues/191)] Make warp numbers in the `assets` command translatable
+* [Bukkit] Build against Bukkit 1.13.2-R0.1-SNAPSHOT
+
+### Fixed
+* [[#181](https://github.com/TheE/MyWarp/issues/181)] - Warp limits fail to account for warps on multiple worlds
+* [[#192](https://github.com/TheE/MyWarp/issues/192)] - Using MySQL 5.7 or newer raises unsupported database errors
+
 ## [3.0-rc-1] - 2018-09-05
 
 ### Changed
@@ -12,7 +23,7 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 * [[#71](https://github.com/TheE/MyWarp/issues/71)] - Require Java 8 to run MyWarp, update internals to use new, native Java constructs where possible
 * Update JOOQ to 3.11
 * Update FlyWay to 4.2.0
-* [Bukkit] Build against Bukkit 1.13.2-R0.1-SNAPSHOT
+* [Bukkit] Build against Bukkit 1.13.1-R0.1-SNAPSHOT
 * [[#151](https://github.com/TheE/MyWarp/issues/151)] - Use new crowdin API
 * [Spigot][[#118](https://github.com/TheE/MyWarp/issues/118)] - Use `player.getLocale()` if it exists
 * [[#160](https://github.com/TheE/MyWarp/issues/160)] - Move LocaleResolver to VersionSupport
