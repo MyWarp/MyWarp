@@ -88,6 +88,11 @@ shadowJar {
     relocate("info.ronjenkins", "${internalPath}.slf4bukkit")
     relocate("com.sk89q.intake", "${internalPath}.intake")
     relocate("com.sk89q.squirrelid", "${internalPath}.squirrelid")
+
+    //exclude unused classes
+    minimize{
+        exclude(dependency("com.h2database:h2:.*"))
+    }
 }
 build.dependsOn(shadowJar)
 
