@@ -5,12 +5,12 @@ Starting with version 3, this project adheres to [Semantic Versioning](http://se
 
 Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 
-##[Unreleased]
+## [Unreleased]
 
 ### Changed
-* [Bukkit][[#191](https://github.com/TheE/MyWarp/issues/191)] Increase the conversation timeout to 60 seconds
-* [[#191](https://github.com/TheE/MyWarp/issues/191)] Make warp numbers in the `assets` command translatable
-* [Bukkit] Build against Bukkit 1.13.2-R0.1-SNAPSHOT
+* [Bukkit][[#191](https://github.com/TheE/MyWarp/issues/191)] - Increase the conversation timeout to 60 seconds
+* [[#191](https://github.com/TheE/MyWarp/issues/191)] - Make warp numbers in the `assets` command translatable
+* [Bukkit] - Build against Bukkit 1.13.2-R0.1-SNAPSHOT
 
 ### Fixed
 * [[#181](https://github.com/TheE/MyWarp/issues/181)] - Warp limits fail to account for warps on multiple worlds
@@ -54,14 +54,14 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 * [[#156](https://github.com/TheE/MyWarp/issues/156)] - Fix teleporting with donkeys and mules on 1.12
 * Fix Guava compatibility of the Dynmap bridge
 * Fix handling of manually thrown AuthorizationExceptions in commands
-* [[#179](https://github.com/TheE/MyWarp/issues/179)] - Fix `give.is-owner error message
+* [[#179](https://github.com/TheE/MyWarp/issues/179)] - Fix `give.is-owner` error message
 * [[#182](https://github.com/TheE/MyWarp/issues/182)] - Fix warp signs when warp names are not handled case sensitive
 * [Bukkit] Fix incompatibilities with Bukkit 1.7.10
 
 
 ### Removed:
 * Remove `%creator%` placeholder from welcome messages and Dynmap markers
-* [Bukkit][[#146](https://github.com/TheE/MyWarp/issues/146)] - Remove explicit position correction for warps created in MyWarp 2 (the default warp safety algorithm is now resopinsilbe for handling these)
+* [Bukkit][[#146](https://github.com/TheE/MyWarp/issues/146)] - Remove explicit position correction for warps created in MyWarp 2 (the default warp safety algorithm is now responsible for handling these)
 * Remove dependency on commons-lang
 
 ## [3.0-beta-4] - 2017-02-26
