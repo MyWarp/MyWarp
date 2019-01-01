@@ -11,6 +11,7 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 * [Bukkit][[#191](https://github.com/TheE/MyWarp/issues/191)] - Increase the conversation timeout to 60 seconds
 * [[#191](https://github.com/TheE/MyWarp/issues/191)] - Make warp numbers in the `assets` command translatable
 * [Bukkit] - Build against Bukkit 1.13.2-R0.1-SNAPSHOT
+* Update Gradle to 5.0 and use up-to-date versions of all plugins used in the build process
 
 ### Fixed
 * [[#181](https://github.com/TheE/MyWarp/issues/181)] - Warp limits fail to account for warps on multiple worlds
