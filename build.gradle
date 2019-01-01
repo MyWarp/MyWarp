@@ -26,14 +26,14 @@ subprojects {
 
     // Basic project information
     group = "io.github.mywarp.mywarp"
-    version = "3.0-SNAPSHOT"
+    version = "3.0"
 
     // Extended project information
     ext.projectName = "MyWarp"
     ext.inceptionYear = "2011"
     ext.packaging = "jar"
     ext.url = "https://mywarp.github.io/"
-    ext.projectDescription = "Social and self managing warps for the Minecraft multiplayer."
+    ext.projectDescription = "An extension for the Minecraft multiplayer that allows players to create and share warps with each other."
 
     ext.internalVersion = version + "+" + ciSystem + "-b" + buildNumber + ".git-" + commitHash
 

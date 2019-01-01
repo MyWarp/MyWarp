@@ -5,7 +5,7 @@ Starting with version 3, this project adheres to [Semantic Versioning](http://se
 
 Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 
-## [Unreleased]
+## [3.0] - 2019-01-01
 
 ### Changed
 * [Bukkit][[#191](https://github.com/TheE/MyWarp/issues/191)] - Increase the conversation timeout to 60 seconds
@@ -479,7 +479,8 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 * Updated for Permissions 2.5.5 or higher (tested with 2.6 and 2.7)
 * Changed update URL where MyWarp downloads sqlite libraries
 
-[Unreleased]: https://github.com/TheE/MyWarp/compare/v3.0-rc-1...HEAD
+[Unreleased]: https://github.com/TheE/MyWarp/compare/v3.0...HEAD
+[3.0]: https://github.com/TheE/MyWarp/compare/v3.0-rc-1...v3.0
 [3.0-rc-1]: https://github.com/TheE/MyWarp/compare/v3.0-beta-4...v3.0-rc-1
 [3.0-beta-4]: https://github.com/TheE/MyWarp/compare/v3.0-beta-3...v3.0-beta-4
 [3.0-beta-3]: https://github.com/TheE/MyWarp/compare/v3.0-beta-2...v3.0-beta-3
