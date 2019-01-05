@@ -5,6 +5,11 @@ Starting with version 3, this project adheres to [Semantic Versioning](http://se
 
 Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 
+## Unreleased
+
+### Fixed
+* [Bukkit][[#196](https://github.com/TheE/MyWarp/issues/196)] Warps on blocks added in 1.13 are marked unsafe even if they are safe
+
 ## [3.0] - 2019-01-01
 
 ### Changed

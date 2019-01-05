@@ -14,6 +14,7 @@ softdepend:
   - Vault
 website: ${url}
 main: io.github.mywarp.mywarp.bukkit.MyWarpPlugin
+api-version: 1.13
 commands:
   warp:
     aliases: ['mywarp', 'mw']
