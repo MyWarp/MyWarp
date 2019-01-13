@@ -3,7 +3,7 @@ Contributing
 
 Thank you for your interest in contributing to MyWarp! We appreciate your effort, but to make sure that the inclusion of your patch is a smooth process, we ask that you make note of the following guidelines.
 
-Please note that MyWarp targeted at **Java 6**, but requires at least **Java 8** to be build as the build process makes use of tools that are not compatible with Java 6.
+Please note that MyWarp is targeted at **Java 8**.
 
 All contributions must be licensed under the GNU General Public License v3.
 
@@ -22,7 +22,7 @@ The build process automatically checks most of these conventions using Checkstyl
 
 Code Conventions
 ---------
-* Use [Optionals](https://code.google.com/p/guava-libraries/wiki/UsingAndAvoidingNullExplained) instead of returning `null`.
+* Use `java.util.Optional` instead of returning `null`.
 * Method parameters accepting `null` must be annotated with `@javax.annotation.Nullable`, all methods and parameters are nonnull by default.
-* Use [Google Preconditions](https://code.google.com/p/guava-libraries/wiki/PreconditionsExplained) for null- and argument checking.
-* Use `me.taylorkelly.mywarp.util.MyWarpLogger.getLogger(Class<?>)` to create per-class loggers, if needed.
+* Use `java.util.Objects` for null- and argument checking.
+* Use `MyWarpLogger.getLogger(Class<?>)` to create per-class loggers, if needed.

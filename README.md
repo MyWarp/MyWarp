@@ -1,51 +1,36 @@
-![MyWarp](https://github.com/TheE/MyWarp/wiki/images/logo_vertical.png)
-==========
-[![Build Status](https://travis-ci.org/TheE/MyWarp.svg)](https://travis-ci.org/TheE/MyWarp) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/mywarp/localized.svg)](https://crowdin.com/project/mywarp)
+# ![MyWarp](https://github.com/MyWarp/MyWarp/wiki/images/logo_vertical.png)
+[![Build Status](https://travis-ci.org/MyWarp/MyWarp.svg?branch=master)](https://travis-ci.org/MyWarp/MyWarp)
+[![Maintainability](https://api.codeclimate.com/v1/badges/492f3d16610c8c344cd3/maintainability)](https://codeclimate.com/github/MyWarp/MyWarp/maintainability) [![jitpack](https://jitpack.io/v/MyWarp/mywarp.svg)](https://jitpack.io/#MyWarp/mywarp)  [![Crowdin](https://d322cqt584bo4o.cloudfront.net/mywarp/localized.svg)](https://crowdin.com/project/mywarp)
 
-MyWarp is an extension for the Minecraft multiplayer that allows players to share locations with each other. Shared locations (called ‘warps’) can be visited instantly by other players using a simple command. Creators remain in full control over their warps: They can remove them, change their locations, or invite players to or uninvite players from using them.
+MyWarp is an extension for the Minecraft multiplayer that allows players to create and share warps with each other.
 
-MyWarp’s goal is to create a highly flexible system that allows players to dynamically connect with each other while beeing entirely self-managed. Once set up, administrative interventions are reduced to a bare minimum.
+* Create public warps, usable by everybody or private ones, only usable by the creator and invited players.
+* Profit from intelligent matching mechanisms that complete warp names while typing.
+* Use buttons or pressure plates to access warps.
+* Limit the number of warps a user can create: per type and even per world.
+* Charge users for creating, managing or using warps.
+* Make users wait before or after being teleported.
+* Translate or fine-tune every message.
 
-Compiling
----------
+## Project Structure
+Starting with version 3, MyWarp has been split into a platform agnostic core and platform-specific implementation. `mywarp-core` contains most of MyWarp's inner logic, e.g. it handles access to and storage of warps, services like timers, limits or economy support and also individual commands.
 
-You can compile MyWarp as long as you have the [Java Development Kit (JDK)](http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html) for Java 8 or newer. You only need one version of JDK installed.
+To use MyWarp, the core has to be implemented for a certain platform. Currently, `mywarp-bukkit` is the only official implementation and targets various implementations of the Bukkit API. An implementation for Sponge is planned.
 
-The build process uses Gradle, which you do *not* need to download. MyWarp is a multi-module project with two modules:
+## Compiling
 
-* `mywarp-core` contains MyWarp
-* `mywarp-bukkit` is the Bukkit plugin
+The project is written for Java 8 and build with [Gradle](http://gradle.org/). To compile, clone this repository and run:
 
-### To compile...
+    gradlew build
 
-#### On Windows
+If you want to build against MyWarp, javadocs and maven dependencies can be found on [JitPack](https://jitpack.io/#MyWarp/mywarp).
 
-1. Shift + right click the folder with MyWarp's files and click "Open command prompt".
-2. `gradlew build`
+## Contributing
 
-#### On Linux, BSD or macOS
+Please check [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines to follow. Note that branches in this repository, as well as all pull-requests, are built automatically via [Travis](https://travis-ci.org/MyWarp/MyWarp).
 
-1. In your terminal, navigate to the folder with MyWarp's files (`cd /folder/of/mywarp/files`)
-2. `./gradlew build`
-
-### Then you will find...
-
-You will find:
-
-* The core MyWarp API in **mywarp-core/build/libs**
-* MyWarp for Bukkit in **mywarp-bukkit/build/libs**
-
-If you want to use MyWarp, use the `-all` version which includes MyWarp and all necessary libraries.
-
-Contributing
-------------
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for important guidelines to follow.
-
-Links
------
-* [Official Website](https://thee.github.io/MyWarp/)
-* [Documentation](https://github.com/TheE/MyWarp/wiki)
-* [Localization](https://crowdin.com/project/mywarp)
-* [Issue Tracker](https://github.com/TheE/MyWarp/issues)
-* [Continues Integration](https://thee140.ci.cloudbees.com/)
+## Links
+* [Project Website](https://mywarp.github.io/)
+* [Issue Tracker](https://github.com/MyWarp/MyWarp/issues)
+* [End-User Documentation](https://github.com/MyWarp/MyWarp/wiki)
+* [Localization Management](https://crowdin.com/project/mywarp)

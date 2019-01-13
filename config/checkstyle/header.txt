@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2016, MyWarp team and contributors
+ * Copyright (C) 2011 - 2019, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *

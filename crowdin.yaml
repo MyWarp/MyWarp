@@ -1,5 +1,0 @@
-files:
-  - source: resources/me/taylorkelly/mywarp/lang/*.properties
-    ignore:
-      - '*_*.properties'
-    translation: /%original_path%/%file_name%_%locale_with_underscore%.%file_extension%

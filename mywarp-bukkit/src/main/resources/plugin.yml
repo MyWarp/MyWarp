@@ -13,7 +13,8 @@ softdepend:
   - GroupManager
   - Vault
 website: ${url}
-main: me.taylorkelly.mywarp.bukkit.MyWarpPlugin
+main: io.github.mywarp.mywarp.bukkit.MyWarpPlugin
+api-version: 1.13
 commands:
   warp:
     aliases: ['mywarp', 'mw']

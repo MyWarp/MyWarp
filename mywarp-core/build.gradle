@@ -1,19 +1,33 @@
-repositories {
-    maven { url "http://repository-thee140.forge.cloudbees.com/snapshot/" }
+plugins {
+    id "ru.vyarus.animalsniffer" version "1.4.6"
+}
+apply plugin: "ru.vyarus.animalsniffer"
+
+configurations.create("createSignature")
+
+task sig(type: ru.vyarus.gradle.plugin.animalsniffer.signature.BuildSignatureTask) {
+    //build new signature as an extension to the JDK's
+    signatures configurations.signature
+    files configurations.createSignature
+}
+animalsniffer {
+    //use the signature generated above
+    signatures = sig.outputFiles
+    excludeJars "guava-*"
+    //the cache cannot be used due to incompatibilities with Java 8,
+    //see https://github.com/xvik/gradle-animalsniffer-plugin/wiki/Check-task-performance#known-issues
 }
 
 dependencies {
-    compile 'org.jooq:jooq:3.6.4'
-    compile 'org.flywaydb:flyway-core:4.0.2'
-    // Bukkit only bundles 2.3
-    compile 'commons-lang:commons-lang:2.3'
-    // Bukkit only bundles 10.0.1
-    compile 'com.google.guava:guava:10.0.1'
-    compile 'org.slf4j:slf4j-api:1.7.10'
-    compile 'com.flowpowered:flow-math:1.0.2'
-    compile 'de.minehattan.intake:intake:4.2-SNAPSHOT'
-}
+    compile "org.jooq:jooq:3.11.+"
+    annotationProcessor "org.jooq:jooq-checker:3.11.+"
+    compile "org.flywaydb:flyway-core:4.2.0"
+    compile "com.google.guava:guava:21.0"
+    compile "org.slf4j:slf4j-api:1.7.25"
+    compile "com.flowpowered:flow-math:1.0.3"
+    compile "com.github.mywarp.intake:intake:b57bff7cd9"
 
-crowdinDownload {
-    excludePattern = '*mywarp-bukkit*/**'
+    signature "org.codehaus.mojo.signature:java18:1.0@signature" //required to build custom signature
+    createSignature "com.google.guava:guava:10.0.1" //bundled by Bukkit 1.7.10, we should try to stay compatible
 }
+compileJava.options.compilerArgs << "-processor" << "org.jooq.checker.SQLDialectChecker"

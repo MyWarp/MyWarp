@@ -1,13 +1,15 @@
 settings:
   controlWorldAccess: false
+  caseSensitiveWarpNames: true
   teleportHorses: true
   showTeleportEffect: true
   informPlayersOnInvitation: true
 storage:
-  url: # path is set programatically to a h2 database file in MyWarp's plugin folder
+  url: # path is set programmatically to a h2 database file in MyWarp's plugin folder
   schema: 'mywarp'
   user: 'mywarp'
   password: 'mywarp'
+  properties: []
 localization:
   defaultLocale: en_US
   perPlayer: true
@@ -72,3 +74,5 @@ dynmap:
     iconID: 'mywarp_warp-32'
     minZoom: 0
     showLabel: false
+slf4j:
+  showShortLogName: false

@@ -1,118 +1,126 @@
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-    dependencies {
-        classpath "gradle.plugin.com.mendhak.gradlecrowdin:plugin:0.0.9"
-    }
+plugins {
+    id "com.mendhak.gradlecrowdin" version "0.1.0"
+    id "com.palantir.git-version" version "0.11.0"
 }
 
-plugins {
-    id "com.palantir.git-version" version "0.5.2"
+if (hasProperty('buildScan')) {
+    buildScan {
+        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+        termsOfServiceAgree = 'yes'
+    }
 }
 
 // Define variables
 if (!project.hasProperty("buildNumber")) {
-    ext.buildNumber = '0'
+    ext.buildNumber = "0"
 }
 if (!project.hasProperty("ciSystem")) {
-    ext.ciSystem = 'unknown'
+    ext.ciSystem = "unknown"
 }
 if (!project.hasProperty("commitHash")) {
     try {
         ext.commitHash = versionDetails().gitHash
     } catch (Exception ignore) {
-        ext.commitHash = 'unknown'
+        ext.commitHash = "unknown"
     }
 }
 
 subprojects {
-    apply plugin: 'java'
-    apply plugin: 'maven'
-    apply plugin: 'checkstyle'
+    apply plugin: "java"
+    apply plugin: "maven"
+    apply plugin: "checkstyle"
     apply plugin: "com.mendhak.gradlecrowdin"
 
     // Basic project information
-    group = 'me.taylorkelly'
-    version = '3.0-SNAPSHOT'
+    group = "io.github.mywarp.mywarp"
+    version = "3.0.1-SNAPSHOT"
 
     // Extended project information
-    ext.projectName = 'MyWarp'
-    ext.inceptionYear = '2011'
-    ext.packaging = 'jar'
-    ext.url = 'https://thee.github.io/MyWarp/'
-    ext.projectDescription = 'Social and dynamic warps for Minecraft'
+    ext.projectName = "MyWarp"
+    ext.inceptionYear = "2011"
+    ext.packaging = "jar"
+    ext.url = "https://mywarp.github.io/"
+    ext.projectDescription = "An extension for the Minecraft multiplayer that allows players to create and share warps with each other."
 
     ext.internalVersion = version + "+" + ciSystem + "-b" + buildNumber + ".git-" + commitHash
 
     // Minimum version of Java required
-    sourceCompatibility = 6
-    targetCompatibility = 6
+    sourceCompatibility = 8
+    targetCompatibility = 8
 
     // Project repositories
     repositories {
         jcenter()
+        maven { url "https://jitpack.io" }
     }
 
     checkstyle {
-        toolVersion = '7.0'
-        configProperties.checkstyleConfigDir = new File(rootProject.projectDir, 'config/checkstyle')
-        configFile = new File(configProperties.checkstyleConfigDir, 'checkstyle.xml')
+        toolVersion = "8.11"
+        configProperties.checkstyleConfigDir = new File(rootProject.projectDir, "config/checkstyle")
+        configFile = new File(configProperties.checkstyleConfigDir, "checkstyle.xml")
     }
 
     // JAR manifest configuration
     jar.manifest.mainAttributes(
-            "Built-By": System.properties['user.name'],
-            "Created-By": System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
+            "Built-By": System.properties["user.name"],
+            "Created-By": System.properties["java.vm.version"] + " (" + System.properties["java.vm.vendor"] + ")",
             "Implementation-Title": name,
             "Implementation-Version": internalVersion,
             "Implementation-Vendor": url)
 
+    jar {
+        from new File(rootProject.projectDir, "LICENSE.txt")
+    }
+
     task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = 'sources'
+        classifier = "sources"
         from sourceSets.main.allSource
     }
     task javadocJar(type: Jar, dependsOn: javadoc) {
-        classifier = 'javadoc'
+        classifier = "javadoc"
         from javadoc.destinationDir
     }
 
     javadoc {
-        options.setEncoding('UTF-8')
+        options.setEncoding("UTF-8")
 
         if (JavaVersion.current().isJava8Compatible()) {
             // disable the super-strict doclint tool in Java 8
-            options.addStringOption('Xdoclint:none', '-quiet')
+            options.addStringOption("Xdoclint:none", "-quiet")
         }
     }
 
-    if (project.hasProperty('crowdinKey')) {
+    // handle translations
+    def translationsSourceDir = "io/github/mywarp/mywarp/lang"
+    def translationFinalDir = new File(sourceSets.main.output.resourcesDir, translationsSourceDir)
 
-        crowdinDownload {
-            destination = "$projectDir/build/resources/main/me/taylorkelly/mywarp/lang"
-            projectId = 'mywarp'
+    // if present, additional translations will be downloaded from crowdin,
+    // extracted to a temporary folder and copied to the final destination
+    if (project.hasProperty("crowdinKey")) {
+        
+        def crowdinTempDir = "build/tmp/crowdin"
 
-            //remove project folders from crowdin source
-            renameMapping = [
-                    from: '^(.*)/(.*)$',
-                    to  : /\2/
-            ]
-
-            apiKey = project.crowdinKey
+        task crowdinCopy(type: Copy) {
+            FileTree tree = fileTree(dir:crowdinTempDir, include: "**/" + project.name + "/**/*.properties")
+            from tree.files
+            into translationFinalDir
+            dependsOn(crowdinDownload)
         }
-        processResources.dependsOn(crowdinDownload)
+        crowdinDownload {
+            projectId = "mywarp"
+            apiKey = project.crowdinKey
+            destination = crowdinTempDir
+        }
+        processResources.dependsOn(crowdinCopy)
     }
 
     // create the English localization files from the fallback files
     task createDefaultLocalizations(type: Copy) {
-        def bundleFolder = 'me/taylorkelly/mywarp/lang'
-        from('src/main/resources/' + bundleFolder)
-        into(new File(sourceSets.main.output.resourcesDir, bundleFolder))
-        include('*.properties')
-        exclude('*_*.properties')
-        rename { fileName -> fileName.replace('.', '_en.') }
+        from "src/main/resources/" + translationsSourceDir
+        into translationFinalDir
+        include("*.properties")
+        exclude("*_*.properties")
+        rename { fileName -> fileName.replace(".", "_en.") }
     }
     processResources.dependsOn(createDefaultLocalizations)
 
