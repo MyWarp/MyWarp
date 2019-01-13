@@ -101,9 +101,16 @@ subprojects {
         def crowdinTempDir = "build/tmp/crowdin"
 
         task crowdinCopy(type: Copy) {
-            FileTree tree = fileTree(dir:crowdinTempDir, include: "**/" + project.name + "/**/*.properties")
-            from tree.files
+            from crowdinTempDir
             into translationFinalDir
+            include "**/" + project.name + "/**/*.properties"
+
+            //copy files without their directories
+            eachFile {
+                path = name
+            }
+            includeEmptyDirs = false
+            
             dependsOn(crowdinDownload)
         }
         crowdinDownload {
