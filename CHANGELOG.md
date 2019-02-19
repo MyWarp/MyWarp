@@ -9,6 +9,7 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 
 ### Fixed
 * [Bukkit][[#196](https://github.com/TheE/MyWarp/issues/196)] Warps on blocks added in 1.13 are marked unsafe even if they are safe
+* [Bukkit][[#198](https://github.com/TheE/MyWarp/issues/198)] Translation files are missing from build
 
 ## [3.0] - 2019-01-01
 
