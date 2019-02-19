@@ -30,14 +30,13 @@ repositories {
     maven { url "http://maven.sk89q.com/repo/" } //SquirrelID
     maven { url "https://raw.github.com/rjenkinsjr/maven2/repo" } //SLF4Bukkit
     maven { url "http://repo.mikeprimm.com" } //DynmapAPI
-    maven { url "http://nexus.hc.to/content/repositories/pub_releases/" } //Vault
 }
 
 dependencies {
     compile project(":mywarp-core")
     compile "org.bukkit:bukkit:1.13.2-R0.1-SNAPSHOT"
     compile "com.sk89q:squirrelid:0.1.0"
-    compile "net.milkbowl.vault:VaultAPI:1.4"
+    compile "net.milkbowl.vault:VaultAPI:1.7"
     compile "org.anjocaido:essentialsgroupmanager:2.10.1"
     compile "de.bananaco:bpermissions:2.10.5"
     compile "us.dynmap:DynmapCoreAPI:1.9.4"
