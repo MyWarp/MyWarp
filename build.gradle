@@ -33,7 +33,7 @@ subprojects {
 
     // Basic project information
     group = "io.github.mywarp.mywarp"
-    version = "3.0.1-SNAPSHOT"
+    version = "3.0.1"
 
     // Extended project information
     ext.projectName = "MyWarp"

@@ -5,7 +5,7 @@ Starting with version 3, this project adheres to [Semantic Versioning](http://se
 
 Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 
-## Unreleased
+## [3.0.1] - 2019-02-19
 
 ### Changed
 * [Bukkit] Update VaultAPI to 1.7 hosted in our own repository
@@ -488,7 +488,8 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 * Updated for Permissions 2.5.5 or higher (tested with 2.6 and 2.7)
 * Changed update URL where MyWarp downloads sqlite libraries
 
-[Unreleased]: https://github.com/TheE/MyWarp/compare/v3.0...HEAD
+[Unreleased]: https://github.com/TheE/MyWarp/compare/v3.0.1...HEAD
+[3.0.1]: https://github.com/TheE/MyWarp/compare/v3.0...v3.0.1
 [3.0]: https://github.com/TheE/MyWarp/compare/v3.0-rc-1...v3.0
 [3.0-rc-1]: https://github.com/TheE/MyWarp/compare/v3.0-beta-4...v3.0-rc-1
 [3.0-beta-4]: https://github.com/TheE/MyWarp/compare/v3.0-beta-3...v3.0-beta-4
