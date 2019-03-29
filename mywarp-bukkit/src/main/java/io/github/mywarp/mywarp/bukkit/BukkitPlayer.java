@@ -35,6 +35,7 @@ import io.github.mywarp.mywarp.warp.Warp;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.Locale;
 import java.util.Optional;
@@ -161,7 +162,7 @@ public class BukkitPlayer extends BukkitActor implements LocalPlayer {
     }
 
     // teleport the entity
-    toTeleport.teleport(bukkitLoc);
+    toTeleport.teleport(bukkitLoc, PlayerTeleportEvent.TeleportCause.PLUGIN);
 
     // teleport the vehicle
     if (vehicle != null) {

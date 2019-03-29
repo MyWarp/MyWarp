@@ -93,8 +93,8 @@ class WarpSignListener extends AbstractListener {
       case RIGHT_CLICK_BLOCK:
         //player clicked on a sign directly
         if (block.getState() instanceof Sign) {
-          boolean cancel = warpSignHandler.handleInteraction(toPlayer(event), new BukkitSign((Sign) block.getState()));
-          event.setCancelled(cancel);
+          event.setCancelled(
+              warpSignHandler.handleInteraction(toPlayer(event), new BukkitSign((Sign) block.getState())));
           return;
         }
 
@@ -105,14 +105,14 @@ class WarpSignListener extends AbstractListener {
           Optional<BlockFace> blockFace = attachedBlockFace(block);
 
           if (blockFace.isPresent()) {
-            warpSignHandler.handleInteraction(toPlayer(event), toVector(block), blockFace.get());
+            event.setCancelled(warpSignHandler.handleInteraction(toPlayer(event), toVector(block), blockFace.get()));
           }
         }
         break;
       case PHYSICAL:
         //player stepped on something that might trigger a warp sign
         if (block.getState().getData() instanceof PressurePlate) {
-          warpSignHandler.handleInteraction(toPlayer(event), toVector(block), BlockFace.UP);
+          event.setCancelled(warpSignHandler.handleInteraction(toPlayer(event), toVector(block), BlockFace.UP));
         }
         break;
       default: //do nothing
