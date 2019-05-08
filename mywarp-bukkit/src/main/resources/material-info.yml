@@ -5,9 +5,11 @@ standOn:
   - CACTUS #since 1.10
   - MAGMA #until 1.13, then renamed to MAGMA_BLOCK
   - MAGMA_BLOCK #since 1.13
+  - CAMPFIRE #since 1.14
   safe:
   - WATER
   - STATIONARY_WATER #removed in 1.13
+  - SCAFFOLDING #since 1.14
 standWithin:
   dangerous:
   - LAVA
