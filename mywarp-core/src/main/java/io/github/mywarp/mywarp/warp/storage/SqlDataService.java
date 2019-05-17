@@ -27,16 +27,23 @@ import javax.sql.DataSource;
 /**
  * Provides access to a relational database management systems (DBMS).
  *
- * <p>This service can hide connection pools, single-connection implementations or custom SQL services provided by
+ * <p>This interface can hide connection pools, single-connection implementations or custom SQL services provided by
  * platform implementations. It provides:
  * <ul>
  * <li>Access to a configured {@link DataSource} that can be used to connect to the DBMS.</li>
  * <li>A configured {@link ExecutorService} that should execute any database queries.</li>
- * <li>Information about the DBMS configuration, such as the name of the database to use (if any).</li>
+ * <li>Information about the DBMS configuration, such as JDBC_URL and the name of the database to use (if any).</li>
  * <li>A method to close previously acquired DataSources and ExecutorServices.</li>
  * </ul></p>
  */
 public interface SqlDataService extends AutoCloseable {
+
+  /**
+   * Gets the JDBC-URL that this data service uses to connect to the database.
+   *
+   * @return the JDBC-URL
+   */
+  String getJdbcUrl();
 
   /**
    * Gets a {@code DataSource} that provides a connection to the DBMS.

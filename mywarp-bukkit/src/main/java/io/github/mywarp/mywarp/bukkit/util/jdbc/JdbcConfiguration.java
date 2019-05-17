@@ -195,7 +195,12 @@ public class JdbcConfiguration {
     return ret;
   }
 
-  String getJdbcUrl() {
+  /**
+   * Gets the JDBC-URL.
+   *
+   * @return the JDBC-URL
+   */
+  public String getJdbcUrl() {
     return jdbcUrl;
   }
 

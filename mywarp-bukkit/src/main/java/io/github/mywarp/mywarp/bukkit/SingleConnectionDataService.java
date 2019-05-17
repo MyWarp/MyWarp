@@ -64,6 +64,11 @@ public class SingleConnectionDataService implements SqlDataService {
   }
 
   @Override
+  public String getJdbcUrl() {
+    return config.getJdbcUrl();
+  }
+
+  @Override
   public DataSource getDataSource() {
     if (dataSource == null) {
       dataSource = DataSourceFactory.createSingleConnectionDataSource(config);

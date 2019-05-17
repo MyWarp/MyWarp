@@ -21,7 +21,7 @@ animalsniffer {
 dependencies {
     compile "org.jooq:jooq:3.11.+"
     annotationProcessor "org.jooq:jooq-checker:3.11.+"
-    compile "org.flywaydb:flyway-core:4.2.0"
+    compile "org.flywaydb:flyway-core:5.2.4"
     compile "com.google.guava:guava:21.0"
     compile "org.slf4j:slf4j-api:1.7.25"
     compile "com.flowpowered:flow-math:1.0.3"

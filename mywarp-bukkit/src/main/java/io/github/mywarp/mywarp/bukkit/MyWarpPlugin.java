@@ -40,7 +40,8 @@ import io.github.mywarp.mywarp.util.i18n.FolderSourcedControl;
 import io.github.mywarp.mywarp.util.i18n.LocaleManager;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.storage.SqlDataService;
-import io.github.mywarp.mywarp.warp.storage.StorageInitializationException;
+import io.github.mywarp.mywarp.warp.storage.TableInitializationException;
+import io.github.mywarp.mywarp.warp.storage.UnsupportedDialectException;
 
 import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Bukkit;
@@ -60,6 +61,7 @@ import org.slf4j.Logger;
 import java.io.Closeable;
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -106,14 +108,14 @@ public final class MyWarpPlugin extends JavaPlugin {
         return;
       }
     }
-    platform =
-        new BukkitPlatform(this, dataFolder, YamlConfiguration.loadConfiguration(this.getTextResource("config.yml")));
+    platform = new BukkitPlatform(this, dataFolder, YamlConfiguration.loadConfiguration(getTextResource("config.yml")));
 
     // setup the core
     try {
       myWarp = MyWarp.initialize(platform, createDataService(getSettings().getJdbcStorageConfiguration()));
-    } catch (StorageInitializationException | InvalidFormatException e) {
-      log.error("Failed to initialize warp storage.", e);
+    } catch (InvalidFormatException | UnsupportedDialectException | SQLException | TableInitializationException e) {
+      log.error("Failed to initialize warp storage.");
+      log.error(e.getLocalizedMessage(), e);
       log.error("MyWarp is unable to continue and will be disabled.");
       Bukkit.getPluginManager().disablePlugin(this);
       return;
@@ -328,7 +330,7 @@ public final class MyWarpPlugin extends JavaPlugin {
   }
 
   MaterialInfo createMaterialInformation() {
-    return new ConfigurableMaterialInfo(YamlConfiguration.loadConfiguration(this.getTextResource("material-info.yml")));
+    return new ConfigurableMaterialInfo(YamlConfiguration.loadConfiguration(getTextResource("material-info.yml")));
   }
 
 }

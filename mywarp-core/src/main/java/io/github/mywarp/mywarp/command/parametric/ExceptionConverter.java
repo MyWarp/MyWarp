@@ -35,7 +35,10 @@ import io.github.mywarp.mywarp.command.CommandHandler;
 import io.github.mywarp.mywarp.command.parametric.namespace.IllegalCommandSenderException;
 import io.github.mywarp.mywarp.command.util.NoSuchWorldException;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
-import io.github.mywarp.mywarp.warp.storage.StorageInitializationException;
+import io.github.mywarp.mywarp.warp.storage.TableInitializationException;
+import io.github.mywarp.mywarp.warp.storage.UnsupportedDialectException;
+
+import java.sql.SQLException;
 
 import javax.annotation.Nullable;
 
@@ -150,14 +153,37 @@ public class ExceptionConverter extends ExceptionConverterHelper {
     throw new CommandException(msg.getString("exception.no-such-world", e.getWorldIdentifier()), e);
   }
 
+  //-- SQL
+
   /**
-   * Converts a StorageInitializationException to a CommandException.
+   * Converts a SQLException to a CommandException.
    *
-   * @param e the StorageInitializationException
+   * @param e the SQLException
    * @throws CommandException the converted exception
    */
   @ExceptionMatch
-  public void convert(StorageInitializationException e) throws CommandException {
+  public void convert(SQLException e) throws CommandException {
+    throw new CommandException(msg.getString("import.no-connection", e.getLocalizedMessage()));
+  }
+
+  /**
+   * Converts a UnsupportedDialectException to a CommandException.
+   *
+   * @param e the UnsupportedDialectException
+   * @throws CommandException the converted exception
+   */
+  @ExceptionMatch
+  public void convert(UnsupportedDialectException e) throws CommandException {
+    throw new CommandException(msg.getString("import.no-connection", e.getLocalizedMessage()));
+  }
+  /**
+   * Converts a TableInitializationException to a CommandException.
+   *
+   * @param e the TableInitializationException
+   * @throws CommandException the converted exception
+   */
+  @ExceptionMatch
+  public void convert(TableInitializationException e) throws CommandException {
     throw new CommandException(msg.getString("import.no-connection", e.getLocalizedMessage()));
   }
 }
