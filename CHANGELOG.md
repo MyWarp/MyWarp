@@ -5,6 +5,12 @@ Starting with version 3, this project adheres to [Semantic Versioning](http://se
 
 Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 
+## Unreleased
+
+### Fixed
+* [Bukkit] Properly cancel physical interaction events in order to fix rare `Player moved wrongly!` errors
+* [Bukkit] [[#205](https://github.com/TheE/MyWarp/issues/205)] - Restore compatibility with Essential's `/back` command
+
 ## [3.0.1] - 2019-02-19
 
 ### Changed
