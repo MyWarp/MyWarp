@@ -22,6 +22,9 @@ package io.github.mywarp.mywarp.bukkit;
 import com.flowpowered.math.vector.Vector3i;
 
 import io.github.mywarp.mywarp.bukkit.util.AbstractListener;
+import io.github.mywarp.mywarp.bukkit.util.material.MaterialInfo;
+import io.github.mywarp.mywarp.bukkit.util.versionsupport.BlockFaceResolver;
+import io.github.mywarp.mywarp.bukkit.util.versionsupport.VersionSupport;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.sign.WarpSignHandler;
 import io.github.mywarp.mywarp.util.BlockFace;
@@ -33,11 +36,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.material.Attachable;
-import org.bukkit.material.Button;
-import org.bukkit.material.Lever;
-import org.bukkit.material.MaterialData;
-import org.bukkit.material.PressurePlate;
 
 import java.util.Optional;
 
@@ -48,15 +46,18 @@ class WarpSignListener extends AbstractListener {
 
   private final MyWarpPlugin plugin;
   private final WarpSignHandler warpSignHandler;
+  private final MaterialInfo materialInfo;
+  private final BlockFaceResolver blockFaceResolver = VersionSupport.getBlockFaceResolver();
 
   /**
    * Initializes this listener.
    *
    * @param warpSignHandler the warpSignHandler that will be feat by this listener
    */
-  WarpSignListener(MyWarpPlugin plugin, WarpSignHandler warpSignHandler) {
+  WarpSignListener(MyWarpPlugin plugin, WarpSignHandler warpSignHandler, MaterialInfo materialInfo) {
     this.plugin = plugin;
     this.warpSignHandler = warpSignHandler;
+    this.materialInfo = materialInfo;
   }
 
   /**
@@ -99,19 +100,18 @@ class WarpSignListener extends AbstractListener {
         }
 
         //player clicked on something that might trigger a warp sign
-        MaterialData materialData = block.getState().getData();
-
-        if (materialData instanceof Button || materialData instanceof Lever) {
-          Optional<BlockFace> blockFace = attachedBlockFace(block);
+        if (materialInfo.isClickable(block.getType())) {
+          Optional<BlockFace> blockFace = blockFaceResolver.getBlockFace(block).flatMap(BukkitAdapter::adapt);
 
           if (blockFace.isPresent()) {
             event.setCancelled(warpSignHandler.handleInteraction(toPlayer(event), toVector(block), blockFace.get()));
           }
+
         }
         break;
       case PHYSICAL:
         //player stepped on something that might trigger a warp sign
-        if (block.getState().getData() instanceof PressurePlate) {
+        if (materialInfo.isTriggerable(block.getType())) {
           event.setCancelled(warpSignHandler.handleInteraction(toPlayer(event), toVector(block), BlockFace.UP));
         }
         break;
@@ -148,15 +148,6 @@ class WarpSignListener extends AbstractListener {
     public void setLine(int line, String text) {
       event.setLine(line, text);
     }
-  }
-
-  private Optional<BlockFace> attachedBlockFace(Block block) {
-    MaterialData materialData = block.getState().getData();
-
-    if (materialData instanceof Attachable) {
-      return BukkitAdapter.adapt(((Attachable) materialData).getAttachedFace());
-    }
-    return Optional.empty();
   }
 
 }

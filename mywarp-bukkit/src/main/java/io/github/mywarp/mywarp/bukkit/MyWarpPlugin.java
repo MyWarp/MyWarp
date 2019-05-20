@@ -153,7 +153,7 @@ public final class MyWarpPlugin extends JavaPlugin {
 
     //register warp sign listener
     if (getSettings().isWarpSignsEnabled()) {
-      new WarpSignListener(this, myWarp.createWarpSignHandler()).registerEvents(this);
+      new WarpSignListener(this, myWarp.createWarpSignHandler(), createMaterialInformation()).registerEvents(this);
     }
 
     // register world access permissions

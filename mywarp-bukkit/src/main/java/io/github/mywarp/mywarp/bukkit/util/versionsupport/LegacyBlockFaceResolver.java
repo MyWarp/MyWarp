@@ -19,28 +19,24 @@
 
 package io.github.mywarp.mywarp.bukkit.util.versionsupport;
 
-import org.bukkit.entity.AbstractHorse;
-import org.bukkit.entity.Entity;
-import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.material.Attachable;
+import org.bukkit.material.MaterialData;
+
+import java.util.Optional;
 
 /**
- * Checks whether a given entity is any variant of a horse and is tamed when running on 1.12 and newer.
+ * Resolves the attached BlockFace using legacy {@link Attachable}.
  */
-@IgnoreJRERequirement
-class TamedHorseChecker112 extends LegacyTamedHorseChecker {
-
-  private TamedHorseChecker112() {
-  }
-
-  static LegacyTamedHorseChecker create() throws ClassNotFoundException {
-    // this will throw an ClassNotFoundException on anything lower than 1.12
-    // because 'org.bukkit.entity.AbstractHorse' does not exist before 1.12
-    Class.forName("org.bukkit.entity.AbstractHorse");
-    return new TamedHorseChecker112();
-  }
+class LegacyBlockFaceResolver implements BlockFaceResolver {
 
   @Override
-  public boolean test(Entity entity) {
-    return entity instanceof AbstractHorse && ((AbstractHorse) entity).isTamed();
+  public Optional<BlockFace> getBlockFace(Block toTest) {
+    MaterialData data = toTest.getState().getData();
+    if (data instanceof Attachable) {
+      return Optional.of(((Attachable) data).getAttachedFace());
+    }
+    return Optional.empty();
   }
 }

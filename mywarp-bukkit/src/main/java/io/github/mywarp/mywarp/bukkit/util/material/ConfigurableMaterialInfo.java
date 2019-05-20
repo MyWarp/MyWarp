@@ -68,6 +68,14 @@ import javax.annotation.Nullable;
  * <td>{@code standWithin.safe}</td>
  * <td>solid but safe</td>
  * </tr>
+ * <tr>
+ * <td>{@code clickable}</td>
+ * <td>toggleable by clicking on theme</td>
+ * </tr>
+ * <tr>
+ * <td>{@code triggerable}</td>
+ * <td>triggerable by stepping on theme</td>
+ * </tr>
  * </table>
  * See the bundled {@code material.info.yml} for examples.</p>
  */
@@ -79,6 +87,8 @@ public class ConfigurableMaterialInfo implements MaterialInfo {
   private final ImmutableSet<Material> safeToStandOn;
   private final ImmutableSet<Material> dangerousToStandWithin;
   private final ImmutableSet<Material> safeToStandWithin;
+  private final ImmutableSet<Material> clickable;
+  private final ImmutableSet<Material> triggerable;
 
   /**
    * Creates an instance using the given configuration.
@@ -90,6 +100,8 @@ public class ConfigurableMaterialInfo implements MaterialInfo {
     safeToStandOn = fromConfig("standOn.safe", config);
     dangerousToStandWithin = fromConfig("standWithin.dangerous", config);
     safeToStandWithin = fromConfig("standWithin.safe", config);
+    clickable = fromConfig("clickable", config);
+    triggerable = fromConfig("triggerable", config);
   }
 
   private static ImmutableSet<Material> fromConfig(String path, ConfigurationSection config) {
@@ -106,24 +118,34 @@ public class ConfigurableMaterialInfo implements MaterialInfo {
   }
 
   @Override
-  public boolean safeToStandOn(Material material) {
-    if (dangerousToStandOn.contains(material)) {
+  public boolean safeToStandOn(Material toTest) {
+    if (dangerousToStandOn.contains(toTest)) {
       return false;
     }
-    if (safeToStandOn.contains(material)) {
+    if (safeToStandOn.contains(toTest)) {
       return true;
     }
-    return material.isSolid();
+    return toTest.isSolid();
   }
 
   @Override
-  public boolean dangerousToStandWithin(Material material) {
-    if (dangerousToStandWithin.contains(material)) {
+  public boolean dangerousToStandWithin(Material toTest) {
+    if (dangerousToStandWithin.contains(toTest)) {
       return true;
     }
-    if (safeToStandWithin.contains(material)) {
+    if (safeToStandWithin.contains(toTest)) {
       return false;
     }
-    return material.isSolid();
+    return toTest.isSolid();
+  }
+
+  @Override
+  public boolean isClickable(Material toTest) {
+    return clickable.contains(toTest);
+  }
+
+  @Override
+  public boolean isTriggerable(Material toTest) {
+    return triggerable.contains(toTest);
   }
 }

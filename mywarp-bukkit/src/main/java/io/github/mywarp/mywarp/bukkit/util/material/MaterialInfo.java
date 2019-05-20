@@ -19,12 +19,6 @@
 
 package io.github.mywarp.mywarp.bukkit.util.material;
 
-import com.flowpowered.math.vector.Vector3i;
-import com.google.common.primitives.Ints;
-
-import io.github.mywarp.mywarp.bukkit.BukkitAdapter;
-import io.github.mywarp.mywarp.platform.LocalWorld;
-
 import org.bukkit.Material;
 
 /**
@@ -33,64 +27,46 @@ import org.bukkit.Material;
 public interface MaterialInfo {
 
   /**
-   * Gets the {@code Material} of the block at the given position within the given world.
-   *
-   * @param world    the world
-   * @param position the position
-   * @return the Material of the block at the given position
-   */
-  static Material getMaterial(LocalWorld world, Vector3i position) {
-    return BukkitAdapter.adapt(world).getBlockAt(Ints.checkedCast(position.getX()), Ints.checkedCast(position.getY()),
-                                                 Ints.checkedCast(position.getZ())).getType();
-  }
-
-  /**
-   * Returns whether an entity <b>can stand <u>on</u></b> the block at the given {@code position} of the given {@code
-   * world} without taking damage or falling.
-   *
-   * @param world    the world
-   * @param position the position
-   * @return true if the given position is safe to stand on
-   * @see #safeToStandOn(Material)
-   */
-  default boolean safeToStandOn(LocalWorld world, Vector3i position) {
-    return safeToStandOn(getMaterial(world, position));
-  }
-
-  /**
-   * Returns whether an entity <b>can stand <u>on</u></b> a block of the given {@code material} without taking damage or
+   * Returns whether an entity <b>can stand <u>on</u></b> a block of the given Material without taking damage or
    * falling.
    *
-   * <p>For example, if {@code material} is {@link Material#DIRT}, this method will return {@code true}. If
-   * {@code material} is {@link Material#LAVA}, this method will return {@code false}.</p>
+   * <p>For example, for {@link Material#DIRT}, this method will return {@code true}. For {@link Material#LAVA}, this
+   * method will return {@code false}.</p>
    *
-   * @param material the material
-   * @return true if the given material is safe to stand on
+   * @param toTest the Material to test
+   * @return true if the given Material is safe to stand on
    */
-  boolean safeToStandOn(Material material);
+  boolean safeToStandOn(Material toTest);
 
   /**
-   * Returns whether an entity standing <b><u>within</u></b> the the block at the given {@code position} of the given
-   * {@code world} will take damage from doing so.
+   * Returns whether an entity standing <b><u>within</u></b> the the given Material without taking damage or
+   * falling.
    *
-   * @param world    the world
-   * @param position the position
-   * @return true if the given position is dangerous
-   * @see #dangerousToStandWithin(Material)
+   * <p>For example, for {@link Material#DIRT}, this method will return {@code true}. For {@link Material#AIR}, this
+   * method will return {@code false}.</p>
+   *
+   * @param toTest the Material to test
+   * @return true if the given Material is dangerous to stand within
    */
-  default boolean dangerousToStandWithin(LocalWorld world, Vector3i position) {
-    return dangerousToStandWithin(getMaterial(world, position));
-  }
+  boolean dangerousToStandWithin(Material toTest);
 
   /**
-   * Returns whether an entity standing <b><u>within</u></b> the the block at the given {@code position} of the given
-   * {@code world} will take damage from doing so.
+   * Returns whether an entity can toggle a block of the given by clicking on it.
    *
-   * <p>For example, if {@code material} is {@link Material#DIRT}, this method will return {@code true}. If
-   * {@code material} is {@link Material#AIR}, this method will return {@code false}.</p>
+   * <p>For example, for {@link Material#STONE_BUTTON}, this method will return {@code true}.</p>
    *
-   * @param material the Material to check
-   * @return true if the given material is dangerous
+   * @param toTest the Material to test
+   * @return true if the given Material is clickable
    */
-  boolean dangerousToStandWithin(Material material);
+  boolean isClickable(Material toTest);
+
+  /**
+   * Returns whether an entity can trigger a block of the given by stepping on it.
+   *
+   * <p>For example, for {@link Material#STONE_PRESSURE_PLATE}, this method will return {@code true}.</p>
+   *
+   * @param toTest the Material to test
+   * @return true if the given Material is clickable
+   */
+  boolean isTriggerable(Material toTest);
 }

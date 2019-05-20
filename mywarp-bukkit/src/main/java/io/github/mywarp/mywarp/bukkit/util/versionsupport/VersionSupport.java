@@ -40,6 +40,8 @@ public final class VersionSupport {
   private static LocaleResolver localeResolver;
   @Nullable
   private static Predicate<Entity> horseChecker;
+  @Nullable
+  private static BlockFaceResolver blockFaceResolver;
 
   /**
    * Gets a {@link LocaleResolver} implementation.
@@ -82,6 +84,24 @@ public final class VersionSupport {
       }
     }
     return horseChecker;
+  }
+
+  /**
+   * Gets a{@link BlockFaceResolver} implementation.
+   *
+   * @return a working block face resolver
+   */
+  public static BlockFaceResolver getBlockFaceResolver() {
+    if (blockFaceResolver == null) {
+      try {
+        blockFaceResolver = BlockFaceResolver113.create();
+        log.debug("Using BlockFaceResolver113.");
+      } catch (Exception e) {
+        blockFaceResolver = new LegacyBlockFaceResolver();
+        log.debug("Using LegacyBlockFaceResolver.", e);
+      }
+    }
+    return blockFaceResolver;
   }
 
 }

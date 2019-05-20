@@ -22,6 +22,7 @@ package io.github.mywarp.mywarp.bukkit.util;
 import com.flowpowered.math.vector.Vector3d;
 
 import io.github.mywarp.mywarp.bukkit.util.material.MaterialInfo;
+import io.github.mywarp.mywarp.bukkit.util.material.MaterialUtil;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.capability.PositionValidationCapability;
 
@@ -33,7 +34,7 @@ import java.util.Optional;
 public class CubicSafetyValidationCapability implements PositionValidationCapability {
 
   private final int searchRadius;
-  private MaterialInfo materialInfo;
+  private final MaterialInfo materialInfo;
 
   /**
    * Creates an instance that searches for safe positions within the given radius.
@@ -170,13 +171,13 @@ public class CubicSafetyValidationCapability implements PositionValidationCapabi
    * @return {@code true} is the position is safe
    */
   private boolean isSafe(LocalWorld world, Vector3d position) {
-    if (materialInfo.dangerousToStandWithin(world, position.add(0, 1, 0).toInt())) {
+    if (MaterialUtil.test(world, position.add(0, 1, 0).toInt(), materialInfo::dangerousToStandWithin)) {
       return false;
     }
-    if (materialInfo.dangerousToStandWithin(world, position.toInt())) {
+    if (MaterialUtil.test(world, position.toInt(), materialInfo::dangerousToStandWithin)) {
       return false;
     }
-    return materialInfo.safeToStandOn(world, position.sub(0, 1, 0).toInt());
+    return MaterialUtil.test(world, position.sub(0, 1, 0).toInt(), materialInfo::safeToStandOn);
   }
 
   /**

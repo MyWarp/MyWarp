@@ -12,8 +12,6 @@ task sig(type: ru.vyarus.gradle.plugin.animalsniffer.signature.BuildSignatureTas
     files configurations.createSignature
 }
 animalsniffer {
-    ignore "org.bukkit.entity.AbstractHorse" //see util.versionsupport.TamedHorseCheck112
-
     //use the signature generated above
     signatures = sig.outputFiles
     excludeJars "bukkit-*"
@@ -44,6 +42,7 @@ dependencies {
     runtime "info.ronjenkins:slf4bukkit:1.0.0"
     runtime "com.h2database:h2:1.4.+"
 
+    compile "org.codehaus.mojo:animal-sniffer-annotations:1.16"
     signature "org.codehaus.mojo.signature:java18:1.0@signature" //required to build custom signature
     createSignature "org.bukkit:bukkit:1.7.10-R0.1-SNAPSHOT" //try to stay compatible with the last 'official' version
     createSignature "com.google.guava:guava:10.0.1" //bundled by Bukkit 1.7.10, we should try to stay compatible

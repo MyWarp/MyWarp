@@ -2,17 +2,41 @@
 # returns a false result. See ConfigurableMaterialInfo's Javadocs for more information.
 standOn:
   dangerous:
-  - CACTUS #since 1.10
-  - MAGMA #until 1.13, then renamed to MAGMA_BLOCK
-  - MAGMA_BLOCK #since 1.13
-  - CAMPFIRE #since 1.14
+    - CACTUS
+    - MAGMA #renamed in 1.13
+    - MAGMA_BLOCK
+    - CAMPFIRE
   safe:
   - WATER
   - STATIONARY_WATER #removed in 1.13
-  - SCAFFOLDING #since 1.14
+  - SCAFFOLDING
 standWithin:
   dangerous:
   - LAVA
   - STATIONARY_LAVA #removed in 1.13
   - FIRE
   safe: []
+clickable:
+  - WOOD_BUTTON #before...
+  - ACACIA_BUTTON
+  - BIRCH_BUTTON
+  - DARK_OAK_BUTTON
+  - JUNGLE_BUTTON
+  - OAK_BUTTON
+  - SPRUCE_BUTTON
+  - STONE_BUTTON
+  - LEVER
+triggerable:
+  - STONE_PLATE #renamed in 1.13
+  - WOOD_PLATE #renamed in 1.13
+  - GOLD_PLATE #renamed in 1.13
+  - IRON_PLATE #renamed in 1.13
+  - ACACIA_PRESSURE_PLATE
+  - BIRCH_PRESSURE_PLATE
+  - DARK_OAK_PRESSURE_PLATE
+  - JUNGLE_PRESSURE_PLATE
+  - OAK_PRESSURE_PLATE
+  - SPRUCE_PRESSURE_PLATE
+  - STONE_PRESSURE_PLATE
+  - LIGHT_WEIGHTED_PRESSURE_PLATE
+  - HEAVY_WEIGHTED_PRESSURE_PLATE
