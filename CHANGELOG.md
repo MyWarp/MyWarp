@@ -10,6 +10,7 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 ### Fixed
 * [Bukkit] Properly cancel physical interaction events in order to fix rare `Player moved wrongly!` errors
 * [Bukkit] [[#205](https://github.com/TheE/MyWarp/issues/205)] - Restore compatibility with Essential's `/back` command
+* [[#211](https://github.com/TheE/MyWarp/issues/211)] - Evaluation of warp sign returns a false value. On Bukkit, this caused the cancellation of every interactions with buttons, levers and pressure plates.
 
 ## [3.0.1] - 2019-02-19
 

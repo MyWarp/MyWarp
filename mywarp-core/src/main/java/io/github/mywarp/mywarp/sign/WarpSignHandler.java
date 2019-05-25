@@ -246,7 +246,7 @@ public class WarpSignHandler {
         sign = world.getSign(position);
     }
 
-    return !sign.isPresent() || handleInteraction(player, sign.get());
+    return sign.isPresent() && handleInteraction(player, sign.get());
   }
 
   private Optional<Warp> getWarp(String warpName) {
