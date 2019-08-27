@@ -56,7 +56,7 @@ if [[ ("$TRAVIS_BRANCH" == "master" || "$TRAVIS_BRANCH" == "$TRAVIS_TAG") && \
     # Copy the binaries
     mkdir -p "${binary_destination}"
     for binary in "${binaries_to_store[@]}"; do
-        cp -Rf "${TRAVIS_BUILD_DIR}/${binary}" "${binary_destination}"
+        cp -Rf ${TRAVIS_BUILD_DIR}/${binary} "${binary_destination}"
         echo -e "Copied '${binary}' to '${binary_destination}'."
 
         binary_name=$(basename find "${binary_destination}" -name "${binary}")
@@ -65,12 +65,11 @@ if [[ ("$TRAVIS_BRANCH" == "master" || "$TRAVIS_BRANCH" == "$TRAVIS_TAG") && \
 
     # Copy the development binaries
     for dev_binary in "${development_binaries_to_store[@]}"; do
-        cp -Rf "${TRAVIS_BUILD_DIR}/${dev_binary}" "${binary_destination}"
-        yq w yml_path "development_artifacts[+]" "${dev_binary}"
+        cp -Rf ${TRAVIS_BUILD_DIR}/${dev_binary} "${binary_destination}"
         echo -e "Copied '${dev_binary}' to '${binary_destination}'."
 
-        binary_name=$(basename find "${binary_destination}" -name "${dev_binary}")
-        yq w yml_path "artifacts[+]" "${binary_name}"
+        dev_binary_name=$(basename find "${binary_destination}" -name "${dev_binary}")
+        yq w yml_path "development_artifacts[+]" "${dev_binary_name}"
     done
 
     # Add artifacts and YML to git
