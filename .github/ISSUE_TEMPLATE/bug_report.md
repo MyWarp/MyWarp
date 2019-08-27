@@ -1,6 +1,9 @@
 ---
 name: Bug report
 about: Help us improving MyWarp by reporting a bug
+title: "[Bug]"
+labels: 't: bug'
+assignees: ''
 
 ---
 

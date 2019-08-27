@@ -1,6 +1,9 @@
 ---
 name: Feature request
 about: Suggest a new feature for MyWarp
+title: "[FEATURE]"
+labels: 't: feature'
+assignees: ''
 
 ---
 
