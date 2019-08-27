@@ -59,7 +59,7 @@ if [[ ("$TRAVIS_BRANCH" == "master" || "$TRAVIS_BRANCH" == "$TRAVIS_TAG") && \
         cp -Rf ${TRAVIS_BUILD_DIR}/${binary} "${binary_destination}"
         echo -e "Copied '${binary}' to '${binary_destination}'."
 
-        binary_name=$(basename find "${binary_destination}" -name "${binary}")
+        binary_name=$(find "${binary_destination}" -name "${binary}" -printf "%f\n")
         yq w yml_path "artifacts[+]" "${binary_name}"
     done
 
@@ -68,7 +68,7 @@ if [[ ("$TRAVIS_BRANCH" == "master" || "$TRAVIS_BRANCH" == "$TRAVIS_TAG") && \
         cp -Rf ${TRAVIS_BUILD_DIR}/${dev_binary} "${binary_destination}"
         echo -e "Copied '${dev_binary}' to '${binary_destination}'."
 
-        dev_binary_name=$(basename find "${binary_destination}" -name "${dev_binary}")
+        dev_binary_name=$(find "${binary_destination}" -name "${dev_binary}" -printf "%f\n")
         yq w yml_path "development_artifacts[+]" "${dev_binary_name}"
     done
 
