@@ -1,4 +1,8 @@
 language: java
+dist: xenial
+addons:
+  snaps:
+    - yq
 jdk:
 - openjdk8
 notifications:
