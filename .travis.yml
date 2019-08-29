@@ -8,7 +8,8 @@ notifications:
 branches:
   except:
     - /^(?i:l10n).*$/
-install: ./gradlew assemble --scan -PcrowdinKey=${CROWDIN_API_KEY} -PbuildNumber=${TRAVIS_BUILD_NUMBER} -PciSystem=travis
+install: skip
+script: ./gradlew check --scan -PcrowdinKey=${CROWDIN_API_KEY} -PbuildNumber=${TRAVIS_BUILD_NUMBER} -PbuildNumber=999 -PciSystem=travis
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/

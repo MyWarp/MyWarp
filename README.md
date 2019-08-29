@@ -21,7 +21,7 @@ To use MyWarp, the core has to be implemented for a certain platform. Currently,
 
 The project is written for Java 8 and build with [Gradle](http://gradle.org/). To compile, clone this repository and run:
 
-    gradlew assemble
+    gradlew check
 
 If you want to build against MyWarp, javadocs and maven dependencies can be found on [JitPack](https://jitpack.io/#MyWarp/mywarp).
 
