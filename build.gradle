@@ -26,13 +26,12 @@ allprojects {
     ext.inceptionYear = "2011"
     ext.projectDescription = "An extension for the Minecraft multiplayer that allows players to create and share warps with each other."
 }
-apply from: "gradle/publishOnGitHub.gradle"
+apply from: "${rootProject.projectDir}/gradle/publishOnGitHub.gradle"
 
 subprojects {
     apply plugin: "java"
     apply plugin: "checkstyle"
-    apply from: "${project.rootDir}/gradle/i18n.gradle"
-    apply from: "${project.rootDir}/gradle/publishOnGitHub.gradle"
+    apply from: "${rootProject.projectDir}/gradle/i18n.gradle"
 
     sourceCompatibility = 8
     targetCompatibility = 8
