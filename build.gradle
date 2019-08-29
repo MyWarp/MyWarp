@@ -1,8 +1,8 @@
 plugins {
-    id "com.mendhak.gradlecrowdin" version "0.1.0"
     id "com.palantir.git-version" version "0.11.0"
 }
 
+// build configuration
 if (hasProperty('buildScan')) {
     buildScan {
         termsOfServiceUrl = 'https://gradle.com/terms-of-service'
@@ -10,75 +10,45 @@ if (hasProperty('buildScan')) {
     }
 }
 
-// Define variables
-if (!project.hasProperty("buildNumber")) {
-    ext.buildNumber = "0"
-}
-if (!project.hasProperty("ciSystem")) {
-    ext.ciSystem = "unknown"
-}
-if (!project.hasProperty("commitHash")) {
-    try {
-        ext.commitHash = versionDetails().gitHash
-    } catch (Exception ignore) {
-        ext.commitHash = "unknown"
-    }
+// define variables
+ext.buildNumber = project.hasProperty("buildNumber") ? buildNumber : "0"
+ext.ciSystem = project.hasProperty("ciSystem") ? ciSystem : "unknown"
+ext.commitHash = project.hasProperty("commitHash") ? commitHash : versionDetails().gitHash
+
+allprojects {
+    group = "io.github.mywarp.mywarp"
+    version = "3.0.2-SNAPSHOT"
+
+    // general project information
+    ext.projectName = "MyWarp"
+    ext.internalVersion = "${version}+${ciSystem}-b${buildNumber}.git-${commitHash}"
+    ext.url = "https://mywarp.github.io/"
+    ext.inceptionYear = "2011"
+    ext.projectDescription = "An extension for the Minecraft multiplayer that allows players to create and share warps with each other."
 }
 
 subprojects {
     apply plugin: "java"
-    apply plugin: "maven"
     apply plugin: "checkstyle"
-    apply plugin: "com.mendhak.gradlecrowdin"
+    apply from: "${project.rootDir}/gradle/i18n.gradle"
 
-    // Basic project information
-    group = "io.github.mywarp.mywarp"
-    version = "3.0.2-SNAPSHOT"
-
-    // Extended project information
-    ext.projectName = "MyWarp"
-    ext.inceptionYear = "2011"
-    ext.packaging = "jar"
-    ext.url = "https://mywarp.github.io/"
-    ext.projectDescription = "An extension for the Minecraft multiplayer that allows players to create and share warps with each other."
-
-    ext.internalVersion = version + "+" + ciSystem + "-b" + buildNumber + ".git-" + commitHash
-
-    // Minimum version of Java required
     sourceCompatibility = 8
     targetCompatibility = 8
 
-    // Project repositories
     repositories {
         jcenter()
         maven { url "https://jitpack.io" }
     }
 
-    checkstyle {
-        toolVersion = "8.11"
-        configProperties.checkstyleConfigDir = new File(rootProject.projectDir, "config/checkstyle")
-        configFile = new File(configProperties.checkstyleConfigDir, "checkstyle.xml")
-    }
-
-    // JAR manifest configuration
-    jar.manifest.mainAttributes(
-            "Built-By": System.properties["user.name"],
-            "Created-By": System.properties["java.vm.version"] + " (" + System.properties["java.vm.vendor"] + ")",
-            "Implementation-Title": name,
-            "Implementation-Version": internalVersion,
-            "Implementation-Vendor": url)
-
     jar {
         from new File(rootProject.projectDir, "LICENSE.txt")
-    }
 
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = "sources"
-        from sourceSets.main.allSource
-    }
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        classifier = "javadoc"
-        from javadoc.destinationDir
+        manifest.mainAttributes(
+                "Built-By": System.properties["user.name"],
+                "Created-By": System.properties["java.vm.version"] + " (" + System.properties["java.vm.vendor"] + ")",
+                "Implementation-Title": name,
+                "Implementation-Version": internalVersion,
+                "Implementation-Vendor": url)
     }
 
     javadoc {
@@ -90,55 +60,19 @@ subprojects {
         }
     }
 
-    // handle translations
-    def translationsSourceDir = "io/github/mywarp/mywarp/lang"
-    def translationFinalDir = new File(sourceSets.main.output.resourcesDir, translationsSourceDir)
-
-    // if present, additional translations will be downloaded from crowdin,
-    // extracted to a temporary folder and copied to the final destination
-    if (project.hasProperty("crowdinKey")) {
-        
-        def crowdinTempDir = "build/tmp/crowdin"
-
-        task crowdinCopy(type: Copy) {
-            from crowdinTempDir
-            into translationFinalDir
-            include "**/" + project.name + "/**/*.properties"
-
-            //copy files without their directories
-            eachFile {
-                path = name
-            }
-            includeEmptyDirs = false
-            
-            dependsOn(crowdinDownload)
-        }
-        crowdinDownload {
-            projectId = "mywarp"
-            apiKey = project.crowdinKey
-            destination = crowdinTempDir
-        }
-        processResources.dependsOn(crowdinCopy)
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        archiveClassifier = "sources"
+        from sourceSets.main.allSource
     }
 
-    // create the English localization files from the fallback files
-    task createDefaultLocalizations(type: Copy) {
-        from "src/main/resources/" + translationsSourceDir
-        into translationFinalDir
-        include("*.properties")
-        exclude("*_*.properties")
-        rename { fileName -> fileName.replace(".", "_en.") }
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        archiveClassifier = "javadoc"
+        from javadoc.destinationDir
     }
-    processResources.dependsOn(createDefaultLocalizations)
 
     artifacts {
         archives jar
         archives sourcesJar
         archives javadocJar
     }
-
-    build.dependsOn(checkstyleMain)
-    build.dependsOn(checkstyleTest)
-    build.dependsOn(sourcesJar)
-    build.dependsOn(javadocJar)
 }

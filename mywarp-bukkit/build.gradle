@@ -1,25 +1,11 @@
+import ru.vyarus.gradle.plugin.animalsniffer.signature.BuildSignatureTask
+
 plugins {
-    id "com.github.johnrengelman.shadow" version "4.0.3"
-    id "ru.vyarus.animalsniffer" version "1.4.6"
+    id "com.github.johnrengelman.shadow" version "5.1.0"
+    id "ru.vyarus.animalsniffer" version "1.5.0"
 }
-apply plugin: "ru.vyarus.animalsniffer"
 
 configurations.create("createSignature")
-
-task sig(type: ru.vyarus.gradle.plugin.animalsniffer.signature.BuildSignatureTask) {
-    //build new signature as an extension to the JDK's
-    signatures configurations.signature
-    files configurations.createSignature
-}
-animalsniffer {
-    //use the signature generated above
-    signatures = sig.outputFiles
-    excludeJars "bukkit-*"
-    excludeJars "guava-*"
-
-    //the cache cannot be used due to incompatibilities with Java 8,
-    //see https://github.com/xvik/gradle-animalsniffer-plugin/wiki/Check-task-performance#known-issues
-}
 
 repositories {
     maven { url 'https://raw.github.com/mywarp/repo/master/releases' }
@@ -48,6 +34,22 @@ dependencies {
     createSignature "com.google.guava:guava:10.0.1" //bundled by Bukkit 1.7.10, we should try to stay compatible
 }
 
+task sig(type: BuildSignatureTask) {
+    //build new signature as an extension to the JDK's
+    signatures configurations.signature
+    files configurations.createSignature
+}
+
+animalsniffer {
+    //use the signature generated above
+    signatures = sig.outputFiles
+    excludeJars "bukkit-*"
+    excludeJars "guava-*"
+
+    //the cache cannot be used due to incompatibilities with Java 8,
+    //see https://github.com/xvik/gradle-animalsniffer-plugin/wiki/Check-task-performance#known-issues
+}
+
 processResources {
     filesMatching("**/plugin.yml") {
         expand(projectName: project.projectName,
@@ -59,7 +61,7 @@ processResources {
 }
 
 shadowJar {
-    ext.internalPath = "io.github.mywarp.mywarp.internal"
+    def internalPath = "io.github.mywarp.mywarp.internal"
 
     // exclude various text files from libraries
     exclude "**/META-INF/LICENSE*"
@@ -92,11 +94,5 @@ shadowJar {
         exclude(dependency("com.h2database:h2:.*"))
     }
 }
-build.dependsOn(shadowJar)
+assemble.dependsOn(shadowJar)
 
-artifacts {
-    archives jar
-    archives shadowJar
-    archives sourcesJar
-    archives javadocJar
-}

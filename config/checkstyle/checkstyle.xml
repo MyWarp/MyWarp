@@ -18,13 +18,14 @@
 
     <!-- Control files ignored by Checkstyle -->
     <module name="SuppressionFilter">
-        <property name="file" value="${checkstyleConfigDir}/suppressions.xml"/>
+        <property name="file" value="config/checkstyle/suppressions.xml"/>
     </module>
     <module name="SuppressWarningsFilter"/>
 
-    <!-- Checks for Headers --><!-- See http://checkstyle.sf.net/config_header.html -->
+    <!-- Checks for Headers -->
+    <!-- See http://checkstyle.sf.net/config_header.html -->
     <module name="Header">
-        <property name="headerFile" value="${checkstyleConfigDir}/header.txt"/>
+        <property name="headerFile" value="config/checkstyle/header.txt"/>
         <property name="fileExtensions" value="java"/>
     </module>
 

@@ -1,0 +1,55 @@
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "com.mendhak.gradlecrowdin:com.mendhak.gradlecrowdin.gradle.plugin:0.1.0"
+    }
+}
+apply plugin: com.mendhak.gradlecrowdin.CrowdinPlugin
+
+//variables
+def crowdinApiKey = project.hasProperty("crowdinKey") ? project.crowdinKey : null
+def crowdinTempDir = "$buildDir/tmp/crowdin"
+def translationPackage = "io/github/mywarp/mywarp/lang"
+def translationOutputDir = new File(sourceSets.main.output.resourcesDir, translationPackage)
+
+//download i18n files from crowdin using the plugin
+//REVIEW replace legacy plugin with self written code
+crowdinDownload {
+    projectId = "mywarp"
+    apiKey = crowdinApiKey
+    destination = crowdinTempDir
+}
+crowdinDownload.onlyIf {crowdinApiKey != null}
+
+task crowdinCopy(type: Copy) {
+    description "Copies the files downloaded from crodwin to the appropiate destination"
+    dependsOn(crowdinDownload)
+
+    from crowdinTempDir
+    into translationOutputDir
+    include "**/" + project.name + "/**/*.properties"
+
+    //copy files without their directories
+    eachFile {
+        path = name
+    }
+    includeEmptyDirs = false
+}
+
+task createDefaultLocalizations(type: Copy) {
+    description "Creates the default i18n files (without extension) from the bundled English files (with '_en' extension)"
+
+    from "src/main/resources/$translationPackage"
+    into translationOutputDir
+
+    include("*.properties")
+    exclude("*_*.properties")
+
+    rename { fileName -> fileName.replace(".", "_en.") }
+}
+
+///configure tasks dependencies
+processResources.dependsOn(crowdinCopy)
+processResources.dependsOn(createDefaultLocalizations)

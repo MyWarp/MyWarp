@@ -1,22 +1,10 @@
+import ru.vyarus.gradle.plugin.animalsniffer.signature.BuildSignatureTask
+
 plugins {
-    id "ru.vyarus.animalsniffer" version "1.4.6"
+    id "ru.vyarus.animalsniffer" version "1.5.0"
 }
-apply plugin: "ru.vyarus.animalsniffer"
 
 configurations.create("createSignature")
-
-task sig(type: ru.vyarus.gradle.plugin.animalsniffer.signature.BuildSignatureTask) {
-    //build new signature as an extension to the JDK's
-    signatures configurations.signature
-    files configurations.createSignature
-}
-animalsniffer {
-    //use the signature generated above
-    signatures = sig.outputFiles
-    excludeJars "guava-*"
-    //the cache cannot be used due to incompatibilities with Java 8,
-    //see https://github.com/xvik/gradle-animalsniffer-plugin/wiki/Check-task-performance#known-issues
-}
 
 dependencies {
     compile "org.jooq:jooq:3.11.+"
@@ -30,4 +18,21 @@ dependencies {
     signature "org.codehaus.mojo.signature:java18:1.0@signature" //required to build custom signature
     createSignature "com.google.guava:guava:10.0.1" //bundled by Bukkit 1.7.10, we should try to stay compatible
 }
+
+// Use JOOQ's annotation processor
 compileJava.options.compilerArgs << "-processor" << "org.jooq.checker.SQLDialectChecker"
+
+task sig(type: BuildSignatureTask) {
+    //build new signature as an extension to the JDK's
+    signatures configurations.signature
+    files configurations.createSignature
+}
+animalsniffer {
+    //use the signature generated above
+    signatures = sig.outputFiles
+    excludeJars "guava-*"
+    //the cache cannot be used due to incompatibilities with Java 8,
+    //see https://github.com/xvik/gradle-animalsniffer-plugin/wiki/Check-task-performance#known-issues
+}
+
+
