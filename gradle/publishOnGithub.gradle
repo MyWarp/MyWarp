@@ -60,8 +60,8 @@ task createVersionJson() {
 
     def data = [
             build: [
-                    by: project.ciSystem,
-                    number: project.buildNumber,
+                    by: rootProject.ciSystem,
+                    number: rootProject.buildNumber,
                     successful: "true", //REVIEW do we really need this?
                     date: new Date().format("dd.MM.YYYY").toString()
             ],
