@@ -13,7 +13,7 @@ apply plugin: org.ajoberstar.grgit.gradle.GrgitPlugin
 apply plugin: org.ajoberstar.gradle.git.publish.GitPublishPlugin
 
 gitPublish {
-    def artifactDir = "source/files/${buildNumber}_${commitHash}"
+    def artifactDir = "source/files/${rootProject.buildNumber}_${rootProject.commitHash}"
     def dataDir = "data/builds"
 
     // authentication is handled using a token that is available as an environment variable (GRGIT_USER),
@@ -38,7 +38,7 @@ gitPublish {
         }
         from ("$buildDir/tmp/") {
             include "version.json"
-            rename {filename -> "${buildNumber}_${commitHash}.json"}
+            rename {filename -> "${rootProject.buildNumber}_${rootProject.commitHash}.json"}
             into dataDir
         }
     }
@@ -70,7 +70,7 @@ task createVersionJson() {
                     longVersion: project.internalVersion
             ],
             commit: [
-                    short_hash: commitHash,
+                    short_hash: rootProject.commitHash,
                     message: head.shortMessage,
                     author: head.author.name,
                     tags: gitTag, //TODO rename to "tag"

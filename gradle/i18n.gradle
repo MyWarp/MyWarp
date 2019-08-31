@@ -9,7 +9,7 @@ buildscript {
 apply plugin: com.mendhak.gradlecrowdin.CrowdinPlugin
 
 //variables
-def crowdinApiKey = project.hasProperty("crowdinKey") ? project.crowdinKey : null
+def crowdinApiKey = rootProject.resolveProperty("CROWDIN_KEY", null)
 def crowdinTempDir = "$buildDir/tmp/crowdin"
 def translationPackage = "io/github/mywarp/mywarp/lang"
 def translationOutputDir = new File(sourceSets.main.output.resourcesDir, translationPackage)

@@ -8,8 +8,12 @@ notifications:
 branches:
   except:
     - /^(?i:l10n).*$/
+env:
+  - CI_SYSTEM = travis
+  - BUILD_NUMBER = $TRAVIS_BUILD_NUMBER
+  - COMMIT_HASH = $TRAVIS_COMMIT
 install: skip
-script: ./gradlew check -PcrowdinKey=${CROWDIN_API_KEY} -PbuildNumber=${TRAVIS_BUILD_NUMBER} -PciSystem=travis --scan
+script: ./gradlew check --scan
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/

@@ -10,10 +10,14 @@ if (hasProperty('buildScan')) {
     }
 }
 
+ext.resolveProperty = {key, defaultValue = "unknown" ->
+    return project.findProperty(key) ?: System.getenv(key) ?: defaultValue
+}
+
 // define variables
-ext.buildNumber = project.hasProperty("buildNumber") ? buildNumber : "0"
-ext.ciSystem = project.hasProperty("ciSystem") ? ciSystem : "unknown"
-ext.commitHash = project.hasProperty("commitHash") ? commitHash : versionDetails().gitHash
+ext.buildNumber = resolveProperty("BUILD_NUMBER")
+ext.ciSystem = resolveProperty("CI_SYSTEM")
+ext.commitHash = resolveProperty("COMMIT_HASH", versionDetails().gitHash)
 
 allprojects {
     group = "io.github.mywarp.mywarp"
