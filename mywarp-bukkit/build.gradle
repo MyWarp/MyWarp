@@ -94,5 +94,5 @@ shadowJar {
         exclude(dependency("com.h2database:h2:.*"))
     }
 }
-assemble.dependsOn(shadowJar)
+build.finalizedBy(shadowJar)
 
