@@ -9,9 +9,10 @@ branches:
   except:
     - /^(?i:l10n).*$/
 env:
-  - CI_SYSTEM = travis
-  - BUILD_NUMBER = $TRAVIS_BUILD_NUMBER
-  - COMMIT_HASH = $TRAVIS_COMMIT
+  global:
+    - CI_SYSTEM = travis
+    - BUILD_NUMBER = $TRAVIS_BUILD_NUMBER
+    - COMMIT_HASH = $TRAVIS_COMMIT
 install: skip
 script: ./gradlew check --scan
 before_cache:
