@@ -53,17 +53,14 @@ gitPublishPush.onlyIf { System.env.GRGIT_USER != null && project.name == "MyWarp
 
 task createVersionJson() {
     def head = grgit.head()
-    def gitTag = grgit.tag.list().find { it.commit == head }
-    if (gitTag == null) {
-        gitTag == ""
-    }
+    def gitTag = grgit.tag.list().find { it.commit == head } ?: ""
 
     def data = [
             build: [
                     by: rootProject.ciSystem,
                     number: rootProject.buildNumber,
                     successful: "true", //REVIEW do we really need this?
-                    date: new Date().format("dd.MM.YYYY").toString()
+                    date: new Date().format("dd/MM/YYYY").toString()
             ],
             version: [
                     shortVersion: project.version,
@@ -73,7 +70,7 @@ task createVersionJson() {
                     short_hash: rootProject.commitHash,
                     message: head.shortMessage,
                     author: head.author.name,
-                    tags: gitTag, //TODO rename to "tag"
+                    tag: gitTag,
             ]
     ]
     def json = JsonOutput.prettyPrint(JsonOutput.toJson(data))
