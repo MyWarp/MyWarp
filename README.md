@@ -25,6 +25,24 @@ The project is written for Java 8 and build with [Gradle](http://gradle.org/). T
 
 If you want to build against MyWarp, javadocs and maven dependencies can be found on [JitPack](https://jitpack.io/#MyWarp/mywarp).
 
+### Publishing Artifacts
+
+Build artifacts can be published on [mywarp.github.io/builds](mywarp.github.io/builds) using the `gitPublishPush` task. This requires access to the repo of the website. Additionally, the build number has to be set in order for the build to be displayed correctly.
+
+Publication is typically handled automatically by a CI.
+
+### Customizing the Build
+
+The build can be customized via environment variables or project properties (`-Pkey=value`):
+
+|Key|Value|
+|---|-----|
+|`BUILD_NUMBER`|The number of the build relative to the current system.|
+|`CI_SYSTEM`|The name of the CI system that runs the build.|
+|`COMMIT_HASH`|The short hash of the current commit. If not set, the build process attempts to resolve this automatically.|
+|`CROWDIN_KEY`|Crowdin's [API key](https://support.crowdin.com/api/api-integration-setup/). If present, translations will be downloaded from crowdin and shaded into the JAR.|
+|`GRGIT_USER`|A [GitHub token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line#creating-a-token) that provides access to the repository artifacts are published in. To set via project property, use `org.ajoberstar.grgit.auth.username` as key.|
+
 ## Contributing
 
 Please check [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines to follow. Note that branches in this repository, as well as all pull-requests, are built automatically via [Travis](https://travis-ci.org/MyWarp/MyWarp).

@@ -9,7 +9,7 @@ branches:
   except:
     - /^(?i:l10n).*$/
 env:
-  - CI_SYSTEM=travis BUILD_NUMBER=$TRAVIS_BUILD_NUMBER
+  - CI_SYSTEM=Travis BUILD_NUMBER=$TRAVIS_BUILD_NUMBER
 install: skip
 script: ./gradlew build --scan
 before_cache:
