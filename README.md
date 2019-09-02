@@ -27,7 +27,7 @@ If you want to build against MyWarp, javadocs and maven dependencies can be foun
 
 ### Publishing Artifacts
 
-Build artifacts can be published on [mywarp.github.io/builds](mywarp.github.io/builds) using the `gitPublishPush` task. This requires access to the repo of the website. Additionally, the build number has to be set in order for the build to be displayed correctly.
+Build artifacts can be published on [mywarp.github.io/builds](https://mywarp.github.io/builds/) using the `gitPublishPush` task. This requires access to the repo of the website. Additionally, the build number has to be set in order for the build to be displayed correctly.
 
 Publication is typically handled automatically by a CI.
 
