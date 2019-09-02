@@ -52,6 +52,7 @@ import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -126,7 +127,7 @@ public final class InformativeCommands {
   @Require("mywarp.cmd.list")
   @Billable(FeeType.LIST)
   public void list(final Actor actor, @OptArg("1") int page, @Switch('c') CompletableFuture<Profile> creatorFuture,
-                   @Switch('n') final String name,
+                   @Switch('n') final String name, @Switch('o') final Comparator<Warp> comparator,
                    @Switch('r') @Range(min = 1, max = Integer.MAX_VALUE) final Integer radius,
                    @Switch('w') final String world) {
 
@@ -168,10 +169,13 @@ public final class InformativeCommands {
       return filter;
     }, game.getExecutor());
 
+    Ordering<Warp>
+        ordering =
+        Ordering.from(comparator != null ? comparator : platform.getSettings().getDefaultListComparator());
+
     // query all matching warps
     CompletableFuture<List<Warp>>
-        warpsFuture =
-        filterFuture.thenApply(filter -> Ordering.natural().sortedCopy(warpManager.getAll(filter)));
+        warpsFuture = filterFuture.thenApply(filter -> ordering.sortedCopy(warpManager.getAll(filter)));
 
     // build the list of creator names
     CompletableFuture<Map<UUID, String>>
@@ -183,7 +187,7 @@ public final class InformativeCommands {
     //convert to messages
     creatorsFuture.thenAcceptBothAsync(warpsFuture, (creators, warps) -> {
 
-      List<Message> messages = warps.stream().sorted().map(warp -> {
+      List<Message> messages = warps.stream().map(warp -> {
         Message.Builder builder = Message.builder();
         builder.append("'");
         builder.append(warp);

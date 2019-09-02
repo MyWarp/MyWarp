@@ -25,6 +25,8 @@ import io.github.mywarp.mywarp.bukkit.util.jdbc.JdbcConfiguration;
 import io.github.mywarp.mywarp.platform.InvalidFormatException;
 import io.github.mywarp.mywarp.platform.Settings;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
+import io.github.mywarp.mywarp.util.WarpUtils;
+import io.github.mywarp.mywarp.warp.Warp;
 
 import org.apache.commons.lang.LocaleUtils;
 import org.bukkit.configuration.Configuration;
@@ -36,6 +38,7 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -325,6 +328,11 @@ public class BukkitSettings implements Settings {
   @Override
   public boolean isInformPlayerOnInvitation() {
     return config.getBoolean("settings.informPlayersOnInvitation");
+  }
+
+  @Override
+  public Comparator<Warp> getDefaultListComparator() {
+    return WarpUtils.getComparator(config.getString("settings.defaultListComparator"));
   }
 
   /**

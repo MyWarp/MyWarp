@@ -21,6 +21,9 @@ package io.github.mywarp.mywarp.platform;
 
 import com.google.common.collect.ImmutableSet;
 
+import io.github.mywarp.mywarp.warp.Warp;
+
+import java.util.Comparator;
 import java.util.Locale;
 
 /**
@@ -90,5 +93,13 @@ public interface Settings {
    * @return {@code true} if players should be informed
    */
   boolean isInformPlayerOnInvitation();
+
+
+  /**
+   * Gets the Comparator to be used by default in the {@code warp list} command.
+   *
+   * @return the Comparator
+   */
+  Comparator<Warp> getDefaultListComparator();
 
 }

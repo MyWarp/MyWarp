@@ -42,6 +42,7 @@ import io.github.mywarp.mywarp.warp.storage.SqlDataService;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Comparator;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
@@ -106,6 +107,10 @@ public class BaseModule extends AbstractModule {
     //warp name
     bind(String.class).annotatedWith(WarpName.class)
         .toProvider(new WarpNameProvider(warpManager, commandHandler, platform.getSettings()));
+
+    //warp comparators
+    bind(key(new TypeCapture<Comparator<Warp>>() {
+    })).toProvider(new WarpComparatorProvider());
 
     //invitations
     bind(key(new TypeCapture<CompletableFuture<PlayerMatcher>>() {
