@@ -81,7 +81,7 @@ public class BukkitTimerHandler {
   public TimerCapability.EvaluationResult has(Object timedSubject, Class<? extends TimerAction> timerClass) {
     SelfRunningRunnable action = runningTimers.get(timedSubject, timerClass);
     if (action != null) {
-      return TimerCapability.EvaluationResult.runningTimer(action.getRemainingTime());
+      return new TimerCapability.EvaluationResult(true, action.getRemainingTime(), action.runnable);
     }
     return TimerCapability.EvaluationResult.noRunningTimer();
   }

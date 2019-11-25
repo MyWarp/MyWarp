@@ -27,11 +27,13 @@ import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.Sign;
 import io.github.mywarp.mywarp.platform.capability.EconomyCapability;
+import io.github.mywarp.mywarp.platform.capability.TimerCapability;
 import io.github.mywarp.mywarp.service.economy.EconomyService;
 import io.github.mywarp.mywarp.service.economy.FeeType;
 import io.github.mywarp.mywarp.service.teleport.EconomyTeleportService;
 import io.github.mywarp.mywarp.service.teleport.HandlerTeleportService;
 import io.github.mywarp.mywarp.service.teleport.TeleportService;
+import io.github.mywarp.mywarp.service.teleport.TimerTeleportService;
 import io.github.mywarp.mywarp.util.BlockFace;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.i18n.LocaleManager;
@@ -77,10 +79,12 @@ public class WarpSignHandler {
    * @param identifiers       the identifiers of warp signs
    * @param myWarp            the MyWarp instance
    * @param economyCapability the EconomyCapability used by this instance - can be null if no economy should be used
+   * @param timerCapability   the TimerCapabilty used by this instance - can be null if timers should no be used
    */
-  public WarpSignHandler(Iterable<String> identifiers, MyWarp myWarp, @Nullable EconomyCapability economyCapability) {
+  public WarpSignHandler(Iterable<String> identifiers, MyWarp myWarp, @Nullable EconomyCapability economyCapability,
+                         @Nullable TimerCapability timerCapability) {
     this(identifiers, myWarp.getSettings().isCaseSensitiveWarpNames(), myWarp.getAuthorizationResolver(),
-         createEconomyService(economyCapability), createTeleportService(myWarp, economyCapability),
+         createEconomyService(economyCapability), createTeleportService(myWarp, economyCapability, timerCapability),
          myWarp.getWarpManager());
   }
 
@@ -161,11 +165,15 @@ public class WarpSignHandler {
     return null;
   }
 
-  private static TeleportService createTeleportService(MyWarp myWarp, @Nullable EconomyCapability economyCapability) {
+  private static TeleportService createTeleportService(MyWarp myWarp, @Nullable EconomyCapability economyCapability,
+                                                       @Nullable TimerCapability timerCapability) {
     TeleportService ret = new HandlerTeleportService(myWarp.getTeleportHandler());
 
     if (economyCapability != null) {
       ret = new EconomyTeleportService(ret, createEconomyService(economyCapability), FeeType.WARP_SIGN_USE);
+    }
+    if (timerCapability != null) {
+      ret = new TimerTeleportService(ret, myWarp.getGame(), timerCapability);
     }
     return ret;
   }
@@ -207,7 +215,6 @@ public class WarpSignHandler {
       player.sendError(msg.getString("permission.use.to-warp", warpName));
       return true;
     }
-
     teleportService.teleport(player, warp);
     return true;
   }

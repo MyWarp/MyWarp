@@ -73,12 +73,12 @@ public class TimerTeleportService extends ForwardingTeleportService {
     // check for already running timers
     TimerCapability.EvaluationResult cooldownResult = capability.has(player.getUniqueId(), WarpCooldown.class);
     if (cooldownResult.isTimerRunning()) {
-      player.sendError(msg.getString("timer-already-running", cooldownResult.getDurationLeft().getSeconds()));
+      cooldownResult.getRunningTimer().informTimerRunning(player, cooldownResult.getDurationLeft());
       return TeleportHandler.TeleportStatus.NONE;
     }
     TimerCapability.EvaluationResult warmupResult = capability.has(player.getUniqueId(), WarpWarmup.class);
     if (warmupResult.isTimerRunning()) {
-      player.sendError(msg.getString("timer-already-running", warmupResult.getDurationLeft().getSeconds()));
+      warmupResult.getRunningTimer().informTimerRunning(player, warmupResult.getDurationLeft());
       return TeleportHandler.TeleportStatus.NONE;
     }
 

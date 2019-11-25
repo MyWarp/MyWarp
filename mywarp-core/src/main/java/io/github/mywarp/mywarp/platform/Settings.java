@@ -94,7 +94,6 @@ public interface Settings {
    */
   boolean isInformPlayerOnInvitation();
 
-
   /**
    * Gets the Comparator to be used by default in the {@code warp list} command.
    *

@@ -34,6 +34,7 @@ import io.github.mywarp.mywarp.bukkit.util.permission.group.GroupResolverFactory
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.InvalidFormatException;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
+import io.github.mywarp.mywarp.platform.capability.TimerCapability;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.i18n.FolderSourcedControl;
@@ -153,7 +154,13 @@ public final class MyWarpPlugin extends JavaPlugin {
 
     //register warp sign listener
     if (getSettings().isWarpSignsEnabled()) {
-      new WarpSignListener(this, myWarp.createWarpSignHandler(), createMaterialInformation()).registerEvents(this);
+      TimerCapability capability = null;
+      if (getSettings().isTimersEnabledForSigns()) {
+        capability = platform.getCapability(TimerCapability.class).orElse(null);
+      }
+      platform.getCapability(TimerCapability.class);
+      new WarpSignListener(this, myWarp.createWarpSignHandler(capability), createMaterialInformation())
+          .registerEvents(this);
     }
 
     // register world access permissions

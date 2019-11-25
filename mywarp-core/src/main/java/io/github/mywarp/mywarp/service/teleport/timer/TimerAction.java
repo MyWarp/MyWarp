@@ -19,6 +19,13 @@
 
 package io.github.mywarp.mywarp.service.teleport.timer;
 
+import io.github.mywarp.mywarp.platform.Actor;
+import io.github.mywarp.mywarp.service.teleport.TimerTeleportService;
+import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
+
+import java.time.Duration;
+import java.time.Instant;
+
 /**
  * An action that is executed after a timer finishes.
  *
@@ -26,6 +33,9 @@ package io.github.mywarp.mywarp.service.teleport.timer;
  */
 public abstract class TimerAction<T> implements Runnable {
 
+  private static final DynamicMessages msg = new DynamicMessages(TimerTeleportService.RESOURCE_BUNDLE_NAME);
+
+  private Instant lastInformed = Instant.MIN;
   private final T timedSuject;
 
   /**
@@ -44,6 +54,20 @@ public abstract class TimerAction<T> implements Runnable {
    */
   public T getTimedSuject() {
     return timedSuject;
+  }
+
+  /**
+   * Informs the given Actor that this action is still running.
+   *
+   * @param actor    the Actor to inform
+   * @param duration the duration left until completed
+   */
+  public void informTimerRunning(Actor actor, Duration duration) {
+    Instant now = Instant.now();
+    if (now.minusSeconds(4).isAfter(lastInformed)) {
+      actor.sendError(msg.getString("timer-already-running", duration.getSeconds()));
+      lastInformed = now;
+    }
   }
 
 }

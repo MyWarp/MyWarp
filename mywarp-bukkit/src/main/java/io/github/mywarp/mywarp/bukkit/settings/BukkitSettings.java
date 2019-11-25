@@ -227,6 +227,15 @@ public class BukkitSettings implements Settings {
   }
 
   /**
+   * Returns whether timers should be used for warp signs, too.
+   *
+   * @return {@code true} if timers should be used for signs
+   */
+  public boolean isTimersEnabledForSigns() {
+    return config.getBoolean("timers.forSigns");
+  }
+
+  /**
    * Returns whether the warp-cooldown should notify users when they have cooled down.
    *
    * @return {@code true} if users should be notified

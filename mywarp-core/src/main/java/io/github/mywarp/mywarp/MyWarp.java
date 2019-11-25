@@ -28,6 +28,7 @@ import io.github.mywarp.mywarp.platform.PlayerNameResolver;
 import io.github.mywarp.mywarp.platform.Settings;
 import io.github.mywarp.mywarp.platform.capability.EconomyCapability;
 import io.github.mywarp.mywarp.platform.capability.PositionValidationCapability;
+import io.github.mywarp.mywarp.platform.capability.TimerCapability;
 import io.github.mywarp.mywarp.sign.WarpSignHandler;
 import io.github.mywarp.mywarp.util.InvitationInformationListener;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
@@ -229,9 +230,9 @@ public final class MyWarp {
    *
    * @return a new WarpSign instance
    */
-  public WarpSignHandler createWarpSignHandler() {
+  public WarpSignHandler createWarpSignHandler(@Nullable TimerCapability capability) {
     return new WarpSignHandler(getSettings().getWarpSignsIdentifiers(), this,
-                               platform.getCapability(EconomyCapability.class).orElse(null));
+                               platform.getCapability(EconomyCapability.class).orElse(null), capability);
   }
 
   private void initializeMutableFields() {

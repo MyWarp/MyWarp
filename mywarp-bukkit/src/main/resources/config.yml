@@ -31,6 +31,7 @@ limits:
   configuredLimits: []
 timers:
   enabled: false
+  forSigns: false
   warpCooldown:
     notifyOnFinish: false
   warpWarmup:
