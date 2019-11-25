@@ -1,11 +1,17 @@
 # Change Log
 
 All notable changes to this project will be documented in this file.
-Starting with version 3, this project adheres to [Semantic Versioning](http://semver.org/).
-
-Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 
 ## Unreleased
+
+### Added
+* [[#207](https://github.com/TheE/MyWarp/issues/213)] - Optional cooldowns and warmups to warp signs
+* [[#213](https://github.com/TheE/MyWarp/issues/213)] - Configurable sorting for the `list` command
+
+### Changed
+* Build against Bukkit 1.14.4
+* Update Gradle to 5.6.1
+* Deploy development artifacts to our website using gradle
 
 ### Fixed
 * [Bukkit] Properly cancel physical interaction events in order to fix rare `Player moved wrongly!` errors
