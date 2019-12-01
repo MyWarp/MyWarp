@@ -2,13 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## [3.1] - 2019-12-01
 
 ### Known Issues
 * [[#223](https://github.com/TheE/MyWarp/issues/223)] - Facing for warps located in unloaded is not set when activated by pressure plate
 
 ### Added
-* [[#207](https://github.com/TheE/MyWarp/issues/213)] - Optional cooldowns and warmups form warp signs
+* [[#207](https://github.com/TheE/MyWarp/issues/213)] - Optional cooldowns and warmups for warp signs
 * [[#213](https://github.com/TheE/MyWarp/issues/213)] - Configurable sorting for the `list` command
 
 ### Changed
@@ -506,7 +506,8 @@ All notable changes to this project will be documented in this file.
 * Updated for Permissions 2.5.5 or higher (tested with 2.6 and 2.7)
 * Changed update URL where MyWarp downloads sqlite libraries
 
-[Unreleased]: https://github.com/TheE/MyWarp/compare/v3.0.1...HEAD
+[Unreleased]: https://github.com/TheE/MyWarp/compare/v3.1...HEAD
+[3.1]: https://github.com/TheE/MyWarp/compare/v3.0.1...v3.1
 [3.0.1]: https://github.com/TheE/MyWarp/compare/v3.0...v3.0.1
 [3.0]: https://github.com/TheE/MyWarp/compare/v3.0-rc-1...v3.0
 [3.0-rc-1]: https://github.com/TheE/MyWarp/compare/v3.0-beta-4...v3.0-rc-1

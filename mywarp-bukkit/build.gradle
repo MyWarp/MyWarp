@@ -111,7 +111,7 @@ shadowJar {
     relocate("com.sk89q.squirrelid", "${internalPath}.squirrelid")
 
     //exclude unused classes
-    minimize{
+    minimize {
         exclude(dependency("com.h2database:h2:.*"))
     }
 }
