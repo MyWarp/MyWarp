@@ -4,14 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Known Issues
+* [[#223](https://github.com/TheE/MyWarp/issues/223)] - Facing for warps located in unloaded is not set when activated by pressure plate
+
 ### Added
-* [[#207](https://github.com/TheE/MyWarp/issues/213)] - Optional cooldowns and warmups to warp signs
+* [[#207](https://github.com/TheE/MyWarp/issues/213)] - Optional cooldowns and warmups form warp signs
 * [[#213](https://github.com/TheE/MyWarp/issues/213)] - Configurable sorting for the `list` command
 
 ### Changed
 * Build against Bukkit 1.14.4
 * Update Gradle to 5.6.1
 * Deploy development artifacts to our website using gradle
+* [[#186](https://github.com/TheE/MyWarp/issues/186)] - Update Flyway to 6.0.8. Users running versions older than 3.0-beta4 **must** run MyWarp 3.0.1 at least once before updating.
+* Update JOOQ to 3.12.3
 
 ### Fixed
 * [Bukkit] Properly cancel physical interaction events in order to fix rare `Player moved wrongly!` errors
