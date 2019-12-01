@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [3.1] - 2019-12-01
 
 ### Known Issues
-* [[#223](https://github.com/TheE/MyWarp/issues/223)] - Facing for warps located in unloaded is not set when activated by pressure plate
+* [[#223](https://github.com/TheE/MyWarp/issues/223)] - Facing for warps in unloaded chunks is not set when used via pressure plate
 
 ### Added
 * [[#207](https://github.com/TheE/MyWarp/issues/213)] - Optional cooldowns and warmups for warp signs
