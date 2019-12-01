@@ -19,24 +19,14 @@
 
 package io.github.mywarp.mywarp.warp.storage;
 
+import org.jooq.SQLDialect;
+
 /**
- * Thrown when a {@link WarpStorage} cannot be initialized.
+ * Thrown if the dialect of a JDBC-URL is not supported.
  */
-public class StorageInitializationException extends Exception {
+public class UnsupportedDialectException extends Exception {
 
-  StorageInitializationException() {
-    super();
-  }
-
-  StorageInitializationException(String message) {
-    super(message);
-  }
-
-  StorageInitializationException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
-  StorageInitializationException(Throwable cause) {
-    super(cause);
+  UnsupportedDialectException(SQLDialect dialect) {
+    super(String.format("Unsupported SQL dialect: '%s'.", dialect));
   }
 }

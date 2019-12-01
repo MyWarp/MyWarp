@@ -76,7 +76,7 @@ import javax.sql.DataSource;
  * #getWarps()} will convert both. Player names are acquired by calling the configured {@link PlayerNameResolver}, witch
  * may result in a blocking call.</p>
  *
- * <p>Call {@link #from(DataSource, String, String)} to create instances.</p>
+ * <p>Call {@link #using(DataSource, String, String)} to create instances.</p>
  */
 @SuppressWarnings("checkstyle:indentation")
 @Allow({SQLITE, MYSQL, MARIADB})
@@ -111,26 +111,24 @@ public final class LegacyWarpSource implements WarpSource {
    * @param databaseName the name of the database (sometimes also called schema that contains the table. May be {@code
    *                     null} if the DBMS does not support multiple databases.
    * @return a builder step
-   * @throws StorageInitializationException if the given dataSource does not connect to a DBMS or the DBMS is not
-   *                                        supported
+   * @throws SQLException                if the connection to the DBMS fails
+   * @throws UnsupportedDialectException if the dialect if the {@code dataSource} is not supported
    */
-  public static LegacyWarpImporterBuilder from(DataSource dataSource, String tableName, @Nullable String databaseName)
-      throws StorageInitializationException {
-    return from(dataSource, databaseName != null ? name(databaseName, tableName) : name(tableName));
+  public static LegacyWarpImporterBuilder using(DataSource dataSource, String tableName, @Nullable String databaseName)
+      throws UnsupportedDialectException, SQLException {
+    return using(dataSource, databaseName != null ? name(databaseName, tableName) : name(tableName));
   }
 
-  private static LegacyWarpImporterBuilder from(DataSource source, Name tableName)
-      throws StorageInitializationException {
+  private static LegacyWarpImporterBuilder using(DataSource source, Name tableName)
+      throws UnsupportedDialectException, SQLException {
     SQLDialect dialect;
     try (Connection conn = source.getConnection()) {
       dialect = JDBCUtils.dialect(conn);
 
       if (SUPPORTED_DIALECTS.stream().noneMatch(dialect::supports)) {
-        throw new StorageInitializationException(String.format("%s is not supported!", dialect.getName()));
+        throw new UnsupportedDialectException(dialect);
       }
 
-    } catch (SQLException e) {
-      throw new StorageInitializationException("Failed to connect due to an SQLException.", e);
     }
     return new LegacyWarpImporterBuilder(new DefaultConfiguration().set(dialect).set(new Settings()).set(source),
                                          tableName);
@@ -244,7 +242,7 @@ public final class LegacyWarpSource implements WarpSource {
   /**
    * Builder class for {@link LegacyWarpSource}s.
    *
-   * @see LegacyWarpSource#from(DataSource, String, String)
+   * @see LegacyWarpSource#using(DataSource, String, String)
    */
   public static class LegacyWarpImporterBuilder {
 

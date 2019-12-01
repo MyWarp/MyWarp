@@ -46,12 +46,14 @@ import io.github.mywarp.mywarp.warp.authorization.WarpPropertiesAuthorizationStr
 import io.github.mywarp.mywarp.warp.authorization.WorldAccessAuthorizationStrategy;
 import io.github.mywarp.mywarp.warp.storage.AsyncWritingWarpStorage;
 import io.github.mywarp.mywarp.warp.storage.SqlDataService;
-import io.github.mywarp.mywarp.warp.storage.StorageInitializationException;
+import io.github.mywarp.mywarp.warp.storage.TableInitializationException;
+import io.github.mywarp.mywarp.warp.storage.UnsupportedDialectException;
 import io.github.mywarp.mywarp.warp.storage.WarpStorage;
-import io.github.mywarp.mywarp.warp.storage.WarpStorageFactory;
+import io.github.mywarp.mywarp.warp.storage.WarpStorageBuilder;
 
 import org.slf4j.Logger;
 
+import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.Nullable;
@@ -103,12 +105,15 @@ public final class MyWarp {
    * @param platform    the platform MyWarp will run on
    * @param dataService the SqlDataService warps are stored in
    * @return a fully operational instance of MyWarp that runs on {@code platform}
-   * @throws StorageInitializationException if the Storage system could not be initialized
+   * @throws SQLException                 if the connection to the DBMS fails
+   * @throws UnsupportedDialectException  if the dialect of if configuration is not supported
+   * @throws TableInitializationException if the connection works, but the initialization of the table structure fails
    */
-  public static MyWarp initialize(Platform platform, SqlDataService dataService) throws StorageInitializationException {
+  public static MyWarp initialize(Platform platform, SqlDataService dataService)
+      throws UnsupportedDialectException, SQLException, TableInitializationException {
     WarpStorage
         warpStorage =
-        new AsyncWritingWarpStorage(WarpStorageFactory.createAndInitialize(dataService),
+        new AsyncWritingWarpStorage(WarpStorageBuilder.using(dataService).initTables().build(),
                                     dataService.getExecutorService());
 
     EventBus eventBus = new EventBus();
