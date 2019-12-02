@@ -154,13 +154,6 @@ public class BukkitPlayer extends BukkitActor implements LocalPlayer {
     }
     toTeleport.leaveVehicle();
 
-    // load the chunk if needed
-    int blockX = bukkitLoc.getBlockX();
-    int blockZ = bukkitLoc.getBlockZ();
-    if (!bukkitLoc.getWorld().isChunkLoaded(blockX, blockZ)) {
-      bukkitLoc.getWorld().refreshChunk(blockX, blockZ);
-    }
-
     // teleport the entity
     toTeleport.teleport(bukkitLoc, PlayerTeleportEvent.TeleportCause.PLUGIN);
 
