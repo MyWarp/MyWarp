@@ -72,7 +72,8 @@ gitPublishPush.onlyIf { System.env.GRGIT_USER != null && project.name == "MyWarp
 
 task createVersionJson() {
     def head = grgit.head()
-    def gitTag = grgit.tag.list().find { it.commit == head }.name ?: ""
+    def gitTag = grgit.tag.list().find { it.commit == head }?.name ?: ""
+
 
     def data = [
             build: [
