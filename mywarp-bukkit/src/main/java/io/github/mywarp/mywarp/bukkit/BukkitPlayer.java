@@ -32,12 +32,14 @@ import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.Settings;
 import io.github.mywarp.mywarp.warp.Warp;
 
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -155,10 +157,9 @@ public class BukkitPlayer extends BukkitActor implements LocalPlayer {
     toTeleport.leaveVehicle();
 
     // load the chunk if needed
-    int blockX = bukkitLoc.getBlockX();
-    int blockZ = bukkitLoc.getBlockZ();
-    if (!bukkitLoc.getWorld().isChunkLoaded(blockX, blockZ)) {
-      bukkitLoc.getWorld().refreshChunk(blockX, blockZ);
+    Chunk chunk = Objects.requireNonNull(bukkitLoc.getWorld()).getChunkAt(bukkitLoc);
+    if (!chunk.isLoaded()) {
+      chunk.load();
     }
 
     // teleport the entity
@@ -167,7 +168,7 @@ public class BukkitPlayer extends BukkitActor implements LocalPlayer {
     // teleport the vehicle
     if (vehicle != null) {
       teleportRecursive(vehicle, bukkitLoc, true);
-      vehicle.setPassenger(toTeleport);
+      vehicle.setPassenger(toTeleport); //replaced by addPassenger(Entity) in newer versions
     }
   }
 }
