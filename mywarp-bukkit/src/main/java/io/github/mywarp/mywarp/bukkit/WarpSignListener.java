@@ -104,7 +104,7 @@ class WarpSignListener extends AbstractListener {
           Optional<BlockFace> blockFace = blockFaceResolver.getBlockFace(block).flatMap(BukkitAdapter::adapt);
 
           if (blockFace.isPresent()) {
-            event.setCancelled(warpSignHandler.handleInteraction(toPlayer(event), toVector(block), blockFace.get()));
+            warpSignHandler.handleInteraction(toPlayer(event), toVector(block), blockFace.get());
           }
 
         }
@@ -112,7 +112,7 @@ class WarpSignListener extends AbstractListener {
       case PHYSICAL:
         //player stepped on something that might trigger a warp sign
         if (materialInfo.isTriggerable(block.getType())) {
-          event.setCancelled(warpSignHandler.handleInteraction(toPlayer(event), toVector(block), BlockFace.UP));
+          warpSignHandler.handleInteraction(toPlayer(event), toVector(block), BlockFace.UP);
         }
         break;
       default: //do nothing
@@ -131,7 +131,7 @@ class WarpSignListener extends AbstractListener {
   /**
    * A sign that is actually a wrapped event.
    */
-  private class EventSign implements io.github.mywarp.mywarp.platform.Sign {
+  private static class EventSign implements io.github.mywarp.mywarp.platform.Sign {
 
     private final SignChangeEvent event;
 
