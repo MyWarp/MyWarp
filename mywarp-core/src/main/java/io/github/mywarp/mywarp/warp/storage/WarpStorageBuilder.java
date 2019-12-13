@@ -163,7 +163,9 @@ public class WarpStorageBuilder {
               .table(FLYWAY_TABLE_NAME);
 
       if (schema != null) {
-        flywayConfig = flywayConfig.schemas(schema).placeholders(ImmutableMap.of("schema", schema));
+        flywayConfig =
+            flywayConfig.schemas(schema).defaultSchema(schema).placeholders(ImmutableMap.of("schema", schema));
+        //REVIEW use default placeholders? https://flywaydb.org/documentation/placeholders
       }
 
       Flyway flyway = flywayConfig.load();
