@@ -30,7 +30,7 @@ dependencies {
     annotationProcessor "org.jooq:jooq-checker:3.12.+"
     compile "org.flywaydb:flyway-core:6.1.1"
     compile "com.google.guava:guava:21.0"
-    compile "org.slf4j:slf4j-api:1.7.25"
+    compile "org.slf4j:slf4j-api:1.7.30"
     compile "com.flowpowered:flow-math:1.0.3"
     compile "com.github.mywarp.intake:intake:b57bff7cd9"
 
