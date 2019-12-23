@@ -29,13 +29,13 @@ dependencies {
     compile "org.jooq:jooq:3.12.+"
     annotationProcessor "org.jooq:jooq-checker:3.12.+"
     compile "org.flywaydb:flyway-core:6.1.1"
-    compile "com.google.guava:guava:21.0"
+    compile "com.google.guava:guava:23.0"
     compile "org.slf4j:slf4j-api:1.7.25"
     compile "com.flowpowered:flow-math:1.0.3"
     compile "com.github.mywarp.intake:intake:b57bff7cd9"
 
     signature "org.codehaus.mojo.signature:java18:1.0@signature" //required to build custom signature
-    createSignature "com.google.guava:guava:10.0.1" //bundled by Bukkit 1.7.10, we should try to stay compatible
+    createSignature "com.google.guava:guava:23.0" //bundled by Bukkit 1.7.10, we should try to stay compatible
 }
 
 // Use JOOQ's annotation processor
