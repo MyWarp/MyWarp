@@ -98,7 +98,7 @@ public final class VersionSupport {
         log.debug("Using BlockFaceResolver113.");
       } catch (Exception e) {
         blockFaceResolver = new LegacyBlockFaceResolver();
-        log.debug("Using LegacyBlockFaceResolver.", e);
+        log.debug("Using LegacyBlockFaceResolver.");
       }
     }
     return blockFaceResolver;
