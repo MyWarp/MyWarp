@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -28,7 +28,7 @@ configurations.create("createSignature")
 dependencies {
     compile "org.jooq:jooq:3.12.+"
     annotationProcessor "org.jooq:jooq-checker:3.12.+"
-    compile "org.flywaydb:flyway-core:6.1.1"
+    compile "org.flywaydb:flyway-core:6.2.3"
     compile "com.google.guava:guava:21.0"
     compile "org.slf4j:slf4j-api:1.7.30"
     compile "com.flowpowered:flow-math:1.0.3"
