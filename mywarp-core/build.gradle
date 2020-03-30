@@ -28,7 +28,7 @@ configurations.create("createSignature")
 dependencies {
     compile "org.jooq:jooq:3.12.+"
     annotationProcessor "org.jooq:jooq-checker:3.12.+"
-    compile "org.flywaydb:flyway-core:6.2.3"
+    compile "org.flywaydb:flyway-core:6.3.2"
     compile "com.google.guava:guava:21.0"
     compile "org.slf4j:slf4j-api:1.7.30"
     compile "com.flowpowered:flow-math:1.0.3"
