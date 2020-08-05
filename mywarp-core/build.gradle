@@ -21,18 +21,19 @@ import ru.vyarus.gradle.plugin.animalsniffer.signature.BuildSignatureTask
 
 plugins {
     id "ru.vyarus.animalsniffer" version "1.5.1"
+    id 'java-library'
 }
 
 configurations.create("createSignature")
 
 dependencies {
-    compile "org.jooq:jooq:3.12.+"
+    implementation "org.jooq:jooq:3.12.+"
     annotationProcessor "org.jooq:jooq-checker:3.12.+"
-    compile "org.flywaydb:flyway-core:6.3.3"
-    compile "com.google.guava:guava:21.0"
-    compile "org.slf4j:slf4j-api:1.7.30"
-    compile "com.flowpowered:flow-math:1.0.3"
-    compile "com.github.mywarp.intake:intake:b57bff7cd9"
+    implementation "org.flywaydb:flyway-core:6.3.3"
+    implementation "com.google.guava:guava:21.0"
+    api "org.slf4j:slf4j-api:1.7.30"
+    api "com.flowpowered:flow-math:1.0.3"
+    implementation "com.github.mywarp.intake:intake:b57bff7cd9"
 
     signature "org.codehaus.mojo.signature:java18:1.0@signature" //required to build custom signature
     createSignature "com.google.guava:guava:10.0.1" //bundled by Bukkit 1.7.10, we should try to stay compatible
