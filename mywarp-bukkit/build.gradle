@@ -45,7 +45,7 @@ dependencies {
     implementation "us.dynmap:DynmapCoreAPI:1.9.4"
 
     runtimeOnly "info.ronjenkins:slf4bukkit:1.0.0"
-    runtimeOnly "com.h2database:h2:1.4.+"
+    runtimeOnly "com.h2database:h2:1.4.200"
 
     implementation "org.codehaus.mojo:animal-sniffer-annotations:1.19"
     signature "org.codehaus.mojo.signature:java18:1.0@signature" //required to build custom signature
