@@ -37,7 +37,7 @@ repositories {
 
 dependencies {
     implementation project(":mywarp-core")
-    implementation "org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT"
+    implementation "org.spigotmc:spigot-api:1.16.1-R0.1-SNAPSHOT"
     implementation "com.sk89q:squirrelid:0.2.0"
     implementation "net.milkbowl.vault:VaultAPI:1.7"
     implementation "org.anjocaido:essentialsgroupmanager:2.10.1"
@@ -49,7 +49,7 @@ dependencies {
 
     implementation "org.codehaus.mojo:animal-sniffer-annotations:1.19"
     signature "org.codehaus.mojo.signature:java18:1.0@signature" //required to build custom signature
-    createSignature "org.bukkit:bukkit:1.15.1-R0.1-SNAPSHOT" //try to stay compatible with the last 'official' version
+    createSignature "org.bukkit:bukkit:1.7.10-R0.1-SNAPSHOT" //try to stay compatible with the last 'official' version
     createSignature "com.google.guava:guava:10.0.1" //bundled by Bukkit 1.7.10, we should try to stay compatible
 }
 

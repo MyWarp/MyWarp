@@ -13,3 +13,4 @@ updates:
   - dependency-name: com.google.guava:guava
     versions:
     - "> 21.0"
+  - dependency-name: org.bukkit:bukkit
