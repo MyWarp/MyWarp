@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -24,23 +24,12 @@ import com.sk89q.intake.CommandException;
 import com.sk89q.intake.Require;
 import com.sk89q.intake.parametric.annotation.Switch;
 import com.sk89q.intake.util.auth.AuthorizationException;
-
 import io.github.mywarp.mywarp.command.parametric.annotation.Billable;
 import io.github.mywarp.mywarp.command.parametric.annotation.Modifiable;
 import io.github.mywarp.mywarp.command.parametric.provider.exception.ArgumentAuthorizationException;
 import io.github.mywarp.mywarp.command.parametric.provider.exception.NoSuchPlayerException;
-import io.github.mywarp.mywarp.command.util.CommandUtil;
-import io.github.mywarp.mywarp.command.util.ExceedsInitiatorLimitException;
-import io.github.mywarp.mywarp.command.util.ExceedsLimitException;
-import io.github.mywarp.mywarp.command.util.NoSuchWorldException;
-import io.github.mywarp.mywarp.command.util.ProfilePlayerMatcher;
-import io.github.mywarp.mywarp.command.util.UnknownException;
-import io.github.mywarp.mywarp.command.util.UserViewableException;
-import io.github.mywarp.mywarp.platform.Actor;
-import io.github.mywarp.mywarp.platform.Game;
-import io.github.mywarp.mywarp.platform.LocalPlayer;
-import io.github.mywarp.mywarp.platform.PlayerNameResolver;
-import io.github.mywarp.mywarp.platform.Profile;
+import io.github.mywarp.mywarp.command.util.*;
+import io.github.mywarp.mywarp.platform.*;
 import io.github.mywarp.mywarp.service.economy.FeeType;
 import io.github.mywarp.mywarp.service.limit.LimitService;
 import io.github.mywarp.mywarp.util.Message;
@@ -52,11 +41,10 @@ import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.Warp.Type;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-
-import javax.annotation.Nullable;
 
 /**
  * Bundles commands that involve social interaction with other players.
@@ -266,7 +254,7 @@ public final class SocialCommands {
               actor.sendMessage(Message.of(Style.INFO, msg.getString("invite.public", warp.getName())));
             }
           } else {
-            actor.sendError(msg.getString("invite.already-invited", parse(invitation), creatorName));
+            actor.sendError(msg.getString("invite.already-invited", parse(invitation), toName(invitation)));
           }
         }, game.getExecutor()).exceptionally((ex) -> {
 
