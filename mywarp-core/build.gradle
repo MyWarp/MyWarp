@@ -27,7 +27,7 @@ plugins {
 configurations.create("createSignature")
 
 dependencies {
-    implementation "org.jooq:jooq:3.13.4"
+    implementation "org.jooq:jooq:3.13.5"
     annotationProcessor "org.jooq:jooq-checker:3.13.4"
     implementation "org.flywaydb:flyway-core:6.5.7"
     implementation "com.google.guava:guava:21.0"
