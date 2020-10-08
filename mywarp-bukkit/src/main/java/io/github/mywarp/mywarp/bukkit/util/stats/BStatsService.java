@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,7 +23,6 @@ import io.github.mywarp.mywarp.bukkit.MyWarpPlugin;
 import io.github.mywarp.mywarp.bukkit.settings.BukkitSettings;
 import io.github.mywarp.mywarp.bukkit.util.jdbc.JdbcConfiguration;
 import io.github.mywarp.mywarp.warp.WarpManager;
-
 import org.bstats.bukkit.Metrics;
 
 import java.util.HashMap;
@@ -36,10 +35,12 @@ import java.util.Map;
  */
 class BStatsService implements StatisticService {
 
+  private static final int PLUGIN_ID = 2615;
+
   private final Metrics metrics;
 
   BStatsService(MyWarpPlugin plugin) {
-    this.metrics = new Metrics(plugin);
+    this.metrics = new Metrics(plugin, PLUGIN_ID);
   }
 
   @Override
