@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,27 +19,22 @@
 
 package io.github.mywarp.mywarp.bukkit.settings;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-
 import io.github.mywarp.mywarp.bukkit.BukkitAdapter;
 import io.github.mywarp.mywarp.bukkit.util.permission.ValueBundle;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.service.limit.Limit;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
-
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.slf4j.Logger;
 
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A ValueBundle that bundles warp creation limits.
@@ -71,12 +66,13 @@ public class LimitBundle extends ValueBundle implements Limit {
       worldHolder = WorldHolder.INSTANCE;
     } else {
 
-      Set<UUID> worlds = new HashSet<UUID>();
+      Set<UUID> worlds = new HashSet<>();
       for (String name : values.getStringList(WORLD_KEY)) {
         World world = Bukkit.getWorld(name);
         if (world == null) {
           log.warn("The limit bundle '{}' is configured to affect the world '{}' which does NOT exist. The bundle is "
-                   + "active, but the configuration for this world is ignored.", identifier, name);
+                  + "active, but the configuration for this world is ignored.", identifier, name);
+          log.warn("The existing worlds are {}.", Bukkit.getWorlds().stream().map(World::getName).collect(Collectors.joining(", ")));
           continue;
         }
         worlds.add(world.getUID());
