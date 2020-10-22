@@ -1,6 +1,5 @@
 # ![MyWarp](https://github.com/MyWarp/MyWarp/wiki/images/logo_vertical.png)
-[![Build Status](https://travis-ci.org/MyWarp/MyWarp.svg?branch=master)](https://travis-ci.org/MyWarp/MyWarp)
-[![Maintainability](https://api.codeclimate.com/v1/badges/492f3d16610c8c344cd3/maintainability)](https://codeclimate.com/github/MyWarp/MyWarp/maintainability) [![jitpack](https://jitpack.io/v/MyWarp/mywarp.svg)](https://jitpack.io/#MyWarp/mywarp)  [![Crowdin](https://d322cqt584bo4o.cloudfront.net/mywarp/localized.svg)](https://crowdin.com/project/mywarp)
+[![Build Status](https://travis-ci.org/MyWarp/MyWarp.svg?branch=master)](https://travis-ci.org/MyWarp/MyWarp) [![jitpack](https://jitpack.io/v/MyWarp/mywarp.svg)](https://jitpack.io/#MyWarp/mywarp)  [![Crowdin](https://d322cqt584bo4o.cloudfront.net/mywarp/localized.svg)](https://crowdin.com/project/mywarp)
 
 MyWarp is an extension for the Minecraft multiplayer that allows players to create and share warps with each other.
 
