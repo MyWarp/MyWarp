@@ -37,3 +37,5 @@ jobs:
       
     - name: Build with Gradle
       run: ./gradlew build --scan
+      env:
+        CROWDIN_KEY: ${{ secrets.CROWDIN_KEY }}
