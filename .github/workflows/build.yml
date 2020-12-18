@@ -7,7 +7,7 @@ on:
     branches: [ master ]
     
 env:
-  BUILD_NUMBER: $GITHUB_RUN_NUMBER
+  BUILD_NUMBER: ${{ github.run_number }}
   CI_SYSTEM: GitHub Action
 
 jobs:
