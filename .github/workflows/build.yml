@@ -35,7 +35,13 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
       
-    - name: Build with Gradle
+    - name: Build
       run: ./gradlew build --scan
       env:
         CROWDIN_KEY: ${{ secrets.CROWDIN_API_KEY }}
+        
+    - name: Deploy Artifacts to Github Pages
+      run: ./gradlew :gitPublishPush
+      if: github.ref == 'refs/heads/master'
+      env:
+        GRGIT_USER: ${{ secrets.GH_TOKEN_REPO_ACCESS }}
