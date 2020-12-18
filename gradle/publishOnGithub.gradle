@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -24,8 +24,8 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath "org.ajoberstar.grgit:grgit-gradle:4.0.0"
-        classpath "org.ajoberstar:gradle-git-publish:2.1.1"
+        classpath "org.ajoberstar.grgit:grgit-gradle:4.1.0"
+        classpath "org.ajoberstar:gradle-git-publish:3.0.0"
     }
 }
 apply plugin: org.ajoberstar.grgit.gradle.GrgitPlugin

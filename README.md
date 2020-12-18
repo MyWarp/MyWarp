@@ -1,5 +1,5 @@
 # ![MyWarp](https://github.com/MyWarp/MyWarp/wiki/images/logo_vertical.png)
-[![Build Status](https://travis-ci.org/MyWarp/MyWarp.svg?branch=master)](https://travis-ci.org/MyWarp/MyWarp) [![jitpack](https://jitpack.io/v/MyWarp/mywarp.svg)](https://jitpack.io/#MyWarp/mywarp)  [![Crowdin](https://d322cqt584bo4o.cloudfront.net/mywarp/localized.svg)](https://crowdin.com/project/mywarp)
+[![Build Status](https://github.com/MyWarp/MyWarp/workflows/build/badge.svg)](https://github.com/MyWarp/MyWarp/actions) [![jitpack](https://jitpack.io/v/MyWarp/mywarp.svg)](https://jitpack.io/#MyWarp/mywarp)  [![Crowdin](https://d322cqt584bo4o.cloudfront.net/mywarp/localized.svg)](https://crowdin.com/project/mywarp)
 
 MyWarp is an extension for the Minecraft multiplayer that allows players to create and share warps with each other.
 
@@ -44,7 +44,7 @@ The build can be customized via environment variables or project properties (`-P
 
 ## Contributing
 
-Please check [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines to follow. Note that branches in this repository, as well as all pull-requests, are built automatically via [Travis](https://travis-ci.org/MyWarp/MyWarp).
+Please check [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines to follow. Note that branches in this repository, as well as all pull-requests, are built automatically via [Github ACtions](https://github.com/MyWarp/MyWarp/actions).
 
 ## Links
 * [Project Website](https://mywarp.github.io/)
