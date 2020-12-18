@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,10 +19,9 @@
 
 package io.github.mywarp.mywarp.bukkit.util.versionsupport;
 
-import org.bukkit.entity.Player;
-
 import java.util.Locale;
 import java.util.Optional;
+import org.bukkit.entity.Player;
 
 /**
  * Resolves the Locale of individual players.

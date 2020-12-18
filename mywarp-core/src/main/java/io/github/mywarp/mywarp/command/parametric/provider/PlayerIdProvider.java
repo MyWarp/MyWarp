@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,11 +22,9 @@ package io.github.mywarp.mywarp.command.parametric.provider;
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
 import com.sk89q.intake.parametric.Provider;
-
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.PlayerNameResolver;
 import io.github.mywarp.mywarp.platform.Profile;
-
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.UUID;

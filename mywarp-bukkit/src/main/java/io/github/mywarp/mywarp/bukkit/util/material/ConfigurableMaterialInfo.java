@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,15 +20,12 @@
 package io.github.mywarp.mywarp.bukkit.util.material;
 
 import com.google.common.collect.ImmutableSet;
-
 import io.github.mywarp.mywarp.util.MyWarpLogger;
-
+import javax.annotation.Nullable;
 import org.bukkit.Material;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.slf4j.Logger;
-
-import javax.annotation.Nullable;
 
 /**
  * Provides information about Materials depending partly on a given configuration.

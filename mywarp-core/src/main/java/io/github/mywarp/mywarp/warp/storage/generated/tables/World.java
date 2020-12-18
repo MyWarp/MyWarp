@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -25,7 +25,10 @@ package io.github.mywarp.mywarp.warp.storage.generated.tables;
 
 import io.github.mywarp.mywarp.warp.storage.generated.Keys;
 import io.github.mywarp.mywarp.warp.storage.generated.Mywarp;
-
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import javax.annotation.Generated;
 import org.jooq.Field;
 import org.jooq.Identity;
 import org.jooq.Record;
@@ -34,12 +37,6 @@ import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.TableImpl;
 import org.jooq.types.UInteger;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
-import javax.annotation.Generated;
 
 
 /**

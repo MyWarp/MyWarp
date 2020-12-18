@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,7 +21,6 @@ package io.github.mywarp.mywarp.bukkit;
 
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
-
 import io.github.mywarp.mywarp.bukkit.util.conversation.AcceptancePromptFactory;
 import io.github.mywarp.mywarp.bukkit.util.conversation.WelcomeEditorFactory;
 import io.github.mywarp.mywarp.bukkit.util.permission.group.GroupResolver;
@@ -31,17 +30,15 @@ import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.Settings;
 import io.github.mywarp.mywarp.warp.Warp;
-
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
-
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * A reference to a Player in Bukkit.
@@ -62,7 +59,7 @@ public class BukkitPlayer extends BukkitActor implements LocalPlayer {
    * @param settings                the configured settings
    */
   BukkitPlayer(Player player, AcceptancePromptFactory acceptancePromptFactory,
-               WelcomeEditorFactory welcomeEditorFactory, GroupResolver groupResolver, Settings settings) {
+      WelcomeEditorFactory welcomeEditorFactory, GroupResolver groupResolver, Settings settings) {
     super(player, settings);
     this.acceptancePromptFactory = acceptancePromptFactory;
     this.welcomeEditorFactory = welcomeEditorFactory;
@@ -143,7 +140,7 @@ public class BukkitPlayer extends BukkitActor implements LocalPlayer {
     Location
         bukkitLoc =
         new Location(BukkitAdapter.adapt(world), position.getX(), position.getY(), position.getZ(), rotation.getY(),
-                     rotation.getX());
+            rotation.getX());
     teleportRecursive(getWrapped(), bukkitLoc, teleportTamedHorse);
   }
 

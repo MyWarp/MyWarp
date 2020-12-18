@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -34,7 +34,6 @@ import io.github.mywarp.mywarp.util.playermatcher.GroupPlayerMatcher;
 import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
-
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -69,7 +68,7 @@ public class InfoPrinter {
    * @param playerNameResolver    the resolver to be used when resolving player names
    */
   public InfoPrinter(Warp warp, AuthorizationResolver authorizationResolver, Game game,
-                     PlayerNameResolver playerNameResolver) {
+      PlayerNameResolver playerNameResolver) {
     this.warp = warp;
     this.authorizationResolver = authorizationResolver;
     this.game = game;
@@ -111,7 +110,7 @@ public class InfoPrinter {
 
     return creatorFuture
         .thenCombineAsync(futureInvitations, (creator, invitations) -> getInfo(receiver, creator, invitations),
-                          game.getExecutor());
+            game.getExecutor());
   }
 
   /**
@@ -128,7 +127,7 @@ public class InfoPrinter {
    */
   public Message getTextImmediately(Actor receiver) {
     return getInfo(receiver, nameOrUuid(warp.getCreator()),
-                   invitedUuids(warp).stream().map(this::nameOrUuid).sorted().collect(Collectors.toList()));
+        invitedUuids(warp).stream().map(this::nameOrUuid).sorted().collect(Collectors.toList()));
   }
 
   /**
@@ -178,7 +177,7 @@ public class InfoPrinter {
     info.append(" ");
     info.append(Message.Style.VALUE);
     info.append(msg.getString("info.location.position", warp.getPosition().getFloorX(), warp.getPosition().getFloorY(),
-                              warp.getPosition().getFloorZ(), worldName(warp.getWorldIdentifier())));
+        warp.getPosition().getFloorZ(), worldName(warp.getWorldIdentifier())));
 
     info.appendNewLine();
 

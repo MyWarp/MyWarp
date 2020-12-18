@@ -7,15 +7,15 @@ standOn:
     - MAGMA_BLOCK
     - CAMPFIRE
   safe:
-  - WATER
-  - STATIONARY_WATER #removed in 1.13
-  - SCAFFOLDING
+    - WATER
+    - STATIONARY_WATER #removed in 1.13
+    - SCAFFOLDING
 standWithin:
   dangerous:
-  - LAVA
-  - STATIONARY_LAVA #removed in 1.13
-  - FIRE
-  safe: []
+    - LAVA
+    - STATIONARY_LAVA #removed in 1.13
+    - FIRE
+  safe: [ ]
 clickable:
   - WOOD_BUTTON #before...
   - ACACIA_BUTTON

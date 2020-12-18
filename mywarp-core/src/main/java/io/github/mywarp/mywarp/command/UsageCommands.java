@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,7 +22,6 @@ package io.github.mywarp.mywarp.command;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.Default;
 import com.sk89q.intake.Require;
-
 import io.github.mywarp.mywarp.command.parametric.annotation.Sender;
 import io.github.mywarp.mywarp.command.parametric.annotation.Usable;
 import io.github.mywarp.mywarp.platform.LocalPlayer;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,7 +21,6 @@ package io.github.mywarp.mywarp.sign;
 
 import com.flowpowered.math.vector.Vector3i;
 import com.google.common.collect.Iterables;
-
 import io.github.mywarp.mywarp.MyWarp;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
@@ -40,11 +39,9 @@ import io.github.mywarp.mywarp.util.i18n.LocaleManager;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
-
 import java.util.Collection;
 import java.util.Optional;
 import java.util.TreeSet;
-
 import javax.annotation.Nullable;
 
 /**
@@ -82,15 +79,15 @@ public class WarpSignHandler {
    * @param timerCapability   the TimerCapabilty used by this instance - can be null if timers should no be used
    */
   public WarpSignHandler(Iterable<String> identifiers, MyWarp myWarp, @Nullable EconomyCapability economyCapability,
-                         @Nullable TimerCapability timerCapability) {
+      @Nullable TimerCapability timerCapability) {
     this(identifiers, myWarp.getSettings().isCaseSensitiveWarpNames(), myWarp.getAuthorizationResolver(),
-         createEconomyService(economyCapability), createTeleportService(myWarp, economyCapability, timerCapability),
-         myWarp.getWarpManager());
+        createEconomyService(economyCapability), createTeleportService(myWarp, economyCapability, timerCapability),
+        myWarp.getWarpManager());
   }
 
   private WarpSignHandler(Iterable<String> identifiers, boolean caseSensitiveWarpNames,
-                          AuthorizationResolver authorizationResolver, @Nullable EconomyService economyService,
-                          TeleportService teleportService, WarpManager warpManager) {
+      AuthorizationResolver authorizationResolver, @Nullable EconomyService economyService,
+      TeleportService teleportService, WarpManager warpManager) {
     Iterables.addAll(this.identifiers, identifiers);
     this.caseSensitiveWarpNames = caseSensitiveWarpNames;
     this.authorizationResolver = authorizationResolver;
@@ -166,7 +163,7 @@ public class WarpSignHandler {
   }
 
   private static TeleportService createTeleportService(MyWarp myWarp, @Nullable EconomyCapability economyCapability,
-                                                       @Nullable TimerCapability timerCapability) {
+      @Nullable TimerCapability timerCapability) {
     TeleportService ret = new HandlerTeleportService(myWarp.getTeleportHandler());
 
     if (economyCapability != null) {

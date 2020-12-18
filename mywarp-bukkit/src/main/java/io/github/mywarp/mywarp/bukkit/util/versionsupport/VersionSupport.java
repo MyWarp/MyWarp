@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,14 +20,11 @@
 package io.github.mywarp.mywarp.bukkit.util.versionsupport;
 
 import io.github.mywarp.mywarp.util.MyWarpLogger;
-
+import java.util.function.Predicate;
+import javax.annotation.Nullable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.slf4j.Logger;
-
-import java.util.function.Predicate;
-
-import javax.annotation.Nullable;
 
 /**
  * Handles functionality that requires different implementations for different versions if Minecraft or Bukkit.
@@ -61,7 +58,7 @@ public final class VersionSupport {
         } catch (ReflectiveOperationException e2) {
           localeResolver = new FallbackLocaleResolver();
           log.warn("Unable to create the LocaleResolver appropriate for this Bukkit implementation."
-                   + "Player locales WILL NOT be resolved!");
+              + "Player locales WILL NOT be resolved!");
         }
       }
     }

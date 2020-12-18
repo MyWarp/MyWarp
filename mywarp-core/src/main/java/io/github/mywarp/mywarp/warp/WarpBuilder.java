@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,10 +22,8 @@ package io.github.mywarp.mywarp.warp;
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.Iterables;
-
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
-
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -141,6 +139,6 @@ public class WarpBuilder {
    */
   public Warp build() {
     return new SimpleWarp(name, creationDate, invitations, creator, type, worldIdentifier, position, rotation, visits,
-                          welcomeMessage);
+        welcomeMessage);
   }
 }

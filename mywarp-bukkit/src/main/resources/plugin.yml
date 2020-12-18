@@ -17,7 +17,7 @@ main: io.github.mywarp.mywarp.bukkit.MyWarpPlugin
 api-version: 1.13
 commands:
   warp:
-    aliases: ['mywarp', 'mw']
+    aliases: [ 'mywarp', 'mw' ]
     description: MyWarp usage and management commands
     usage: /<command> help - Displays the help for MyWarp
   to:

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,9 +23,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.service.teleport.timer.TimerAction;
-
 import java.time.Duration;
-
 import javax.annotation.Nullable;
 
 /**
@@ -107,7 +105,7 @@ public interface TimerCapability {
      *
      * @param timerRunning true if the timer is running
      * @param durationLeft the Duration left on the running Timer (may be null)
-     * @param timerAction the TimerAction currently running (may be null)
+     * @param timerAction  the TimerAction currently running (may be null)
      */
     public EvaluationResult(boolean timerRunning, @Nullable Duration durationLeft, @Nullable TimerAction timerAction) {
       this.timerRunning = timerRunning;

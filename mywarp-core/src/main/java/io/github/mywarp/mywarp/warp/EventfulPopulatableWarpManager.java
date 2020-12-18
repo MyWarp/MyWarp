@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,7 +22,6 @@ package io.github.mywarp.mywarp.warp;
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.eventbus.EventBus;
-
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
@@ -32,7 +31,6 @@ import io.github.mywarp.mywarp.warp.event.WarpDeletionEvent;
 import io.github.mywarp.mywarp.warp.event.WarpEvent;
 import io.github.mywarp.mywarp.warp.event.WarpInvitesEvent;
 import io.github.mywarp.mywarp.warp.event.WarpUpdateEvent;
-
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;

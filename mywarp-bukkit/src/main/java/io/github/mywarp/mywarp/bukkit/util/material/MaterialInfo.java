@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -39,8 +39,7 @@ public interface MaterialInfo {
   boolean safeToStandOn(Material toTest);
 
   /**
-   * Returns whether an entity standing <b><u>within</u></b> the the given Material without taking damage or
-   * falling.
+   * Returns whether an entity standing <b><u>within</u></b> the the given Material without taking damage or falling.
    *
    * <p>For example, for {@link Material#DIRT}, this method will return {@code true}. For {@link Material#AIR}, this
    * method will return {@code false}.</p>

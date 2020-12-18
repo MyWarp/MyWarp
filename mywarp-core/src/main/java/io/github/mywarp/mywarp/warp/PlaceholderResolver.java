@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,13 +21,10 @@ package io.github.mywarp.mywarp.warp;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.ImmutableMap;
-
 import io.github.mywarp.mywarp.platform.Actor;
-
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.annotation.Nullable;
 
 /**

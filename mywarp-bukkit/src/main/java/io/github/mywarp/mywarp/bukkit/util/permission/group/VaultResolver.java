@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,7 +20,6 @@
 package io.github.mywarp.mywarp.bukkit.util.permission.group;
 
 import net.milkbowl.vault.permission.Permission;
-
 import org.bukkit.entity.Player;
 
 /**
@@ -28,7 +27,7 @@ import org.bukkit.entity.Player;
  */
 class VaultResolver implements GroupResolver {
 
-  private Permission vaultApi;
+  private final Permission vaultApi;
 
   VaultResolver(Permission vaultApi) {
     this.vaultApi = vaultApi;

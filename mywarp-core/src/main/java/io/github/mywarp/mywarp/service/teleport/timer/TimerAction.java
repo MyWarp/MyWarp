@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,7 +22,6 @@ package io.github.mywarp.mywarp.service.teleport.timer;
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.service.teleport.TimerTeleportService;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
-
 import java.time.Duration;
 import java.time.Instant;
 

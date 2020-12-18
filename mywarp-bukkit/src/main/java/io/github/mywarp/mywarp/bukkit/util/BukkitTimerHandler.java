@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,19 +23,15 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-
 import io.github.mywarp.mywarp.bukkit.MyWarpPlugin;
 import io.github.mywarp.mywarp.platform.capability.TimerCapability;
 import io.github.mywarp.mywarp.service.teleport.timer.AbortableTimerAction;
 import io.github.mywarp.mywarp.service.teleport.timer.TimerAction;
 import io.github.mywarp.mywarp.util.McUtil;
-
-import org.bukkit.scheduler.BukkitRunnable;
-
 import java.time.Duration;
 import java.time.Instant;
-
 import javax.annotation.Nullable;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Handles timers on Bukkit.
@@ -66,7 +62,7 @@ public class BukkitTimerHandler {
    */
   public <T> void start(T timedSubject, Duration duration, TimerAction<T> timer) {
     checkArgument(!has(timedSubject, timer.getClass()).isTimerRunning(),
-                  "A timer of the type " + timer.getClass() + " is already running for " + timedSubject);
+        "A timer of the type " + timer.getClass() + " is already running for " + timedSubject);
 
     runningTimers.put(timedSubject, timer.getClass(), new SelfRunningRunnable<T>(timer, duration));
   }

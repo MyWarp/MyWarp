@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -30,16 +30,13 @@ import com.sk89q.intake.argument.UnusedArgumentException;
 import com.sk89q.intake.parametric.handler.ExceptionContext;
 import com.sk89q.intake.parametric.handler.ExceptionConverterHelper;
 import com.sk89q.intake.parametric.handler.ExceptionMatch;
-
 import io.github.mywarp.mywarp.command.CommandHandler;
 import io.github.mywarp.mywarp.command.parametric.namespace.IllegalCommandSenderException;
 import io.github.mywarp.mywarp.command.util.NoSuchWorldException;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.warp.storage.TableInitializationException;
 import io.github.mywarp.mywarp.warp.storage.UnsupportedDialectException;
-
 import java.sql.SQLException;
-
 import javax.annotation.Nullable;
 
 /**
@@ -66,10 +63,10 @@ public class ExceptionConverter extends ExceptionConverterHelper {
   public void convert(MissingArgumentException e, ExceptionContext context) throws InvalidUsageException {
     if (e.getParameter() != null) {
       throw new InvalidUsageException(msg.getString("exception.argument.missing", e.getParameter().getName()),
-                                      context.getCommand(), context.getAliasStack(), false, e);
+          context.getCommand(), context.getAliasStack(), false, e);
     }
     throw new InvalidUsageException(msg.getString("exception.argument.missing.unknown"), context.getCommand(),
-                                    context.getAliasStack(), false, e);
+        context.getAliasStack(), false, e);
   }
 
   /**
@@ -82,7 +79,7 @@ public class ExceptionConverter extends ExceptionConverterHelper {
   @ExceptionMatch
   public void convert(UnusedArgumentException e, ExceptionContext context) throws InvalidUsageException {
     throw new InvalidUsageException(msg.getString("exception.argument.unused", e.getUnconsumed()), context.getCommand(),
-                                    context.getAliasStack(), false, e);
+        context.getAliasStack(), false, e);
   }
 
   /**
@@ -112,7 +109,7 @@ public class ExceptionConverter extends ExceptionConverterHelper {
   @ExceptionMatch
   public void convert(MissingFlagValueException e, ExceptionContext context) throws InvalidUsageException {
     throw new InvalidUsageException(msg.getString("exception.flag.value.missing", e.getFlagName()),
-                                    context.getCommand(), context.getAliasStack(), true, e);
+        context.getCommand(), context.getAliasStack(), true, e);
   }
 
   /**
@@ -125,7 +122,7 @@ public class ExceptionConverter extends ExceptionConverterHelper {
   @ExceptionMatch
   public void convert(AlreadyPresentFlagException e, ExceptionContext context) throws InvalidUsageException {
     throw new InvalidUsageException(msg.getString("exception.flag.value.already-given", e.getFlagName()),
-                                    context.getCommand(), context.getAliasStack(), true, e);
+        context.getCommand(), context.getAliasStack(), true, e);
   }
 
   //-- Custom
@@ -176,6 +173,7 @@ public class ExceptionConverter extends ExceptionConverterHelper {
   public void convert(UnsupportedDialectException e) throws CommandException {
     throw new CommandException(msg.getString("import.no-connection", e.getLocalizedMessage()));
   }
+
   /**
    * Converts a TableInitializationException to a CommandException.
    *

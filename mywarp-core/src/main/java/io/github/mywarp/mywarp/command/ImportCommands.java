@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,7 +22,6 @@ package io.github.mywarp.mywarp.command;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.Require;
 import com.sk89q.intake.parametric.annotation.OptArg;
-
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalWorld;
@@ -37,7 +36,6 @@ import io.github.mywarp.mywarp.warp.storage.TableInitializationException;
 import io.github.mywarp.mywarp.warp.storage.UnsupportedDialectException;
 import io.github.mywarp.mywarp.warp.storage.WarpSource;
 import io.github.mywarp.mywarp.warp.storage.WarpStorageBuilder;
-
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Map;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,17 +23,14 @@ import static com.google.common.base.Preconditions.checkState;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.capability.LimitCapability;
 import io.github.mywarp.mywarp.service.limit.Limit.Value;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
-
 import java.util.UUID;
 import java.util.function.Predicate;
-
 import javax.annotation.Nullable;
 
 /**
@@ -100,7 +97,7 @@ public class LimitService {
 
   private static Predicate<Warp> createPredicate(final LocalPlayer creator, Limit limit) {
     return input -> input.isCreator(creator.getUniqueId()) && containsIdentifiedWorld(limit.getAffectedWorlds(),
-                                                                                      input.getWorldIdentifier());
+        input.getWorldIdentifier());
   }
 
   /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,9 +20,7 @@
 package io.github.mywarp.mywarp.platform;
 
 import com.google.common.collect.ImmutableSet;
-
 import io.github.mywarp.mywarp.warp.Warp;
-
 import java.util.Comparator;
 import java.util.Locale;
 

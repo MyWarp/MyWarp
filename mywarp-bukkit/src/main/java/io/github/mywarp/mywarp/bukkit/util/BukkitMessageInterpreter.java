@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,7 +23,6 @@ import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.util.Message;
 import io.github.mywarp.mywarp.warp.Warp;
-
 import org.bukkit.ChatColor;
 
 /**
@@ -33,7 +32,7 @@ import org.bukkit.ChatColor;
 public class BukkitMessageInterpreter {
 
   private Message.Style lastStyle = Message.Style.DEFAULT;
-  private StringBuilder builder;
+  private final StringBuilder builder;
 
   private BukkitMessageInterpreter(StringBuilder builder) {
     this.builder = builder;

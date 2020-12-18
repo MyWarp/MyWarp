@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,7 +20,6 @@
 package io.github.mywarp.mywarp;
 
 import com.google.common.eventbus.EventBus;
-
 import io.github.mywarp.mywarp.command.CommandHandler;
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.Platform;
@@ -50,13 +49,10 @@ import io.github.mywarp.mywarp.warp.storage.TableInitializationException;
 import io.github.mywarp.mywarp.warp.storage.UnsupportedDialectException;
 import io.github.mywarp.mywarp.warp.storage.WarpStorage;
 import io.github.mywarp.mywarp.warp.storage.WarpStorageBuilder;
-
-import org.slf4j.Logger;
-
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
-
 import javax.annotation.Nullable;
+import org.slf4j.Logger;
 
 /**
  * Entry point and container for a working MyWarp implementation.
@@ -82,7 +78,7 @@ public final class MyWarp {
   private InvitationInformationListener invitationInformationListener;
 
   private MyWarp(Platform platform, SqlDataService dataService, WarpStorage warpStorage,
-                 PopulatableWarpManager warpManager, EventBus eventBus, AuthorizationResolver authorizationResolver) {
+      PopulatableWarpManager warpManager, EventBus eventBus, AuthorizationResolver authorizationResolver) {
     this.platform = platform;
     this.dataService = dataService;
     this.warpStorage = warpStorage;
@@ -114,7 +110,7 @@ public final class MyWarp {
     WarpStorage
         warpStorage =
         new AsyncWritingWarpStorage(WarpStorageBuilder.using(dataService).initTables().build(),
-                                    dataService.getExecutorService());
+            dataService.getExecutorService());
 
     EventBus eventBus = new EventBus();
 
@@ -127,7 +123,7 @@ public final class MyWarp {
         authorizationResolver =
         new AuthorizationResolver(new PermissionAuthorizationStrategy(
             new WorldAccessAuthorizationStrategy(new WarpPropertiesAuthorizationStrategy(), platform.getGame(),
-                                                 platform.getSettings())));
+                platform.getSettings())));
 
     MyWarp myWarp = new MyWarp(platform, dataService, warpStorage, warpManager, eventBus, authorizationResolver);
     myWarp.initializeMutableFields();
@@ -237,13 +233,13 @@ public final class MyWarp {
    */
   public WarpSignHandler createWarpSignHandler(@Nullable TimerCapability capability) {
     return new WarpSignHandler(getSettings().getWarpSignsIdentifiers(), this,
-                               platform.getCapability(EconomyCapability.class).orElse(null), capability);
+        platform.getCapability(EconomyCapability.class).orElse(null), capability);
   }
 
   private void initializeMutableFields() {
     teleportHandler =
         new StrategicTeleportHandler(getSettings(), getGame(),
-                                     platform.getCapability(PositionValidationCapability.class).orElse(null));
+            platform.getCapability(PositionValidationCapability.class).orElse(null));
 
     commandHandler = new CommandHandler(this, platform);
 

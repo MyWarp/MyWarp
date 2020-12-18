@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,24 +21,20 @@ package io.github.mywarp.mywarp.bukkit;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-
 import io.github.mywarp.mywarp.bukkit.util.jdbc.DataSourceFactory;
 import io.github.mywarp.mywarp.bukkit.util.jdbc.JdbcConfiguration;
 import io.github.mywarp.mywarp.bukkit.util.jdbc.SingleConnectionDataSource;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
 import io.github.mywarp.mywarp.warp.storage.SqlDataService;
-
-import org.slf4j.Logger;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-
 import javax.annotation.Nullable;
 import javax.sql.DataSource;
+import org.slf4j.Logger;
 
 /**
  * An {@link SqlDataService} that uses a {@link SingleConnectionDataSource}.
@@ -102,7 +98,7 @@ public class SingleConnectionDataService implements SqlDataService {
         if (!executorService.awaitTermination(30, TimeUnit.SECONDS)) {
           List<Runnable> droppedTasks = executorService.shutdownNow();
           log.warn("SQL executor did not terminate within 30 seconds and is terminated. {} tasks will not be "
-                   + "executed, recent changes may be missing in the database.", droppedTasks.size());
+              + "executed, recent changes may be missing in the database.", droppedTasks.size());
         }
       } catch (InterruptedException e) {
         log.error("Failed to terminate SQL executor as the process was interrupted.", e);

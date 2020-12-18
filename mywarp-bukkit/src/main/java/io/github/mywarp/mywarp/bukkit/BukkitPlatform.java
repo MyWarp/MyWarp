@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,7 +21,6 @@ package io.github.mywarp.mywarp.bukkit;
 
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
-
 import io.github.mywarp.mywarp.bukkit.settings.BukkitSettings;
 import io.github.mywarp.mywarp.bukkit.settings.DurationBundle;
 import io.github.mywarp.mywarp.bukkit.settings.FeeBundle;
@@ -36,16 +35,13 @@ import io.github.mywarp.mywarp.platform.capability.PositionValidationCapability;
 import io.github.mywarp.mywarp.platform.capability.TimerCapability;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
 import io.github.mywarp.mywarp.warp.storage.SqlDataService;
-
+import java.io.File;
+import java.util.Optional;
 import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.slf4j.Logger;
-
-import java.io.File;
-import java.util.Optional;
 
 /**
  * The platform implementation for Bukkit.

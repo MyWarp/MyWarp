@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -29,17 +29,10 @@ import com.sk89q.squirrelid.resolver.BukkitPlayerService;
 import com.sk89q.squirrelid.resolver.CacheForwardingService;
 import com.sk89q.squirrelid.resolver.CombinedProfileService;
 import com.sk89q.squirrelid.resolver.HttpRepositoryService;
-
 import io.github.mywarp.mywarp.bukkit.util.AbstractListener;
 import io.github.mywarp.mywarp.platform.NoSuchProfileException;
 import io.github.mywarp.mywarp.platform.PlayerNameResolver;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
-
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import org.slf4j.Logger;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
@@ -51,8 +44,11 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import javax.annotation.Nullable;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.slf4j.Logger;
 
 /**
  * A PlayerNameResolver implementation that uses the SquirrelID library to lookup UUIDs.

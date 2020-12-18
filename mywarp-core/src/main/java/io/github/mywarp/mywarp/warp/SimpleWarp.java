@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -25,12 +25,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.ImmutableSet;
-
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
-
 import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
@@ -50,7 +48,7 @@ class SimpleWarp extends AbstractWarp {
   private volatile UUID worldIdentifier;
   private volatile Vector3d position;
   private volatile Vector2f rotation;
-  private volatile AtomicInteger visits;
+  private final AtomicInteger visits;
   private volatile String welcomeMessage;
 
   /**
@@ -70,7 +68,7 @@ class SimpleWarp extends AbstractWarp {
    * @throws IllegalArgumentException if {@code invitedPlayers} or {@code invitedGroups} contains {@code null}
    */
   SimpleWarp(String name, Instant creationDate, Set<PlayerMatcher> invited, UUID creator, Type type,
-             UUID worldIdentifier, Vector3d position, Vector2f rotation, int visits, String welcomeMessage) {
+      UUID worldIdentifier, Vector3d position, Vector2f rotation, int visits, String welcomeMessage) {
     this.name = checkNotNull(name);
     this.creationDate = checkNotNull(creationDate);
     checkArgument(!checkNotNull(invited).contains(null), "'criteria' must not contain null.");
@@ -179,8 +177,8 @@ class SimpleWarp extends AbstractWarp {
   @Override
   public String toString() {
     return "SimpleWarp{" + "name='" + name + '\'' + ", creationDate=" + creationDate + ", criteria=" + invited
-           + ", creator=" + creator + ", type=" + type + ", worldIdentifier=" + worldIdentifier + ", position="
-           + position + ", rotation=" + rotation + ", visits=" + visits + ", welcomeMessage='" + welcomeMessage + '\''
-           + '}';
+        + ", creator=" + creator + ", type=" + type + ", worldIdentifier=" + worldIdentifier + ", position="
+        + position + ", rotation=" + rotation + ", visits=" + visits + ", welcomeMessage='" + welcomeMessage + '\''
+        + '}';
   }
 }

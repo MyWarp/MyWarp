@@ -1,5 +1,5 @@
 ---
-name: Feature request
+name: Feature Request
 about: Suggest a new feature for MyWarp
 title: "[FEATURE]"
 labels: 't: feature'

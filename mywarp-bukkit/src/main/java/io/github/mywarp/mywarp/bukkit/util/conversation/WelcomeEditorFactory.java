@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -25,16 +25,14 @@ import io.github.mywarp.mywarp.bukkit.util.BukkitMessageInterpreter;
 import io.github.mywarp.mywarp.util.Message;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.warp.Warp;
-
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.conversations.MessagePrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * Creates and handles conversations with players who want to change a Warp's welcome-message.
@@ -95,7 +93,7 @@ public class WelcomeEditorFactory {
           message =
           Message.builder().append(
               msg.getString("welcome-message.enter-message", locale, warp.getName(), REMOVE_SEQUENCE, ESCAPE_SEQUENCE,
-                            MyWarpPlugin.CONVERSATION_TIMEOUT)).build();
+                  MyWarpPlugin.CONVERSATION_TIMEOUT)).build();
 
       return BukkitMessageInterpreter.interpret(message);
     }

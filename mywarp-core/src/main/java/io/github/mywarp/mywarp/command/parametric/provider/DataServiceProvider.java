@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,12 +21,10 @@ package io.github.mywarp.mywarp.command.parametric.provider;
 
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
-
 import io.github.mywarp.mywarp.command.parametric.provider.exception.InvalidDataServiceConfigException;
 import io.github.mywarp.mywarp.platform.InvalidFormatException;
 import io.github.mywarp.mywarp.platform.Platform;
 import io.github.mywarp.mywarp.warp.storage.SqlDataService;
-
 import java.lang.annotation.Annotation;
 import java.util.List;
 

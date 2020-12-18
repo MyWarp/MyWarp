@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,16 +22,13 @@ package io.github.mywarp.mywarp.bukkit.settings;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.ImmutableMap;
-
 import io.github.mywarp.mywarp.bukkit.util.permission.ValueBundle;
 import io.github.mywarp.mywarp.service.teleport.timer.TimerAction;
 import io.github.mywarp.mywarp.service.teleport.timer.WarpCooldown;
 import io.github.mywarp.mywarp.service.teleport.timer.WarpWarmup;
-
-import org.bukkit.configuration.ConfigurationSection;
-
 import java.time.Duration;
 import java.util.Map;
+import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * A ValueBundle that bundles Durations.
@@ -53,7 +50,7 @@ public class DurationBundle extends ValueBundle {
     checkNotNull(values);
 
     return new DurationBundle(identifier, createDuration(values.getLong("warpCooldown")),
-                              createDuration(values.getLong("warpWarmup")));
+        createDuration(values.getLong("warpWarmup")));
   }
 
   private DurationBundle(String identifier, Duration warpCooldown, Duration warpWarmup) {

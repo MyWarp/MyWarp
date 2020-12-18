@@ -29,7 +29,7 @@ if (hasProperty('buildScan')) {
     }
 }
 
-ext.resolveProperty = {key, defaultValue = "unknown" ->
+ext.resolveProperty = { key, defaultValue = "unknown" ->
     return project.findProperty(key) ?: System.getenv(key) ?: defaultValue
 }
 

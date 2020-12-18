@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -27,7 +27,6 @@ import com.sk89q.intake.parametric.annotation.OptArg;
 import com.sk89q.intake.parametric.annotation.Range;
 import com.sk89q.intake.parametric.annotation.Switch;
 import com.sk89q.intake.util.auth.AuthorizationException;
-
 import io.github.mywarp.mywarp.command.parametric.annotation.Billable;
 import io.github.mywarp.mywarp.command.parametric.annotation.Viewable;
 import io.github.mywarp.mywarp.command.parametric.namespace.IllegalCommandSenderException;
@@ -51,7 +50,6 @@ import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +58,6 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
 import javax.annotation.Nullable;
 
 /**
@@ -89,8 +86,8 @@ public final class InformativeCommands {
    * @param game                  the Game used by commands
    */
   InformativeCommands(WarpManager warpManager, @Nullable LimitService limitService,
-                      AuthorizationResolver authorizationResolver, Platform platform,
-                      PlayerNameResolver playerNameResolver, Game game) {
+      AuthorizationResolver authorizationResolver, Platform platform,
+      PlayerNameResolver playerNameResolver, Game game) {
     this.authorizationResolver = authorizationResolver;
     this.warpManager = warpManager;
     this.platform = platform;
@@ -127,9 +124,9 @@ public final class InformativeCommands {
   @Require("mywarp.cmd.list")
   @Billable(FeeType.LIST)
   public void list(final Actor actor, @OptArg("1") int page, @Switch('c') CompletableFuture<Profile> creatorFuture,
-                   @Switch('n') final String name, @Switch('o') final Comparator<Warp> comparator,
-                   @Switch('r') @Range(min = 1, max = Integer.MAX_VALUE) final Integer radius,
-                   @Switch('w') final String world) {
+      @Switch('n') final String name, @Switch('o') final Comparator<Warp> comparator,
+      @Switch('r') @Range(min = 1, max = Integer.MAX_VALUE) final Integer radius,
+      @Switch('w') final String world) {
 
     // build the filter Predicate
     if (creatorFuture == null) {
@@ -157,7 +154,7 @@ public final class InformativeCommands {
         final Vector3d position = entity.getPosition();
         filter =
             filter.and(input -> input.getWorldIdentifier().equals(worldId)
-                                && input.getPosition().distanceSquared(position) <= squaredRadius);
+                && input.getPosition().distanceSquared(position) <= squaredRadius);
       }
 
       if (world != null) {

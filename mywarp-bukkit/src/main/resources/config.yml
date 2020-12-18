@@ -10,7 +10,7 @@ storage:
   schema: 'mywarp'
   user: 'mywarp'
   password: 'mywarp'
-  properties: []
+  properties: [ ]
 localization:
   defaultLocale: en_US
   perPlayer: true
@@ -20,15 +20,15 @@ teleportSafety:
 warpSigns:
   enabled: true
   identifiers:
-  - MyWarp
-  - Warp
+    - MyWarp
+    - Warp
 limits:
   enabled: true
   defaultLimit:
     totalLimit: 15
     publicLimit: 5
     privateLimit: 10
-  configuredLimits: []
+  configuredLimits: [ ]
 timers:
   enabled: false
   forSigns: false
@@ -41,7 +41,7 @@ timers:
   defaultTimer:
     warpCooldown: 15
     warpWarmup: 15
-  configuredTimers: []
+  configuredTimers: [ ]
 economy:
   enabled: false
   informAfterTransaction: true
@@ -65,7 +65,7 @@ economy:
     warpSignUse: 25
     warpTo: 25
     welcome: 25
-  configuredFees: []
+  configuredFees: [ ]
 dynmap:
   enabled: false
   layer:

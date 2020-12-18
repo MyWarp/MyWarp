@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,9 +23,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import com.sk89q.intake.argument.CommandArgs;
 import com.sk89q.intake.argument.Namespace;
-
 import io.github.mywarp.mywarp.platform.Actor;
-
 import java.lang.annotation.Annotation;
 import java.util.List;
 

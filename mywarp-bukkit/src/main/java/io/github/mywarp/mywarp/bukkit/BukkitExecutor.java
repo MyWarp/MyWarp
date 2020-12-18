@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,9 +19,8 @@
 
 package io.github.mywarp.mywarp.bukkit;
 
-import org.bukkit.Bukkit;
-
 import java.util.concurrent.Executor;
+import org.bukkit.Bukkit;
 
 /**
  * An Executor for the Bukkit plattform. Given Runnables will be called by the main server thread at the next tick.

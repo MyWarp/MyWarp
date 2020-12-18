@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,7 +20,6 @@
 package io.github.mywarp.mywarp.command.parametric.provider.exception;
 
 import com.sk89q.intake.argument.ArgumentParseException;
-
 import io.github.mywarp.mywarp.command.util.UserViewableException;
 
 /**

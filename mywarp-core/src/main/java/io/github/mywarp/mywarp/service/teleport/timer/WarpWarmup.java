@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,7 +20,6 @@
 package io.github.mywarp.mywarp.service.teleport.timer;
 
 import com.flowpowered.math.vector.Vector3d;
-
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.capability.TimerCapability;
@@ -29,7 +28,6 @@ import io.github.mywarp.mywarp.service.teleport.TimerTeleportService;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.i18n.LocaleManager;
 import io.github.mywarp.mywarp.warp.Warp;
-
 import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
@@ -60,7 +58,7 @@ public class WarpWarmup extends AbortableTimerAction<UUID> {
    * @param capability      platform's capability to run timers
    */
   public WarpWarmup(LocalPlayer player, Warp warp, Game game, TeleportService teleportService,
-                    TimerCapability capability) {
+      TimerCapability capability) {
     super(player.getUniqueId());
     this.warp = warp;
     this.game = game;

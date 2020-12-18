@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -24,18 +24,16 @@ import static java.math.BigDecimal.valueOf;
 
 import io.github.mywarp.mywarp.bukkit.util.permission.ValueBundle;
 import io.github.mywarp.mywarp.service.economy.FeeType;
-
-import org.bukkit.configuration.ConfigurationSection;
-
 import java.math.BigDecimal;
 import java.util.EnumMap;
+import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * A ValueBundle that bundles fees.
  */
 public class FeeBundle extends ValueBundle {
 
-  private EnumMap<FeeType, BigDecimal> fees;
+  private final EnumMap<FeeType, BigDecimal> fees;
 
   /**
    * Creates a new bundle with the given {@code identifier} and the given {@code values}.

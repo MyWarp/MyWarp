@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -32,7 +32,6 @@ import java.security.PrivilegedExceptionAction;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
-
 import javax.annotation.Nullable;
 
 /**
@@ -68,7 +67,7 @@ public class FolderSourcedControl extends EncodedControl {
   @Override
   @Nullable
   public ResourceBundle newBundle(final String baseName, final Locale locale, final String format,
-                                  final ClassLoader loader, final boolean reload) throws IOException {
+      final ClassLoader loader, final boolean reload) throws IOException {
     checkArgument(ResourceBundle.Control.FORMAT_PROPERTIES.contains(format), "unknown format: " + format);
 
     final String bundleName = toBundleName(baseName, locale);

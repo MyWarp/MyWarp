@@ -1,5 +1,5 @@
 ---
-name: Usability question
+name: Usability Question
 about: A question about the usage of MyWarp
 title: "[QUESTION]"
 labels: 't: question'

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,7 +22,6 @@ package io.github.mywarp.mywarp.warp.authorization;
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.warp.Warp;
-
 import java.util.function.Predicate;
 
 /**
@@ -33,7 +32,7 @@ import java.util.function.Predicate;
  */
 public class AuthorizationResolver {
 
-  private AuthorizationStrategy strategy;
+  private final AuthorizationStrategy strategy;
 
   /**
    * Creates an instance that uses the given strategy to resolve authentications.

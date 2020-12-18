@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,9 +22,6 @@ package io.github.mywarp.mywarp.bukkit.util.jdbc;
 import static java.util.Objects.requireNonNull;
 
 import io.github.mywarp.mywarp.platform.InvalidFormatException;
-
-import org.bukkit.configuration.ConfigurationSection;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
@@ -32,8 +29,8 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.annotation.Nullable;
+import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * A configuration for a JDBC connection to a DBMS.
@@ -57,7 +54,7 @@ public class JdbcConfiguration {
   private final String password;
 
   private JdbcConfiguration(String protocol, String jdbcUrl, @Nullable String database, @Nullable String username,
-                            @Nullable String password, Map<String, Object> connectionProperties) {
+      @Nullable String password, Map<String, Object> connectionProperties) {
     this.protocol = requireNonNull(protocol).toLowerCase();
     this.jdbcUrl = requireNonNull(jdbcUrl);
     this.database = nullOnEmpty(database);
@@ -135,7 +132,7 @@ public class JdbcConfiguration {
       connectionProperties = propertiesSection.getValues(false);
     }
     return new JdbcConfiguration(protocol, jdbcUrl, section.getString("schema"), section.getString("user"),
-                                 section.getString("password"), connectionProperties);
+        section.getString("password"), connectionProperties);
   }
 
   @Nullable
@@ -167,7 +164,7 @@ public class JdbcConfiguration {
     JdbcConfiguration that = (JdbcConfiguration) o;
     return Objects.equals(protocol, that.protocol) && Objects.equals(jdbcUrl, that.jdbcUrl) && Objects
         .equals(database, that.database) && Objects.equals(username, that.username) && Objects
-               .equals(password, that.password) && Objects.equals(connectionProperties, that.connectionProperties);
+        .equals(password, that.password) && Objects.equals(connectionProperties, that.connectionProperties);
   }
 
   @Override
@@ -178,8 +175,8 @@ public class JdbcConfiguration {
   @Override
   public String toString() {
     return "JdbcConfiguration{" + "protocol='" + protocol + '\'' + ", jdbcUrl='" + jdbcUrl + '\'' + ", database='"
-           + database + '\'' + ", username='" + username + '\'' + ", password='" + password + '\''
-           + ", connectionProperties=" + connectionProperties + '}';
+        + database + '\'' + ", username='" + username + '\'' + ", password='" + password + '\''
+        + ", connectionProperties=" + connectionProperties + '}';
   }
 
   Properties getConnectionProperties() {

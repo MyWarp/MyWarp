@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,7 +23,6 @@ import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.Platform;
 import io.github.mywarp.mywarp.platform.capability.EconomyCapability;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
-
 import java.math.BigDecimal;
 
 /**
@@ -36,7 +35,7 @@ public class EconomyService {
 
   private static final DynamicMessages msg = new DynamicMessages("io.github.mywarp.mywarp.lang.Economy");
 
-  private EconomyCapability capability;
+  private final EconomyCapability capability;
 
   /**
    * Creates an instance that uses the given {@code capability} to resolve requests.

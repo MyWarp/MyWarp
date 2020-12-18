@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -28,13 +28,10 @@ import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.capability.EconomyCapability;
 import io.github.mywarp.mywarp.service.economy.FeeType;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
-
+import java.math.BigDecimal;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
-
 import org.slf4j.Logger;
-
-import java.math.BigDecimal;
 
 /**
  * Economic compatibility for the Bukkit platform. Hooks into <a href="https://github.com/MilkBowl/VaultAPI">Vault</a>

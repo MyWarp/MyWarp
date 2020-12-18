@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,9 +20,7 @@
 package io.github.mywarp.mywarp.bukkit.util.jdbc;
 
 import com.google.common.base.Objects;
-
 import io.github.mywarp.mywarp.util.MyWarpLogger;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationHandler;
@@ -36,7 +34,6 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Statement;
 import java.util.Properties;
 import java.util.logging.Logger;
-
 import javax.annotation.Nullable;
 import javax.sql.DataSource;
 
@@ -96,7 +93,7 @@ public class SingleConnectionDataSource implements DataSource, AutoCloseable {
         .equal(this.properties.getProperty("password"), password)) {
       throw new SQLException(
           "SingleConnectionDataSource does not support retrieving of connections with custom username and "
-          + "password.");
+              + "password.");
     }
     return getConnection();
   }
@@ -197,7 +194,7 @@ public class SingleConnectionDataSource implements DataSource, AutoCloseable {
    */
   private Connection getCloseSuppressingConnectionProxy(Connection target) {
     return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(), new Class<?>[]{Connection.class},
-                                               new CloseSuppressingInvocationHandler(target));
+        new CloseSuppressingInvocationHandler(target));
   }
 
 

@@ -1,6 +1,6 @@
 ---
-name: Bug report
-about: Help us improving MyWarp by reporting a bug
+name: Bug Report
+about: Help us improve MyWarp by reporting a bug
 title: "[Bug]"
 labels: 't: bug'
 assignees: ''

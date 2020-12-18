@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,7 +22,6 @@ package io.github.mywarp.mywarp.bukkit;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSortedSet;
-
 import io.github.mywarp.mywarp.bukkit.settings.LimitBundle;
 import io.github.mywarp.mywarp.bukkit.util.permission.BukkitPermissionsRegistration;
 import io.github.mywarp.mywarp.bukkit.util.permission.ValueBundle;
@@ -30,17 +29,15 @@ import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.capability.LimitCapability;
 import io.github.mywarp.mywarp.service.limit.Limit;
-
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
 /**
  * Limit compatibility for the Bukkit platform. The actual Limits are stored in {@link LimitBundle}s managed by this
@@ -52,8 +49,8 @@ import java.util.SortedSet;
  */
 public class BukkitLimitCapability implements LimitCapability {
 
-  private SortedSet<LimitBundle> configuredLimits;
-  private LimitBundle defaultLimit;
+  private final SortedSet<LimitBundle> configuredLimits;
+  private final LimitBundle defaultLimit;
 
   /**
    * Initializes this provider.

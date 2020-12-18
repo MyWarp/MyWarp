@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,13 +21,10 @@ package io.github.mywarp.mywarp.bukkit.util.material;
 
 import com.flowpowered.math.vector.Vector3i;
 import com.google.common.primitives.Ints;
-
 import io.github.mywarp.mywarp.bukkit.BukkitAdapter;
 import io.github.mywarp.mywarp.platform.LocalWorld;
-
-import org.bukkit.Material;
-
 import java.util.function.Predicate;
+import org.bukkit.Material;
 
 /**
  * Utilities for working with Materials.
@@ -46,7 +43,7 @@ public class MaterialUtil {
    */
   public static Material getMaterial(LocalWorld world, Vector3i position) {
     return BukkitAdapter.adapt(world).getBlockAt(Ints.checkedCast(position.getX()), Ints.checkedCast(position.getY()),
-                                                 Ints.checkedCast(position.getZ())).getType();
+        Ints.checkedCast(position.getZ())).getType();
   }
 
   /**

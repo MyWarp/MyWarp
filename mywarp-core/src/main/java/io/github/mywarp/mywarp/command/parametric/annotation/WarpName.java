@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,9 +20,7 @@
 package io.github.mywarp.mywarp.command.parametric.annotation;
 
 import com.sk89q.intake.parametric.annotation.Classifier;
-
 import io.github.mywarp.mywarp.warp.Warp;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

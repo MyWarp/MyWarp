@@ -44,7 +44,7 @@ The build can be customized via environment variables or project properties (`-P
 
 ## Contributing
 
-Please check [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines to follow. Note that branches in this repository, as well as all pull-requests, are built automatically via [Github ACtions](https://github.com/MyWarp/MyWarp/actions).
+Please check [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines to follow. Note that branches in this repository, as well as all pull-requests, are built automatically via [Github Actions](https://github.com/MyWarp/MyWarp/actions).
 
 ## Links
 * [Project Website](https://mywarp.github.io/)

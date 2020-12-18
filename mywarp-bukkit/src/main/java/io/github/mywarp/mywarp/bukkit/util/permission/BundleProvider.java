@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,13 +20,10 @@
 package io.github.mywarp.mywarp.bukkit.util.permission;
 
 import com.google.common.collect.ImmutableSortedSet;
-
 import io.github.mywarp.mywarp.platform.LocalPlayer;
-
+import java.util.SortedSet;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
-
-import java.util.SortedSet;
 
 /**
  * Provides a managed access to {@link ValueBundle}s.
@@ -40,8 +37,8 @@ import java.util.SortedSet;
  */
 public class BundleProvider<B extends ValueBundle> {
 
-  private SortedSet<B> configuredBundles;
-  private B defaultBundle;
+  private final SortedSet<B> configuredBundles;
+  private final B defaultBundle;
 
   /**
    * Creates an instance.

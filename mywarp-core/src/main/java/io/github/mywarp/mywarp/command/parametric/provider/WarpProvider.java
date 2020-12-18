@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,14 +23,12 @@ import com.google.common.collect.Lists;
 import com.sk89q.intake.argument.CommandArgs;
 import com.sk89q.intake.argument.MissingArgumentException;
 import com.sk89q.intake.argument.Namespace;
-
 import io.github.mywarp.mywarp.command.parametric.provider.exception.NoSuchWarpException;
 import io.github.mywarp.mywarp.command.util.Matches;
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
-
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.function.Predicate;
@@ -79,8 +77,8 @@ abstract class WarpProvider extends AbstractProvider<Warp> {
   @Override
   public List<String> getSuggestions(String prefix, Namespace locals) {
     return Lists.transform(Matches.from(warpManager.getAll(isValid(locals))).withStringFunction(Warp::getName)
-                               .withValueComparator(new Warp.PopularityComparator()).forQuery(prefix)
-                               .getSortedMatches(), Warp::getName);
+        .withValueComparator(new Warp.PopularityComparator()).forQuery(prefix)
+        .getSortedMatches(), Warp::getName);
   }
 
 }

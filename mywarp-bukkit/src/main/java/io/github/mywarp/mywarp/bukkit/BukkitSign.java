@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,7 +23,6 @@ import io.github.mywarp.mywarp.bukkit.util.versionsupport.BlockFaceResolver;
 import io.github.mywarp.mywarp.bukkit.util.versionsupport.VersionSupport;
 import io.github.mywarp.mywarp.platform.Sign;
 import io.github.mywarp.mywarp.util.BlockFace;
-
 import java.util.Optional;
 
 /**

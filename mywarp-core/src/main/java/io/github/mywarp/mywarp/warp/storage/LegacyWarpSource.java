@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -32,7 +32,6 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-
 import io.github.mywarp.mywarp.platform.PlayerNameResolver;
 import io.github.mywarp.mywarp.platform.Profile;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
@@ -40,7 +39,19 @@ import io.github.mywarp.mywarp.util.playermatcher.GroupPlayerMatcher;
 import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpBuilder;
-
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import javax.annotation.Nullable;
+import javax.sql.DataSource;
 import org.jooq.Allow;
 import org.jooq.Configuration;
 import org.jooq.Name;
@@ -53,21 +64,6 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultConfiguration;
 import org.jooq.tools.jdbc.JDBCUtils;
 import org.slf4j.Logger;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-
-import javax.annotation.Nullable;
-import javax.sql.DataSource;
 
 /**
  * A {@link WarpSource} for databases with a legacy scheme (pre 3.0).
@@ -93,7 +89,7 @@ public final class LegacyWarpSource implements WarpSource {
   private final ImmutableMap<String, UUID> worldMap;
 
   private LegacyWarpSource(Configuration configuration, Name name, PlayerNameResolver resolver,
-                           Map<String, UUID> worldMap) {
+      Map<String, UUID> worldMap) {
     this.configuration = configuration;
     this.tableName = name;
     this.playerResolver = resolver;
@@ -131,7 +127,7 @@ public final class LegacyWarpSource implements WarpSource {
 
     }
     return new LegacyWarpImporterBuilder(new DefaultConfiguration().set(dialect).set(new Settings()).set(source),
-                                         tableName);
+        tableName);
   }
 
   @Override
@@ -142,18 +138,18 @@ public final class LegacyWarpSource implements WarpSource {
         String>>
         results =
         DSL.using(configuration).select(field(name("name"), String.class), //1
-                      field(name("creator"), String.class), //2
-                      field(name("publicAll"), Boolean.class), //3
-                      field(name("x"), Double.class), //4
-                      field(name("y"), Double.class), //5
-                      field(name("z"), Double.class), //6
-                      field(name("yaw"), Float.class), //7
-                      field(name("pitch"), Float.class), //8
-                      field(name("world"), String.class), //9
-                      field(name("visits"), Integer.class), //10
-                      field(name("welcomeMessage"), String.class), //11
-                      field(name("permissions"), String.class), //12
-                      field(name("groupPermissions"), String.class)) //13
+            field(name("creator"), String.class), //2
+            field(name("publicAll"), Boolean.class), //3
+            field(name("x"), Double.class), //4
+            field(name("y"), Double.class), //5
+            field(name("z"), Double.class), //6
+            field(name("yaw"), Float.class), //7
+            field(name("pitch"), Float.class), //8
+            field(name("world"), String.class), //9
+            field(name("visits"), Integer.class), //10
+            field(name("welcomeMessage"), String.class), //11
+            field(name("permissions"), String.class), //12
+            field(name("groupPermissions"), String.class)) //13
             .from(table(tableName)).fetch();
     // @formatter:on
     log.info("{} entries found.", results.size());
@@ -195,7 +191,7 @@ public final class LegacyWarpSource implements WarpSource {
       UUID creator = profileLookup.get(creatorName);
       if (creator == null) {
         log.warn("For the creator of '{}' ({}) no unique ID could be found. The warp will be ignored.", warpName,
-                 creatorName);
+            creatorName);
         continue;
       }
 
@@ -208,7 +204,7 @@ public final class LegacyWarpSource implements WarpSource {
       UUID worldId = worldMap.get(worldName);
       if (worldId == null) {
         log.warn("For the world of '{}' ({}) no unique ID could be found. The warp will be ignored.", warpName,
-                 worldName);
+            worldName);
         continue;
       }
 
@@ -225,7 +221,7 @@ public final class LegacyWarpSource implements WarpSource {
         UUID invitee = profileLookup.get(playerName);
         if (invitee == null) {
           log.warn("{}, who is criteria to '{}' does not have a unique ID. The playermatcher will be ignored.",
-                   playerName, warpName);
+              playerName, warpName);
           continue;
         }
         builder.addInvitation(new UuidPlayerMatcher(invitee));

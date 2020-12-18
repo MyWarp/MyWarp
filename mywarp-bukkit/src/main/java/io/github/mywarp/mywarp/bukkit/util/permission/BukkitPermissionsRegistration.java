@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,12 +19,11 @@
 
 package io.github.mywarp.mywarp.bukkit.util.permission;
 
-import org.bukkit.Bukkit;
-import org.bukkit.permissions.Permission;
-
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import org.bukkit.Bukkit;
+import org.bukkit.permissions.Permission;
 
 /**
  * Controls registered permissions on Bukkit.

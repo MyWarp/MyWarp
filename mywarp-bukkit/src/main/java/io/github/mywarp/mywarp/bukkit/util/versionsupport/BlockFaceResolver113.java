@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,13 +19,12 @@
 
 package io.github.mywarp.mywarp.bukkit.util.versionsupport;
 
+import java.util.Optional;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
-
-import java.util.Optional;
 
 /**
  * Resolves the attached BlockFace using {@link Directional}.

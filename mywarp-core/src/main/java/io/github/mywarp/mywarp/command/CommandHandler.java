@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -35,7 +35,6 @@ import com.sk89q.intake.parametric.Injector;
 import com.sk89q.intake.parametric.ParametricBuilder;
 import com.sk89q.intake.parametric.provider.PrimitivesModule;
 import com.sk89q.intake.util.auth.AuthorizationException;
-
 import io.github.mywarp.mywarp.MyWarp;
 import io.github.mywarp.mywarp.command.parametric.ActorAuthorizer;
 import io.github.mywarp.mywarp.command.parametric.CommandResourceProvider;
@@ -63,9 +62,6 @@ import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
-
-import org.slf4j.Logger;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -73,8 +69,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
-
 import javax.annotation.Nullable;
+import org.slf4j.Logger;
 
 /**
  * Handles MyWarp's commands.
@@ -98,12 +94,12 @@ public final class CommandHandler {
    */
   public CommandHandler(MyWarp myWarp, Platform platform) {
     this(myWarp, platform, myWarp.getWarpManager(), myWarp.getAuthorizationResolver(), platform.getPlayerNameResolver(),
-         platform.getGame(), myWarp.getTeleportHandler());
+        platform.getGame(), myWarp.getTeleportHandler());
   }
 
   private CommandHandler(MyWarp myWarp, Platform platform, WarpManager warpManager,
-                         AuthorizationResolver authorizationResolver, PlayerNameResolver playerNameResolver, Game game,
-                         TeleportHandler teleportHandler) {
+      AuthorizationResolver authorizationResolver, PlayerNameResolver playerNameResolver, Game game,
+      TeleportHandler teleportHandler) {
 
     // create injector and register modules
     Injector injector = Intake.createInjector();
@@ -151,12 +147,12 @@ public final class CommandHandler {
 
     //register commands
     dispatcher = new CommandGraph().builder(builder).commands().registerMethods(usageCmd).group(ROOT_COMMANDS)
-            .registerMethods(defaultUsageCmd).registerMethods(
+        .registerMethods(defaultUsageCmd).registerMethods(
             new InformativeCommands(warpManager, limitService, authorizationResolver, platform, playerNameResolver,
-                                    game)).registerMethods(new ManagementCommands(warpManager, limitService))
-            .registerMethods(new SocialCommands(game, playerNameResolver, limitService))
+                game)).registerMethods(new ManagementCommands(warpManager, limitService))
+        .registerMethods(new SocialCommands(game, playerNameResolver, limitService))
         .registerMethods(new UtilityCommands(myWarp, this, basic, platform, game)).group("import", "migrate")
-            .registerMethods(new ImportCommands(warpManager, playerNameResolver, game)).graph().getDispatcher();
+        .registerMethods(new ImportCommands(warpManager, playerNameResolver, game)).graph().getDispatcher();
   }
 
   /**

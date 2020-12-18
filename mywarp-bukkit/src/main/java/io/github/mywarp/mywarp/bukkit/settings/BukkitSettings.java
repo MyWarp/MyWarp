@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,29 +20,25 @@
 package io.github.mywarp.mywarp.bukkit.settings;
 
 import com.google.common.collect.ImmutableSet;
-
 import io.github.mywarp.mywarp.bukkit.util.jdbc.JdbcConfiguration;
 import io.github.mywarp.mywarp.platform.InvalidFormatException;
 import io.github.mywarp.mywarp.platform.Settings;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
 import io.github.mywarp.mywarp.util.WarpUtils;
 import io.github.mywarp.mywarp.warp.Warp;
-
-import org.apache.commons.lang.LocaleUtils;
-import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.slf4j.Logger;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-
 import javax.annotation.Nullable;
+import org.apache.commons.lang.LocaleUtils;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.slf4j.Logger;
 
 /**
  * The settings when running on Bukkit. This implementation relies on Bukkit's configuration API to manage the actual
@@ -89,7 +85,7 @@ public class BukkitSettings implements Settings {
         ((FileConfiguration) config).save(configFile);
       } catch (IOException e) {
         log.error(String.format("Failed to save configuration to '%1$s', using build-in defaults for missing values.",
-                                configFile.getAbsolutePath()), e);
+            configFile.getAbsolutePath()), e);
       }
     }
 
@@ -209,7 +205,7 @@ public class BukkitSettings implements Settings {
       @Nullable ConfigurationSection section = configuredLimits.getConfigurationSection(key);
       if (section == null) {
         log.warn("The configuration section with the key '{}' does not contain any readable values and will be ignored."
-                 + " Is your configuration file correctly formatted?", key);
+            + " Is your configuration file correctly formatted?", key);
         continue;
       }
       ret.add(LimitBundle.create(key, section));
@@ -298,7 +294,7 @@ public class BukkitSettings implements Settings {
       @Nullable ConfigurationSection section = configuredTimers.getConfigurationSection(key);
       if (section == null) {
         log.warn("The configuration section with the key '{}' does not contain any readable values and will be ignored."
-                 + " Is your configuration file correctly formatted?", key);
+            + " Is your configuration file correctly formatted?", key);
         continue;
       }
       ret.add(DurationBundle.create(key, configuredTimers.getConfigurationSection(key)));
@@ -370,7 +366,7 @@ public class BukkitSettings implements Settings {
       @Nullable ConfigurationSection section = configuredFees.getConfigurationSection(key);
       if (section == null) {
         log.warn("The configuration section with the key '{}' does not contain any readable values and will be ignored."
-                 + " Is your configuration file correctly formatted?", key);
+            + " Is your configuration file correctly formatted?", key);
         continue;
       }
       ret.add(FeeBundle.create(key, configuredFees.getConfigurationSection(key)));

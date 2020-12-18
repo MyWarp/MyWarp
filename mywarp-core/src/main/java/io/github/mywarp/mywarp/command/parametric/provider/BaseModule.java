@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,7 +23,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.sk89q.intake.parametric.AbstractModule;
 import com.sk89q.intake.parametric.Key;
-
 import io.github.mywarp.mywarp.command.CommandHandler;
 import io.github.mywarp.mywarp.command.parametric.annotation.Modifiable;
 import io.github.mywarp.mywarp.command.parametric.annotation.Usable;
@@ -39,7 +38,6 @@ import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
 import io.github.mywarp.mywarp.warp.storage.SqlDataService;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Comparator;
@@ -65,7 +63,7 @@ public class BaseModule extends AbstractModule {
    * @param warpManager           the WarpManager to use
    */
   public BaseModule(CommandHandler commandHandler, Platform platform, AuthorizationResolver authorizationResolver,
-                    WarpManager warpManager) {
+      WarpManager warpManager) {
     this.commandHandler = commandHandler;
     this.platform = platform;
     this.authorizationResolver = authorizationResolver;

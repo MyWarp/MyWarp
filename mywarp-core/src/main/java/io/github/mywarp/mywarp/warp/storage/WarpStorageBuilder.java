@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -25,10 +25,13 @@ import static org.jooq.SQLDialect.MYSQL;
 import static org.jooq.SQLDialect.SQLITE;
 
 import com.google.common.collect.ImmutableMap;
-
 import io.github.mywarp.mywarp.util.MyWarpLogger;
 import io.github.mywarp.mywarp.warp.storage.generated.Tables;
-
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Map;
+import javax.annotation.Nullable;
+import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
@@ -41,13 +44,6 @@ import org.jooq.conf.Settings;
 import org.jooq.impl.DefaultConfiguration;
 import org.jooq.tools.jdbc.JDBCUtils;
 import org.slf4j.Logger;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Map;
-
-import javax.annotation.Nullable;
-import javax.sql.DataSource;
 
 /**
  * Builds {@link WarpStorage} instances.

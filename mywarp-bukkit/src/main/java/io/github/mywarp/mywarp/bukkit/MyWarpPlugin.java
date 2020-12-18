@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -43,7 +43,16 @@ import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.storage.SqlDataService;
 import io.github.mywarp.mywarp.warp.storage.TableInitializationException;
 import io.github.mywarp.mywarp.warp.storage.UnsupportedDialectException;
-
+import java.io.Closeable;
+import java.io.File;
+import java.lang.ref.WeakReference;
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.WeakHashMap;
+import javax.annotation.Nullable;
 import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -58,18 +67,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapCommonAPI;
 import org.slf4j.Logger;
-
-import java.io.Closeable;
-import java.io.File;
-import java.lang.ref.WeakReference;
-import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.WeakHashMap;
-
-import javax.annotation.Nullable;
 
 /**
  * The MyWarp plugin singleton when running on Bukkit.
@@ -126,7 +123,7 @@ public final class MyWarpPlugin extends JavaPlugin {
     groupResolver = GroupResolverFactory.createResolver();
     acceptancePromptFactory =
         new AcceptancePromptFactory(createConversationFactory(), myWarp.getAuthorizationResolver(), platform.getGame(),
-                                    platform.getPlayerNameResolver(), this);
+            platform.getPlayerNameResolver(), this);
     welcomeEditorFactory = new WelcomeEditorFactory(createConversationFactory());
 
     notifyCoreInitialized();
@@ -246,7 +243,7 @@ public final class MyWarpPlugin extends JavaPlugin {
    */
   public LocalPlayer wrap(Player player) {
     return new BukkitPlayer(player, getAcceptancePromptFactory(), getWelcomeEditorFactory(), getGroupResolver(),
-                            getSettings());
+        getSettings());
   }
 
   /**

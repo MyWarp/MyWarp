@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2019, MyWarp team and contributors
+ * Copyright (C) 2011 - 2020, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,7 +22,6 @@ package io.github.mywarp.mywarp.command;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.Require;
 import com.sk89q.intake.parametric.annotation.OptArg;
-
 import io.github.mywarp.mywarp.MyWarp;
 import io.github.mywarp.mywarp.command.parametric.annotation.Billable;
 import io.github.mywarp.mywarp.command.parametric.annotation.Sender;
@@ -39,7 +38,6 @@ import io.github.mywarp.mywarp.service.teleport.TeleportService;
 import io.github.mywarp.mywarp.util.Message;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.warp.Warp;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,7 +64,7 @@ public final class UtilityCommands {
    * @param game            the Game instance used in commands
    */
   UtilityCommands(MyWarp myWarp, CommandHandler commandHandler, TeleportService teleportService, Platform platform,
-                  Game game) {
+      Game game) {
     this.myWarp = myWarp;
     this.commandHandler = commandHandler;
     this.teleportService = teleportService;
