@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+* [Bukkit][[#224](https://github.com/TheE/MyWarp/issues/224)] - Remove superficial cancellation of interaction events for warp signs
+* [Bukkit] Update SquirrelID to 0.2.0
+* Update SLF4j-API to 1.7.30
+* [Bukkit] Do not log an Exception when using LegacyFaceBlockResolver on Bukkit 1.12 and below
+* [[#249](https://github.com/TheE/MyWarp/issues/249)] - Update `exception.no-such-player` message
+* [Bukkit][[#256](https://github.com/TheE/MyWarp/issues/256)] - Improve the warning message if a limit's world does not exist
+* Update SpigotAPI (formerly Bukkit) to 1.16.4
+* Update JOOQ to 3.14.3
+* Update Flyway to 7.3.1
+* [[#283](https://github.com/TheE/MyWarp/issues/283)] Switch from Travis to Github Actions. As a result, the build-number of dev-builds starts once again from 1.
+* Update Gradle to 6.7 and use up-to-date versions of all plugins used in the build process
+
+### Fixed
+* [[#255](https://github.com/TheE/MyWarp/issues/255)] - Correctly display the invitee's name when using `mw invote`
+
 ## [3.1] - 2019-12-01
 
 ### Known Issues
