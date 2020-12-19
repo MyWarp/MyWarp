@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file.
 * [Bukkit][[#256](https://github.com/TheE/MyWarp/issues/256)] - Improve the warning message if a limit's world does not exist
 * Update SpigotAPI (formerly Bukkit) to 1.16.4
 * Update JOOQ to 3.14.3
-* Update Flyway to 7.3.1
+* Update Flyway to 7.3.2
 * [[#283](https://github.com/TheE/MyWarp/issues/283)] Switch from Travis to Github Actions. As a result, the build-number of dev-builds starts once again from 1.
 * Update Gradle to 6.7 and use up-to-date versions of all plugins used in the build process
 

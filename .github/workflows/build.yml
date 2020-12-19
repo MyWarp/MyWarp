@@ -45,3 +45,16 @@ jobs:
         if: github.ref == 'refs/heads/master'
         env:
           GRGIT_USER: ${{ secrets.GH_TOKEN_REPO_ACCESS }}
+
+      - name: Deploy Artifacts to GitHub Releases
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          body_path: CHANGELOG.md
+          prerelease: false
+          files: |
+            mywarp-bukkit/build/libs/mywarp-bukkit*-all.jar
+            mywarp-bukkit/build/libs/mywarp-bukkit*[0-9].jar
+            mywarp-core/build/libs/mywarp-core*[0-9].jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
