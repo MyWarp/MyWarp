@@ -2,9 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+None.
+
 ## [3.1.1] - 2021-01-12
 
 ### Changed
+
 * [Bukkit] Update SquirrelID to 0.2.0
 * Update SLF4j-API to 1.7.30
 * [[#249](https://github.com/TheE/MyWarp/issues/249)] - Update `exception.no-such-player` message

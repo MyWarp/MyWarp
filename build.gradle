@@ -21,7 +21,7 @@ ext.commitHash = resolveProperty("COMMIT_HASH", versionDetails().gitHash)
 
 allprojects {
     group = "io.github.mywarp.mywarp"
-    version = "3.1.1"
+    version = "3.1.2-SNAPSHOT"
 
     // general project information
     ext.projectName = "MyWarp"
