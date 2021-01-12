@@ -16,7 +16,7 @@ ext.resolveProperty = { key, defaultValue = "unknown" ->
 
 // define variables
 ext.buildNumber = resolveProperty("BUILD_NUMBER")
-ext.ciSystem = resolveProperty("CI_SYSTEM")
+ext.ciSystem = resolveProperty("CI_SYSTEM").replaceAll(" ", "_")
 ext.commitHash = resolveProperty("COMMIT_HASH", versionDetails().gitHash)
 
 allprojects {
@@ -28,7 +28,7 @@ allprojects {
     ext.internalVersion = "${version}+${ciSystem}-b${buildNumber}.git-${commitHash}"
     ext.url = "https://mywarp.github.io/"
     ext.inceptionYear = "2011"
-    ext.projectDescription = "An extension for the Minecraft multiplayer that allows players to create and share warps with each other."
+    ext.projectDescription = "An extension for Minecraft that allows players to create and share warps."
 }
 apply from: "${rootProject.projectDir}/gradle/publishOnGithub.gradle"
 
