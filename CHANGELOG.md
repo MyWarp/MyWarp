@@ -2,14 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [3.1.1] - 2021-01-12
 
 ### Changed
-* [Bukkit][[#224](https://github.com/TheE/MyWarp/issues/224)] - Remove superficial cancellation of
-  interaction events for warp signs
 * [Bukkit] Update SquirrelID to 0.2.0
 * Update SLF4j-API to 1.7.30
-* [Bukkit] Do not log an Exception when using LegacyFaceBlockResolver on Bukkit 1.12 and below
 * [[#249](https://github.com/TheE/MyWarp/issues/249)] - Update `exception.no-such-player` message
 * [Bukkit][[#256](https://github.com/TheE/MyWarp/issues/256)] - Improve the warning message if a
   limit's world does not exist
@@ -21,22 +18,29 @@ All notable changes to this project will be documented in this file.
 * Update Gradle to 6.7 and use up-to-date versions of all plugins used in the build process
 
 ### Fixed
-* [[#255](https://github.com/TheE/MyWarp/issues/255)] - Correctly display the invitee's name when using `mw invote`
+* [Bukkit][[#224](https://github.com/TheE/MyWarp/issues/224)] - Remove superficial cancellation of
+  interaction events for warp signs
+* [Bukkit] Do not log an Exception when using LegacyFaceBlockResolver on Bukkit 1.12 and below
+* [[#255](https://github.com/TheE/MyWarp/issues/255)] - Correctly display the invitee's name when
+  using `mw invote`
 
 ## [3.1] - 2019-12-01
 
 ### Known Issues
-* [[#223](https://github.com/TheE/MyWarp/issues/223)] - Facing for warps in unloaded chunks is not set when used via pressure plate
+* [[#223](https://github.com/TheE/MyWarp/issues/223)] - Facing for warps in unloaded chunks is not
+  set when used via pressure plate
 
 ### Added
-* [[#207](https://github.com/TheE/MyWarp/issues/213)] - Optional cooldowns and warmups for warp signs
+* [[#207](https://github.com/TheE/MyWarp/issues/213)] - Optional cooldowns and warmups for warp
+  signs
 * [[#213](https://github.com/TheE/MyWarp/issues/213)] - Configurable sorting for the `list` command
 
 ### Changed
 * Build against Bukkit 1.14.4
 * Update Gradle to 5.6.1
 * Deploy development artifacts to our website using gradle
-* [[#186](https://github.com/TheE/MyWarp/issues/186)] - Update Flyway to 6.0.8. Users running versions older than 3.0-beta4 **must** run MyWarp 3.0.1 at least once before updating.
+* [[#186](https://github.com/TheE/MyWarp/issues/186)] - Update Flyway to 6.0.8. Users running
+  versions older than 3.0-beta4 **must** run MyWarp 3.0.1 at least once before updating.
 * Update JOOQ to 3.12.3
 
 ### Fixed
@@ -520,23 +524,37 @@ All notable changes to this project will be documented in this file.
 ## 1.10.5b
 
 ### Added
+
 * Added GroupManager support
 
 ### Changed
+
 * Updated for CraftBukkit RB `#677` (also tested with CB `#678`)
 * Updated for Permissions 2.5.5 or higher (tested with 2.6 and 2.7)
 * Changed update URL where MyWarp downloads sqlite libraries
 
-[Unreleased]: https://github.com/TheE/MyWarp/compare/v3.1...HEAD
+[Unreleased]: https://github.com/TheE/MyWarp/compare/v3.1.1...HEAD
+
+[3.1.1]: https://github.com/TheE/MyWarp/compare/v3.1...v3.1.1
+
 [3.1]: https://github.com/TheE/MyWarp/compare/v3.0.1...v3.1
+
 [3.0.1]: https://github.com/TheE/MyWarp/compare/v3.0...v3.0.1
+
 [3.0]: https://github.com/TheE/MyWarp/compare/v3.0-rc-1...v3.0
+
 [3.0-rc-1]: https://github.com/TheE/MyWarp/compare/v3.0-beta-4...v3.0-rc-1
+
 [3.0-beta-4]: https://github.com/TheE/MyWarp/compare/v3.0-beta-3...v3.0-beta-4
+
 [3.0-beta-3]: https://github.com/TheE/MyWarp/compare/v3.0-beta-2...v3.0-beta-3
+
 [3.0-beta-2]: https://github.com/TheE/MyWarp/compare/v3.0-beta-1...v3.0-beta-2
+
 [3.0-beta-1]: https://github.com/TheE/MyWarp/compare/v2.6.5...v3.0-beta-1
+
 [2.6.5]: https://github.com/TheE/MyWarp/compare/v2.6.4...v2.6.5
+
 [2.6.4]: https://github.com/TheE/MyWarp/compare/v2.6.3...v2.6.4
 [2.6.3]: https://github.com/TheE/MyWarp/compare/v2.6.2...v2.6.3
 [2.6.2]: https://github.com/TheE/MyWarp/compare/v2.6.1...v2.6.2
