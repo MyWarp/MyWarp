@@ -12,7 +12,6 @@ repositories {
     maven { url 'https://raw.github.com/mywarp/repo/master/snapshots' }
     maven { url "https://hub.spigotmc.org/nexus/content/groups/public/" } //Bukkit API
     maven { url "https://maven.sk89q.com/repo/" } //SquirrelID
-    maven { url "https://raw.github.com/rjenkinsjr/maven2/repo" } //SLF4Bukkit
     maven { url "https://repo.mikeprimm.com" } //DynmapAPI
 }
 
@@ -25,7 +24,7 @@ dependencies {
     implementation "de.bananaco:bpermissions:2.10.5"
     implementation "us.dynmap:DynmapCoreAPI:1.9.4"
 
-    runtimeOnly "info.ronjenkins:slf4bukkit:1.0.0"
+    runtimeOnly "com.github.MyWarp:slf4bukkit:ca7affe246"
     runtimeOnly "com.h2database:h2:1.4.200"
 
     implementation "org.codehaus.mojo:animal-sniffer-annotations:1.19"
