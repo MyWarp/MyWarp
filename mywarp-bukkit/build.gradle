@@ -27,7 +27,7 @@ dependencies {
     runtimeOnly "com.github.MyWarp:slf4bukkit:ca7affe246"
     runtimeOnly "com.h2database:h2:1.4.200"
 
-    implementation "org.codehaus.mojo:animal-sniffer-annotations:1.19"
+    implementation "org.codehaus.mojo:animal-sniffer-annotations:1.20"
     signature "org.codehaus.mojo.signature:java18:1.0@signature"
     //required to build custom signature
     createSignature "org.bukkit:bukkit:1.7.10-R0.1-SNAPSHOT"
