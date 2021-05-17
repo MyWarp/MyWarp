@@ -1,27 +1,34 @@
-buildscript {
-    repositories {
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-    dependencies {
-        classpath "com.mendhak.gradlecrowdin:com.mendhak.gradlecrowdin.gradle.plugin:0.1.1"
-    }
-}
-apply plugin: com.mendhak.gradlecrowdin.CrowdinPlugin
-
 //variables
 def crowdinApiKey = rootProject.resolveProperty("CROWDIN_KEY", null)
 def crowdinTempDir = "$buildDir/tmp/crowdin"
+def crowdinProjectId = "mywarp"
 def translationPackage = "io/github/mywarp/mywarp/lang"
 def translationOutputDir = new File(sourceSets.main.output.resourcesDir, translationPackage)
 
-//download i18n files from crowdin using the plugin
-//REVIEW replace legacy plugin with self written code
-crowdinDownload {
-    projectId = "mywarp"
-    apiKey = crowdinApiKey
-    destination = crowdinTempDir
+task crowdinDownload {
+    description "Downloads the translations from Crowdin to a temporary folder"
+    onlyIf { crowdinApiKey != null }
+
+    // We are still using the Crowdin API v1: https://support.crowdin.com/api/api-integration-setup/
+    // REVIEW move to v2 of the API, v1 is scheduled to be removed at the end of 2021
+    doLast {
+        //create the export folder
+        def exportDir = new File(crowdinTempDir, "crowdin-export")
+        exportDir.mkdirs()
+
+        //tell Crowdin to do an export
+        def crowdinExportUrl = "https://api.crowdin.com/api/project/$crowdinProjectId/export?key=$crowdinApiKey"
+        ant.get(src: crowdinExportUrl, dest: new File(exportDir.getPath(), "export.xml"), verbose: true)
+
+        //download actual zip file
+        def crowdinDowloadUrl = "https://api.crowdin.com/api/project/$crowdinProjectId/download/all.zip?key=$crowdinApiKey"
+        def translationZip = new File(exportDir.getPath(), "all.zip")
+        ant.get(src: crowdinDowloadUrl, dest: translationZip, verbose: 'on')
+
+        //extract
+        ant.unzip(src: translationZip, dest: crowdinTempDir, overwrite: true)
+    }
 }
-crowdinDownload.onlyIf { crowdinApiKey != null }
 
 task crowdinCopy(type: Copy) {
     description "Copies the files downloaded from crodwin to the appropiate destination"
@@ -29,7 +36,7 @@ task crowdinCopy(type: Copy) {
 
     from crowdinTempDir
     into translationOutputDir
-    include "**/" + project.name + "/**/*.properties"
+    include "**/$project.name/**/*.properties"
 
     //copy files without their directories
     eachFile {
