@@ -77,7 +77,7 @@ shadowJar {
         include(dependency("org.reactivestreams:reactive-streams")) //used by JOOQ
         include(dependency("org.flywaydb:flyway-core"))
         include(dependency("org.slf4j:slf4j-api"))
-        include(dependency("info.ronjenkins:slf4bukkit"))
+        include(dependency("com.github.MyWarp:slf4bukkit"))
         include(dependency("com.sk89q:squirrelid"))
         include(dependency("com.github.mywarp.intake:intake"))
         include(dependency("com.h2database:h2"))
