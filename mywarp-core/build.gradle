@@ -14,7 +14,7 @@ dependencies {
     implementation "com.google.guava:guava:21.0"
     implementation "com.github.mywarp.intake:intake:b57bff7cd9"
 
-    api "org.slf4j:slf4j-api:1.7.31"
+    api "org.slf4j:slf4j-api:1.7.32"
     api "com.flowpowered:flow-math:1.0.3"
 
     signature "org.codehaus.mojo.signature:java18:1.0@signature"
