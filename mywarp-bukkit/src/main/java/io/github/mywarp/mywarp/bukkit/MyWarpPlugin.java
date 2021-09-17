@@ -39,7 +39,6 @@ import io.github.mywarp.mywarp.util.MyWarpLogger;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.i18n.FolderSourcedControl;
 import io.github.mywarp.mywarp.util.i18n.LocaleManager;
-import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.storage.SqlDataService;
 import io.github.mywarp.mywarp.warp.storage.TableInitializationException;
 import io.github.mywarp.mywarp.warp.storage.UnsupportedDialectException;
@@ -178,7 +177,7 @@ public final class MyWarpPlugin extends JavaPlugin {
     if (getSettings().isDynmapEnabled()) {
       Plugin dynmap = getServer().getPluginManager().getPlugin("dynmap");
       if (dynmap != null && dynmap.isEnabled() && dynmap instanceof DynmapCommonAPI) {
-        marker = new DynmapMarker((DynmapCommonAPI) dynmap, this, platform, w -> w.isType(Warp.Type.PUBLIC));
+        marker = new DynmapMarker((DynmapCommonAPI) dynmap, this, platform, getSettings().getDynmapShowTypes());
         marker.addMarker(myWarp.getWarpManager().getAll(warp -> true));
         myWarp.getEventBus().register(marker);
       } else {

@@ -26,12 +26,14 @@ import io.github.mywarp.mywarp.platform.Settings;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
 import io.github.mywarp.mywarp.util.WarpUtils;
 import io.github.mywarp.mywarp.warp.Warp;
+import io.github.mywarp.mywarp.warp.Warp.Type;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Predicate;
 import javax.annotation.Nullable;
 import org.apache.commons.lang.LocaleUtils;
 import org.bukkit.configuration.Configuration;
@@ -437,4 +439,21 @@ public class BukkitSettings implements Settings {
     return config.getBoolean("dynmap.marker.showLabel");
   }
 
+  /**
+   * Returns a Predicate that matches all Warps that should be shown
+   *
+   * @return a Predicate that matches all Warps to be shown
+   */
+  public Predicate<Warp> getDynmapShowTypes() {
+    return config.getStringList("dynmap.showTypes").stream().map(s -> {
+      if (s.equalsIgnoreCase("public")) {
+        return (Predicate<Warp>) w -> w.isType(Type.PUBLIC);
+      } else if (s.equalsIgnoreCase("private")) {
+        return (Predicate<Warp>) w -> w.isType(Type.PRIVATE);
+      } else {
+        log.warn("Unknown type '{}' for 'dynmap.showTypes'. The entry will be ignored.", s);
+        return (Predicate<Warp>) w -> false;
+      }
+    }).reduce(Predicate::or).orElse(w -> false);
+  }
 }

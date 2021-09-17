@@ -68,6 +68,8 @@ economy:
   configuredFees: [ ]
 dynmap:
   enabled: false
+  showTypes:
+    - public
   layer:
     displayName: 'MyWarp'
     hiddenByDefault: false
