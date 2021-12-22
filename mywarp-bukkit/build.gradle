@@ -25,7 +25,7 @@ dependencies {
     implementation "us.dynmap:DynmapCoreAPI:1.9.4"
 
     runtimeOnly "com.github.MyWarp:slf4bukkit:ca7affe246"
-    runtimeOnly "com.h2database:h2:1.4.200"
+    runtimeOnly "com.h2database:h2:2.0.204"
 
     implementation "org.codehaus.mojo:animal-sniffer-annotations:1.20"
     signature "org.codehaus.mojo.signature:java18:1.0@signature"
