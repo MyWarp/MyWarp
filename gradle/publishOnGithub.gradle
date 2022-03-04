@@ -2,11 +2,11 @@ import groovy.json.JsonOutput
 
 buildscript {
     repositories {
-        maven { url "https://plugins.gradle.org/m2/" }
+        mavenCentral()
     }
     dependencies {
-        classpath "org.ajoberstar.grgit:grgit-gradle:4.1.0"
-        classpath "org.ajoberstar:gradle-git-publish:3.0.0"
+        classpath "org.ajoberstar.grgit:grgit-gradle:4.1.1"
+        classpath "org.ajoberstar.git-publish:gradle-git-publish:3.0.1"
     }
 }
 apply plugin: org.ajoberstar.grgit.gradle.GrgitPlugin
