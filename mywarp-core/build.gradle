@@ -10,7 +10,7 @@ configurations.create("createSignature")
 dependencies {
     implementation "org.jooq:jooq:3.14.11"
     annotationProcessor "org.jooq:jooq-checker:3.14.11"
-    implementation "org.flywaydb:flyway-core:7.8.1"
+    implementation "org.flywaydb:flyway-core:9.1.0"
     implementation "com.google.guava:guava:21.0"
     implementation "com.github.mywarp.intake:intake:b57bff7cd9"
 
