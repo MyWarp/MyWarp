@@ -3,13 +3,18 @@
 
 MyWarp is an extension for the Minecraft multiplayer that allows players to create and share warps with each other.
 
-* Create public warps, usable by everybody or private ones, only usable by the creator and invited players.
-* Profit from intelligent matching mechanisms that complete warp names while typing.
-* Use buttons or pressure plates to access warps.
-* Limit the number of warps a user can create: per type and even per world.
-* Charge users for creating, managing or using warps.
-* Make users wait before or after being teleported.
-* Translate or fine-tune every message.
+* Create public and private warps.
+* Invite players or whole permission groups to warps.
+* Use buttons or pressure plates to teleport to warps.
+* Limit the number of warps players can create via permissions.
+* Charge users for creating or using warps (via Vault).
+* Use cooldowns and warmups for warps.
+* Translate or change every message that your players might see.
+* Store warps in an SQL-Database (H2, SQLite, MySQL).
+* Supports every Bukkit version from 1.7.10 to current.
+
+MyWarp is highly customisable, enable only what you need. Disabled functions will never impact your server’s
+performance.
 
 ## Project Structure
 Starting with version 3, MyWarp has been split into a platform agnostic core and platform-specific implementation. `mywarp-core` contains most of MyWarp's inner logic, e.g. it handles access to and storage of warps, services like timers, limits or economy support and also individual commands.
