@@ -11,7 +11,7 @@ repositories {
     maven { url 'https://raw.github.com/mywarp/repo/master/releases' }
     maven { url 'https://raw.github.com/mywarp/repo/master/snapshots' }
     maven { url "https://hub.spigotmc.org/nexus/content/groups/public/" } //Bukkit API
-    maven { url "https://maven.sk89q.com/repo/" } //SquirrelID
+    maven { url "https://maven.enginehub.org/repo/" } //SquirrelID
     maven { url "https://repo.mikeprimm.com" } //DynmapAPI
 }
 
