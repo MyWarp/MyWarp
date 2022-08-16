@@ -15,7 +15,7 @@ assignees: ''
 
 ### Log Output
 ```
-<!-- If appreciable, past the log that shows the error -->
+<!-- If appreciable, paste the log that shows the error -->
 ```
 
 ### Affected Version

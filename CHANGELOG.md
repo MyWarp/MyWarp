@@ -9,6 +9,11 @@ All notable changes to this project will be documented in this file.
 * [[#63](https://github.com/MyWarp/MyWarp/issues/63)] - Add a configuration option to specify which
   warps are shown on Dynmap
 
+### Changed
+
+* Update SLF4j-API to 1.7.36
+* Update SpigotAPI (formerly Bukkit) to 1.19.2
+
 ## [3.1.1] - 2021-01-12
 
 ### Changed
