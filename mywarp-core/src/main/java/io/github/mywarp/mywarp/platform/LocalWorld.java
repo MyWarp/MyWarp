@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,6 +22,7 @@ package io.github.mywarp.mywarp.platform;
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
 import io.github.mywarp.mywarp.util.BlockFace;
+
 import java.util.Optional;
 import java.util.UUID;
 

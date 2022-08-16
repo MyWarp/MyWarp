@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,9 +21,10 @@ package io.github.mywarp.mywarp.bukkit.util.permission;
 
 import com.google.common.collect.ImmutableSortedSet;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
-import java.util.SortedSet;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
+
+import java.util.SortedSet;
 
 /**
  * Provides a managed access to {@link ValueBundle}s.

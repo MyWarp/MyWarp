@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,9 +19,10 @@
 
 package io.github.mywarp.mywarp.warp.storage.converter;
 
+import org.jooq.Converter;
+
 import java.sql.Timestamp;
 import java.time.Instant;
-import org.jooq.Converter;
 
 /**
  * Converts {@link Timestamp} values to {@link Instant}s and back.

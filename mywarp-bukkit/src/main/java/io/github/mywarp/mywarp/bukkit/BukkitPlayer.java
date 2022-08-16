@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -30,15 +30,16 @@ import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.Settings;
 import io.github.mywarp.mywarp.warp.Warp;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
+
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * A reference to a Player in Bukkit.

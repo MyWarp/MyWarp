@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,8 +19,7 @@
 
 package io.github.mywarp.mywarp.util.i18n;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -36,7 +35,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
-import javax.annotation.Nullable;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Creates {@link PropertyResourceBundle}s as described by the default implementation, but initializes them with a

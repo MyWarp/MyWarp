@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -27,6 +27,14 @@ import io.github.mywarp.mywarp.util.MyWarpLogger;
 import io.github.mywarp.mywarp.util.WarpUtils;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.Warp.Type;
+import org.apache.commons.lang.LocaleUtils;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.slf4j.Logger;
+
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,13 +42,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Predicate;
-import javax.annotation.Nullable;
-import org.apache.commons.lang.LocaleUtils;
-import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.slf4j.Logger;
 
 /**
  * The settings when running on Bukkit. This implementation relies on Bukkit's configuration API to manage the actual
@@ -440,7 +441,7 @@ public class BukkitSettings implements Settings {
   }
 
   /**
-   * Returns a Predicate that matches all Warps that should be shown
+   * Returns a Predicate that matches all Warps that should be shown.
    *
    * @return a Predicate that matches all Warps to be shown
    */

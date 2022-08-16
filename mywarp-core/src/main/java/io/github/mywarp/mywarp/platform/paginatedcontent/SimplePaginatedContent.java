@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,14 +19,15 @@
 
 package io.github.mywarp.mywarp.platform.paginatedcontent;
 
-import static java.util.Objects.requireNonNull;
-
 import com.google.common.collect.Lists;
 import io.github.mywarp.mywarp.platform.Platform;
 import io.github.mywarp.mywarp.util.Message;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
+
 import java.util.Iterator;
 import java.util.List;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * A simple PaginatedContent implementation.

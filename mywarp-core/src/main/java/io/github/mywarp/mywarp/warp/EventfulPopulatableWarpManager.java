@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -26,11 +26,8 @@ import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
-import io.github.mywarp.mywarp.warp.event.WarpAdditionEvent;
-import io.github.mywarp.mywarp.warp.event.WarpDeletionEvent;
-import io.github.mywarp.mywarp.warp.event.WarpEvent;
-import io.github.mywarp.mywarp.warp.event.WarpInvitesEvent;
-import io.github.mywarp.mywarp.warp.event.WarpUpdateEvent;
+import io.github.mywarp.mywarp.warp.event.*;
+
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,18 +19,15 @@
 
 package io.github.mywarp.mywarp.bukkit.util.jdbc;
 
-import static java.util.Objects.requireNonNull;
-
 import io.github.mywarp.mywarp.platform.InvalidFormatException;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Properties;
+import org.bukkit.configuration.ConfigurationSection;
+
+import javax.annotation.Nullable;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.annotation.Nullable;
-import org.bukkit.configuration.ConfigurationSection;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * A configuration for a JDBC connection to a DBMS.

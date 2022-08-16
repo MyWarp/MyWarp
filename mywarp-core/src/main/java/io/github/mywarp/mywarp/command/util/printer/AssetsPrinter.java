@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,8 +19,6 @@
 
 package io.github.mywarp.mywarp.command.util.printer;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -36,14 +34,13 @@ import io.github.mywarp.mywarp.util.Message;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+
+import javax.annotation.Nullable;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import javax.annotation.Nullable;
+
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Prints a certain player's assets, showing active limit and Warps sorted to the corresponding limit.

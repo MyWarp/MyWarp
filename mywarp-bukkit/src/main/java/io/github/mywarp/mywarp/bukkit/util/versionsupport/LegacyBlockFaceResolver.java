@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,11 +19,12 @@
 
 package io.github.mywarp.mywarp.bukkit.util.versionsupport;
 
-import java.util.Optional;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.material.Attachable;
 import org.bukkit.material.MaterialData;
+
+import java.util.Optional;
 
 /**
  * Resolves the attached BlockFace using legacy {@link Attachable}.

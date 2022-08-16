@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,12 +20,7 @@
 package io.github.mywarp.mywarp.command.util.printer;
 
 import io.github.mywarp.mywarp.command.CommandHandler;
-import io.github.mywarp.mywarp.platform.Actor;
-import io.github.mywarp.mywarp.platform.Game;
-import io.github.mywarp.mywarp.platform.LocalPlayer;
-import io.github.mywarp.mywarp.platform.LocalWorld;
-import io.github.mywarp.mywarp.platform.PlayerNameResolver;
-import io.github.mywarp.mywarp.platform.Profile;
+import io.github.mywarp.mywarp.platform.*;
 import io.github.mywarp.mywarp.util.Message;
 import io.github.mywarp.mywarp.util.WarpUtils;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
@@ -34,6 +29,7 @@ import io.github.mywarp.mywarp.util.playermatcher.GroupPlayerMatcher;
 import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
+
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableSet;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.warp.Warp;
+
 import java.util.EnumSet;
 import java.util.UUID;
 import java.util.function.Predicate;

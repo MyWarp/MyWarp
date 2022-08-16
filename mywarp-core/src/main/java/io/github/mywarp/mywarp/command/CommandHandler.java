@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,12 +20,7 @@
 package io.github.mywarp.mywarp.command;
 
 import com.google.common.base.Joiner;
-import com.sk89q.intake.CommandCallable;
-import com.sk89q.intake.CommandException;
-import com.sk89q.intake.CommandMapping;
-import com.sk89q.intake.Intake;
-import com.sk89q.intake.InvalidUsageException;
-import com.sk89q.intake.InvocationCommandException;
+import com.sk89q.intake.*;
 import com.sk89q.intake.argument.Namespace;
 import com.sk89q.intake.dispatcher.Dispatcher;
 import com.sk89q.intake.dispatcher.NoSubcommandsException;
@@ -62,15 +57,10 @@ import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
-import javax.annotation.Nullable;
 import org.slf4j.Logger;
+
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * Handles MyWarp's commands.

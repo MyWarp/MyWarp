@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -35,18 +35,15 @@ import io.github.mywarp.mywarp.warp.event.WarpAdditionEvent;
 import io.github.mywarp.mywarp.warp.event.WarpDeletionEvent;
 import io.github.mywarp.mywarp.warp.event.WarpEvent;
 import io.github.mywarp.mywarp.warp.event.WarpUpdateEvent;
+import org.bukkit.plugin.Plugin;
+import org.dynmap.DynmapCommonAPI;
+import org.dynmap.markers.*;
+import org.slf4j.Logger;
+
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Predicate;
-import javax.annotation.Nullable;
-import org.bukkit.plugin.Plugin;
-import org.dynmap.DynmapCommonAPI;
-import org.dynmap.markers.GenericMarker;
-import org.dynmap.markers.Marker;
-import org.dynmap.markers.MarkerAPI;
-import org.dynmap.markers.MarkerIcon;
-import org.dynmap.markers.MarkerSet;
-import org.slf4j.Logger;
 
 /**
  * Displays markers for warps using <a href="https://github.com/webbukkit/dynmap">dynmap</a>.

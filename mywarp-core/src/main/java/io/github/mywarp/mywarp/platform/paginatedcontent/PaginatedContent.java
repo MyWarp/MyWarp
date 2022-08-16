@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,6 +21,7 @@ package io.github.mywarp.mywarp.platform.paginatedcontent;
 
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.util.Message;
+
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;

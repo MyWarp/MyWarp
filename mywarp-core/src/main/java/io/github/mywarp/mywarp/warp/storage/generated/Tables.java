@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,12 +23,8 @@
 package io.github.mywarp.mywarp.warp.storage.generated;
 
 
-import io.github.mywarp.mywarp.warp.storage.generated.tables.Group;
-import io.github.mywarp.mywarp.warp.storage.generated.tables.Player;
-import io.github.mywarp.mywarp.warp.storage.generated.tables.Warp;
-import io.github.mywarp.mywarp.warp.storage.generated.tables.WarpGroupMap;
-import io.github.mywarp.mywarp.warp.storage.generated.tables.WarpPlayerMap;
-import io.github.mywarp.mywarp.warp.storage.generated.tables.World;
+import io.github.mywarp.mywarp.warp.storage.generated.tables.*;
+
 import javax.annotation.Generated;
 
 

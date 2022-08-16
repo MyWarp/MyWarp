@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -38,6 +38,7 @@ import io.github.mywarp.mywarp.service.teleport.TeleportService;
 import io.github.mywarp.mywarp.util.Message;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.warp.Warp;
+
 import java.util.List;
 import java.util.stream.Collectors;
 

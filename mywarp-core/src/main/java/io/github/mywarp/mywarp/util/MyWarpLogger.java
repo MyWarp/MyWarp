@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,10 +19,11 @@
 
 package io.github.mywarp.mywarp.util;
 
-import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
+
+import java.util.function.Function;
 
 /**
  * A custom logger that actually delegates all input to an underlying {@link Logger}, but allows to modify the message

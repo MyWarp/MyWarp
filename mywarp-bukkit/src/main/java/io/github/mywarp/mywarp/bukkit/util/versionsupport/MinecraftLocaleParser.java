@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,13 +19,14 @@
 
 package io.github.mywarp.mywarp.bukkit.util.versionsupport;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import org.apache.commons.lang.StringUtils;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Parses Strings in Minecraft's locale format into {@link Locale} objects.

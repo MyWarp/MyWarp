@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,6 +21,7 @@ package io.github.mywarp.mywarp.command.parametric.namespace;
 
 import com.sk89q.intake.argument.Namespace;
 import com.sk89q.intake.parametric.Provider;
+
 import java.util.Collections;
 import java.util.List;
 

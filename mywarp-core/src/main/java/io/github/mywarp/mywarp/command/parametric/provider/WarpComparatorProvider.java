@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -24,10 +24,11 @@ import com.sk89q.intake.argument.CommandArgs;
 import com.sk89q.intake.parametric.Provider;
 import io.github.mywarp.mywarp.util.WarpUtils;
 import io.github.mywarp.mywarp.warp.Warp;
+
+import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.util.Comparator;
 import java.util.List;
-import javax.annotation.Nullable;
 
 /**
  * Provides Comparators for Warps.

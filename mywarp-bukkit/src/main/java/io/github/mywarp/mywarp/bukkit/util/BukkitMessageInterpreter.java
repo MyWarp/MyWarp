@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -127,7 +127,7 @@ public class BukkitMessageInterpreter {
       case INFO:
         return ChatColor.GRAY.toString();
       case HEADLINE_1:
-        return ChatColor.GOLD.toString() + ChatColor.BOLD.toString();
+        return ChatColor.GOLD.toString() + ChatColor.BOLD;
       case HEADLINE_2:
         return ChatColor.WHITE.toString();
       case KEY:

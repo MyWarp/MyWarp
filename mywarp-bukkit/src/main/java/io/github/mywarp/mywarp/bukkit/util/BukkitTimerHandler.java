@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,8 +19,6 @@
 
 package io.github.mywarp.mywarp.bukkit.util;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import io.github.mywarp.mywarp.bukkit.MyWarpPlugin;
@@ -28,10 +26,13 @@ import io.github.mywarp.mywarp.platform.capability.TimerCapability;
 import io.github.mywarp.mywarp.service.teleport.timer.AbortableTimerAction;
 import io.github.mywarp.mywarp.service.teleport.timer.TimerAction;
 import io.github.mywarp.mywarp.util.McUtil;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import javax.annotation.Nullable;
 import java.time.Duration;
 import java.time.Instant;
-import javax.annotation.Nullable;
-import org.bukkit.scheduler.BukkitRunnable;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Handles timers on Bukkit.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,11 +20,12 @@
 package io.github.mywarp.mywarp.bukkit.util.versionsupport;
 
 import io.github.mywarp.mywarp.util.MyWarpLogger;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.slf4j.Logger;
+
+import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 /**
  * Handles functionality that requires different implementations for different versions if Minecraft or Bukkit.

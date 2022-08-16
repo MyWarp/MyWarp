@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,8 +23,9 @@ import io.github.mywarp.mywarp.bukkit.util.BukkitMessageInterpreter;
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.Settings;
 import io.github.mywarp.mywarp.util.Message;
-import java.util.Locale;
 import org.bukkit.command.CommandSender;
+
+import java.util.Locale;
 
 /**
  * References a Bukkit {@link CommandSender}.

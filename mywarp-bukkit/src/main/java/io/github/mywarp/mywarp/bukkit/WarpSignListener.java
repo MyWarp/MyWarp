@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -27,7 +27,6 @@ import io.github.mywarp.mywarp.bukkit.util.versionsupport.VersionSupport;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.sign.WarpSignHandler;
 import io.github.mywarp.mywarp.util.BlockFace;
-import java.util.Optional;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -35,6 +34,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+
+import java.util.Optional;
 
 /**
  * Listens for events involving signs and feats them to a {@link WarpSignHandler}.

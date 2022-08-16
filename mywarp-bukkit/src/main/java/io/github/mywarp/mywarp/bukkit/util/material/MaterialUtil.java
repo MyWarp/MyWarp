@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,8 +23,9 @@ import com.flowpowered.math.vector.Vector3i;
 import com.google.common.primitives.Ints;
 import io.github.mywarp.mywarp.bukkit.BukkitAdapter;
 import io.github.mywarp.mywarp.platform.LocalWorld;
-import java.util.function.Predicate;
 import org.bukkit.Material;
+
+import java.util.function.Predicate;
 
 /**
  * Utilities for working with Materials.

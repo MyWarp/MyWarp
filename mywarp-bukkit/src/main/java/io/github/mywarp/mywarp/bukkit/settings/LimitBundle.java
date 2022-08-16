@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,8 +19,6 @@
 
 package io.github.mywarp.mywarp.bukkit.settings;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import io.github.mywarp.mywarp.bukkit.BukkitAdapter;
@@ -28,16 +26,15 @@ import io.github.mywarp.mywarp.bukkit.util.permission.ValueBundle;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.service.limit.Limit;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.slf4j.Logger;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A ValueBundle that bundles warp creation limits.
@@ -211,10 +208,10 @@ public class LimitBundle extends ValueBundle implements Limit {
 
     LimitBundle that = (LimitBundle) o;
 
-    if (limitMap != null ? !limitMap.equals(that.limitMap) : that.limitMap != null) {
+    if (!Objects.equals(limitMap, that.limitMap)) {
       return false;
     }
-    return worldHolder != null ? worldHolder.equals(that.worldHolder) : that.worldHolder == null;
+    return Objects.equals(worldHolder, that.worldHolder);
 
   }
 

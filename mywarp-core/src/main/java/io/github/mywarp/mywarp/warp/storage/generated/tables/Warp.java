@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -27,19 +27,14 @@ import io.github.mywarp.mywarp.warp.storage.converter.InstantTimestampConverter;
 import io.github.mywarp.mywarp.warp.storage.converter.TypeConverter;
 import io.github.mywarp.mywarp.warp.storage.generated.Keys;
 import io.github.mywarp.mywarp.warp.storage.generated.Mywarp;
+import org.jooq.*;
+import org.jooq.impl.TableImpl;
+import org.jooq.types.UInteger;
+
+import javax.annotation.Generated;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
-import javax.annotation.Generated;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Identity;
-import org.jooq.Record;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.UniqueKey;
-import org.jooq.impl.TableImpl;
-import org.jooq.types.UInteger;
 
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,14 +19,6 @@
 
 package io.github.mywarp.mywarp.warp.storage;
 
-import static io.github.mywarp.mywarp.warp.storage.generated.Tables.GROUP;
-import static io.github.mywarp.mywarp.warp.storage.generated.Tables.PLAYER;
-import static io.github.mywarp.mywarp.warp.storage.generated.Tables.WARP;
-import static io.github.mywarp.mywarp.warp.storage.generated.Tables.WARP_GROUP_MAP;
-import static io.github.mywarp.mywarp.warp.storage.generated.Tables.WARP_PLAYER_MAP;
-import static io.github.mywarp.mywarp.warp.storage.generated.Tables.WORLD;
-import static org.jooq.impl.DSL.select;
-
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
 import io.github.mywarp.mywarp.util.playermatcher.GroupPlayerMatcher;
@@ -36,30 +28,17 @@ import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.Warp.Type;
 import io.github.mywarp.mywarp.warp.WarpBuilder;
 import io.github.mywarp.mywarp.warp.storage.generated.tables.Player;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import javax.annotation.Nullable;
-import org.jooq.Allow;
-import org.jooq.Configuration;
-import org.jooq.DSLContext;
-import org.jooq.Insert;
-import org.jooq.InsertOnDuplicateStep;
-import org.jooq.InsertSetMoreStep;
-import org.jooq.Record;
-import org.jooq.Record14;
-import org.jooq.Require;
-import org.jooq.Result;
-import org.jooq.SQLDialect;
-import org.jooq.Table;
-import org.jooq.TableField;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.types.UInteger;
+
+import javax.annotation.Nullable;
+import java.time.Instant;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static io.github.mywarp.mywarp.warp.storage.generated.Tables.*;
+import static org.jooq.impl.DSL.select;
 
 /**
  * A storage implementation that stores warps in a relational database.

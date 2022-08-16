@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,10 +22,11 @@ package io.github.mywarp.mywarp.warp;
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.ImmutableMap;
 import io.github.mywarp.mywarp.platform.Actor;
+
+import javax.annotation.Nullable;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.annotation.Nullable;
 
 /**
  * Resolves placeholders in a String by replacing them with the appropriate values from a given Warp.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,12 +19,13 @@
 
 package io.github.mywarp.mywarp.platform.capability;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.service.teleport.timer.TimerAction;
-import java.time.Duration;
+
 import javax.annotation.Nullable;
+import java.time.Duration;
+
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * The capability of a platform to run timers.

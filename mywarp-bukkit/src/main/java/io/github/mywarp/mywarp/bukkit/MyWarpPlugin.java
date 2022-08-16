@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -18,8 +18,6 @@
  */
 
 package io.github.mywarp.mywarp.bukkit;
-
-import static com.google.common.base.Preconditions.checkState;
 
 import io.github.mywarp.mywarp.MyWarp;
 import io.github.mywarp.mywarp.bukkit.settings.BukkitSettings;
@@ -42,16 +40,6 @@ import io.github.mywarp.mywarp.util.i18n.LocaleManager;
 import io.github.mywarp.mywarp.warp.storage.SqlDataService;
 import io.github.mywarp.mywarp.warp.storage.TableInitializationException;
 import io.github.mywarp.mywarp.warp.storage.UnsupportedDialectException;
-import java.io.Closeable;
-import java.io.File;
-import java.lang.ref.WeakReference;
-import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.WeakHashMap;
-import javax.annotation.Nullable;
 import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -66,6 +54,15 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapCommonAPI;
 import org.slf4j.Logger;
+
+import javax.annotation.Nullable;
+import java.io.Closeable;
+import java.io.File;
+import java.lang.ref.WeakReference;
+import java.sql.SQLException;
+import java.util.*;
+
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * The MyWarp plugin singleton when running on Bukkit.
@@ -280,7 +277,7 @@ public final class MyWarpPlugin extends JavaPlugin {
    *
    * @return the configured settings
    */
-  protected BukkitSettings getSettings() {
+  private BukkitSettings getSettings() {
     checkState(platform != null, "'platform' is not yet initialized");
     return platform.getSettings();
   }

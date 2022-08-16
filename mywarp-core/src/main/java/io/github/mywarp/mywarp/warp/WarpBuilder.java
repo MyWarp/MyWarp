@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -24,6 +24,7 @@ import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.Iterables;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
+
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;

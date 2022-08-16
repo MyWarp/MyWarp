@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,13 +20,14 @@
 package io.github.mywarp.mywarp.bukkit.util.versionsupport;
 
 import io.github.mywarp.mywarp.util.MyWarpLogger;
+import org.bukkit.entity.Player;
+import org.slf4j.Logger;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Optional;
-import org.bukkit.entity.Player;
-import org.slf4j.Logger;
 
 /**
  * Tries to resolve a player's Locale by using reflection to access MC's internals through CraftBukkit.

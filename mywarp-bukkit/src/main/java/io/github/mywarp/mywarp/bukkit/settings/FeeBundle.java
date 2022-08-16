@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,14 +19,15 @@
 
 package io.github.mywarp.mywarp.bukkit.settings;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static java.math.BigDecimal.valueOf;
-
 import io.github.mywarp.mywarp.bukkit.util.permission.ValueBundle;
 import io.github.mywarp.mywarp.service.economy.FeeType;
+import org.bukkit.configuration.ConfigurationSection;
+
 import java.math.BigDecimal;
 import java.util.EnumMap;
-import org.bukkit.configuration.ConfigurationSection;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.math.BigDecimal.valueOf;
 
 /**
  * A ValueBundle that bundles fees.

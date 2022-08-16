@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,13 +19,6 @@
 
 package io.github.mywarp.mywarp.warp.storage;
 
-import static org.jooq.SQLDialect.MARIADB;
-import static org.jooq.SQLDialect.MYSQL;
-import static org.jooq.SQLDialect.SQLITE;
-import static org.jooq.impl.DSL.field;
-import static org.jooq.impl.DSL.name;
-import static org.jooq.impl.DSL.table;
-
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.base.Splitter;
@@ -39,31 +32,22 @@ import io.github.mywarp.mywarp.util.playermatcher.GroupPlayerMatcher;
 import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpBuilder;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import javax.annotation.Nullable;
-import javax.sql.DataSource;
-import org.jooq.Allow;
-import org.jooq.Configuration;
-import org.jooq.Name;
-import org.jooq.Record13;
-import org.jooq.Require;
-import org.jooq.Result;
-import org.jooq.SQLDialect;
+import org.jooq.*;
 import org.jooq.conf.Settings;
 import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultConfiguration;
 import org.jooq.tools.jdbc.JDBCUtils;
 import org.slf4j.Logger;
+
+import javax.annotation.Nullable;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+
+import static org.jooq.SQLDialect.*;
+import static org.jooq.impl.DSL.*;
 
 /**
  * A {@link WarpSource} for databases with a legacy scheme (pre 3.0).

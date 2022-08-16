@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,9 +19,10 @@
 
 package io.github.mywarp.mywarp.bukkit.util.versionsupport;
 
+import org.bukkit.entity.Player;
+
 import java.util.Locale;
 import java.util.Optional;
-import org.bukkit.entity.Player;
 
 /**
  * Fallback locale resolver that always returns an empty Optional.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,8 +19,6 @@
 
 package io.github.mywarp.mywarp.service.limit;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
@@ -29,9 +27,12 @@ import io.github.mywarp.mywarp.platform.capability.LimitCapability;
 import io.github.mywarp.mywarp.service.limit.Limit.Value;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
+
+import javax.annotation.Nullable;
 import java.util.UUID;
 import java.util.function.Predicate;
-import javax.annotation.Nullable;
+
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Resolves and evaluates warp creation limits for individual players on a set of worlds.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,9 +19,10 @@
 
 package io.github.mywarp.mywarp.bukkit.util.versionsupport;
 
-import java.util.function.Predicate;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
+
+import java.util.function.Predicate;
 
 /**
  * Checks whether a given entity is any variant of a horse and is tamed when running on versions older than 1.12.

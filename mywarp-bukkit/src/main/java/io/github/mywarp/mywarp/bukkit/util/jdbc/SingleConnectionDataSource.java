@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,21 +21,18 @@ package io.github.mywarp.mywarp.bukkit.util.jdbc;
 
 import com.google.common.base.Objects;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
+
+import javax.annotation.Nullable;
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
-import javax.sql.DataSource;
 
 /**
  * A {@link DataSource} implementation that uses a single {@link Connection}. {@code Connection}s returned by this the

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -31,15 +31,12 @@ import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.i18n.LocaleManager;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
+import org.bukkit.conversations.*;
+import org.bukkit.entity.Player;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.ConversationFactory;
-import org.bukkit.conversations.MessagePrompt;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.StringPrompt;
-import org.bukkit.entity.Player;
 
 /**
  * Creates and handles conversations with players who are asked to accept a Warp.

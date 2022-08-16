@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -27,6 +27,7 @@ import io.github.mywarp.mywarp.command.util.Matches;
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
+
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.stream.Collectors;

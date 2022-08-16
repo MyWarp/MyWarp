@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,11 +19,11 @@
 
 package io.github.mywarp.mywarp.command.parametric;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import com.sk89q.intake.argument.Namespace;
 import com.sk89q.intake.util.auth.Authorizer;
 import io.github.mywarp.mywarp.platform.Actor;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Resolves authorization for Actors using {@link Actor#hasPermission(String)}.

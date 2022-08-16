@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -29,6 +29,7 @@ import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
+
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.function.Predicate;

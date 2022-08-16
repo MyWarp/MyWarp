@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -39,10 +39,11 @@ import io.github.mywarp.mywarp.util.i18n.LocaleManager;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
+
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.TreeSet;
-import javax.annotation.Nullable;
 
 /**
  * Handles interaction with warp signs.

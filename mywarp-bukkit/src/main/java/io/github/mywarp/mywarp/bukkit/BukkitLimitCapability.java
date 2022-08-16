@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -29,15 +29,12 @@ import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.capability.LimitCapability;
 import io.github.mywarp.mywarp.service.limit.Limit;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
+
+import java.util.*;
 
 /**
  * Limit compatibility for the Bukkit platform. The actual Limits are stored in {@link LimitBundle}s managed by this

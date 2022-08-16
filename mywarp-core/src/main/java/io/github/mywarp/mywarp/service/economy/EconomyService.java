@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,6 +23,7 @@ import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.Platform;
 import io.github.mywarp.mywarp.platform.capability.EconomyCapability;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
+
 import java.math.BigDecimal;
 
 /**

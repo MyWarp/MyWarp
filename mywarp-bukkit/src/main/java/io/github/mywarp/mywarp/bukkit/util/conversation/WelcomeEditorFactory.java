@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2021, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -25,14 +25,11 @@ import io.github.mywarp.mywarp.bukkit.util.BukkitMessageInterpreter;
 import io.github.mywarp.mywarp.util.Message;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.warp.Warp;
+import org.bukkit.conversations.*;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.ConversationFactory;
-import org.bukkit.conversations.MessagePrompt;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.StringPrompt;
 
 /**
  * Creates and handles conversations with players who want to change a Warp's welcome-message.
