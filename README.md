@@ -10,6 +10,7 @@ fully localized and supports economy plugins.
 [![Build Status](https://img.shields.io/github/workflow/status/MyWarp/MyWarp/build)](https://github.com/MyWarp/MyWarp/actions)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/mywarp/localized.svg)](https://crowdin.com/project/mywarp)
 [![Latest Release](https://img.shields.io/github/v/release/MyWarp/MyWarp)](https://github.com/MyWarp/MyWarp/releases)
+[![Downloads on BukkitDev](https://img.shields.io/badge/dynamic/json?label=downloads&query=downloads.total&url=https%3A%2F%2Fapi.cfwidget.com%2F33546)](https://dev.bukkit.org/projects/mywarp)
 [![License](https://img.shields.io/github/license/MyWarp/MyWarp)](LICENSE.txt)
 
 ## Features
