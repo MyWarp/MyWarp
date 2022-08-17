@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,7 +23,6 @@ import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.ForwardingObject;
 import com.google.common.collect.ImmutableSet;
-
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
@@ -98,8 +97,8 @@ abstract class ForwardingPopulatableWarpManager extends ForwardingObject impleme
   protected abstract PopulatableWarpManager delegate();
 
   /**
-   * Forwards all method calls to another Warp. Subclasses should override one or more methods to modify the behavior
-   * of the backing Warp as desired per the <a href="http://en.wikipedia .org/wiki/Decorator_pattern">decorator
+   * Forwards all method calls to another Warp. Subclasses should override one or more methods to modify the behavior of
+   * the backing Warp as desired per the <a href="http://en.wikipedia .org/wiki/Decorator_pattern">decorator
    * pattern</a>.
    */
   abstract class ForwardingWarp extends ForwardingObject implements Warp {

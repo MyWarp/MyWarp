@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,7 +23,6 @@ import com.sk89q.intake.argument.CommandArgs;
 import com.sk89q.intake.parametric.ArgumentParser;
 import com.sk89q.intake.parametric.handler.AbstractInvokeListener;
 import com.sk89q.intake.parametric.handler.InvokeHandler;
-
 import io.github.mywarp.mywarp.command.parametric.annotation.Billable;
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
@@ -63,7 +62,7 @@ public class EconomyInvokeHandler extends AbstractInvokeListener implements Invo
 
   @Override
   public boolean preInvoke(List<? extends Annotation> annotations, ArgumentParser parser, Object[] args,
-                           CommandArgs commandArgs) {
+      CommandArgs commandArgs) {
     Optional<Billable> billable = findFirst(annotations, Billable.class);
     if (!billable.isPresent()) {
       return true;
@@ -80,7 +79,7 @@ public class EconomyInvokeHandler extends AbstractInvokeListener implements Invo
 
   @Override
   public void postInvoke(List<? extends Annotation> annotations, ArgumentParser parser, Object[] args,
-                         CommandArgs commandArgs) {
+      CommandArgs commandArgs) {
     Optional<Billable> billable = findFirst(annotations, Billable.class);
     if (!billable.isPresent()) {
       return;

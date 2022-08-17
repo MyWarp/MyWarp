@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,16 +22,11 @@ package io.github.mywarp.mywarp.warp;
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.eventbus.EventBus;
-
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
-import io.github.mywarp.mywarp.warp.event.WarpAdditionEvent;
-import io.github.mywarp.mywarp.warp.event.WarpDeletionEvent;
-import io.github.mywarp.mywarp.warp.event.WarpEvent;
-import io.github.mywarp.mywarp.warp.event.WarpInvitesEvent;
-import io.github.mywarp.mywarp.warp.event.WarpUpdateEvent;
+import io.github.mywarp.mywarp.warp.event.*;
 
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -42,9 +37,9 @@ import java.util.stream.StreamSupport;
  * as required by the decorator pattern, events are implemented on top.
  *
  * <p>Events are dispatched in the {@link EventBus} given when initializing this PopulatableWarpManager. Individual
- * warps fire {@link WarpEvent}s and the manager itself fires {@link WarpAdditionEvent}s and {@link
- * WarpDeletionEvent}s when Warps are added to or removed from it. Handlers that want
- * to listen to such events need to register themselves on the EventBus.</p>
+ * warps fire {@link WarpEvent}s and the manager itself fires {@link WarpAdditionEvent}s and {@link WarpDeletionEvent}s
+ * when Warps are added to or removed from it. Handlers that want to listen to such events need to register themselves
+ * on the EventBus.</p>
  */
 public class EventfulPopulatableWarpManager extends ForwardingPopulatableWarpManager {
 

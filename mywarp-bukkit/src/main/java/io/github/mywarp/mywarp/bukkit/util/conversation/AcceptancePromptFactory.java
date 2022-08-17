@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -31,12 +31,7 @@ import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.i18n.LocaleManager;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
-
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.ConversationFactory;
-import org.bukkit.conversations.MessagePrompt;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.StringPrompt;
+import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -66,7 +61,7 @@ public class AcceptancePromptFactory {
    * @param plugin                the plugin instance
    */
   public AcceptancePromptFactory(ConversationFactory factory, AuthorizationResolver authorizationResolver, Game game,
-                                 PlayerNameResolver resolver, MyWarpPlugin plugin) {
+      PlayerNameResolver resolver, MyWarpPlugin plugin) {
     this.authorizationResolver = authorizationResolver;
     this.game = game;
     this.resolver = resolver;
@@ -122,7 +117,7 @@ public class AcceptancePromptFactory {
           message =
           Message
               .of(msg.getString("warp-acceptance.want-to-accept", initiatorName, warp.getName(), acceptanceSequence(),
-                                declineSequence(), infoSequence(), MyWarpPlugin.CONVERSATION_TIMEOUT));
+                  declineSequence(), infoSequence(), MyWarpPlugin.CONVERSATION_TIMEOUT));
       return BukkitMessageInterpreter.interpret(message);
     }
 
@@ -155,7 +150,7 @@ public class AcceptancePromptFactory {
 
       LocaleManager.setLocale((Locale) context.getSessionData(Locale.class));
       return BukkitMessageInterpreter.interpret(new InfoPrinter(warp, authorizationResolver, game, resolver)
-                                                    .getText(plugin.wrap((Player) context.getForWhom())));
+          .getTextImmediately(plugin.wrap((Player) context.getForWhom())));
     }
   }
 

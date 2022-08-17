@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,9 +20,7 @@
 package io.github.mywarp.mywarp.bukkit.util.permission;
 
 import com.google.common.collect.ImmutableSortedSet;
-
 import io.github.mywarp.mywarp.platform.LocalPlayer;
-
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
@@ -31,17 +29,17 @@ import java.util.SortedSet;
 /**
  * Provides a managed access to {@link ValueBundle}s.
  *
- * <p>A provider instance is created with a default and multiple custom bundles. When a bundle for a player is requested
- * from the provider, it iterates over the custom bundles in the order defined for ValueBundles and returns the first
- * bundle for which the player has the permission. If he does not have a permission for any bundle, the default one is
- * returned.</p>
+ * <p>A provider instance is created with a default and multiple custom bundles. When a bundle for a player is
+ * requested from the provider, it iterates over the custom bundles in the order defined for ValueBundles and returns
+ * the first bundle for which the player has the permission. If he does not have a permission for any bundle, the
+ * default one is returned.</p>
  *
  * @param <B> the type of ValueBundle this provider provides
  */
 public class BundleProvider<B extends ValueBundle> {
 
-  private SortedSet<B> configuredBundles;
-  private B defaultBundle;
+  private final SortedSet<B> configuredBundles;
+  private final B defaultBundle;
 
   /**
    * Creates an instance.

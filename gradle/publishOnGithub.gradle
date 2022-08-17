@@ -1,0 +1,84 @@
+import groovy.json.JsonOutput
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.ajoberstar.grgit:grgit-gradle:4.1.1"
+        classpath "org.ajoberstar.git-publish:gradle-git-publish:3.0.1"
+    }
+}
+apply plugin: org.ajoberstar.grgit.gradle.GrgitPlugin
+apply plugin: org.ajoberstar.gradle.git.publish.GitPublishPlugin
+
+gitPublish {
+    def artifactDir = "source/files/${rootProject.buildNumber}_${rootProject.commitHash}"
+    def dataDir = "data/builds"
+
+    // authentication is handled using a token that is available as an environment variable (GRGIT_USER),
+    // see http://ajoberstar.org/grgit/grgit-authentication.html
+    // we skip the task if the token is missing
+
+    repoUri = "https://github.com/MyWarp/mywarp.github.io.git"
+    branch = "src"
+
+    contents {
+        from("mywarp-bukkit/build/libs") {
+            include "mywarp-bukkit*.jar"
+            exclude "*javadoc*.jar"
+            exclude "*sources*.jar"
+            into artifactDir
+        }
+        from("mywarp-core/build/libs") {
+            include "mywarp-core*.jar"
+            exclude "*javadoc*.jar"
+            exclude "*sources*.jar"
+            into artifactDir
+        }
+        from("$buildDir/tmp/") {
+            include "version.json"
+            rename { filename -> "${rootProject.buildNumber}_${rootProject.commitHash}.json" }
+            into dataDir
+        }
+    }
+
+    preserve {
+        include "**"
+    }
+
+    commitMessage = "Automatic deployment of binaries from build #$buildNumber."
+}
+gitPublishPush.onlyIf { System.env.GRGIT_USER != null && project.name == "MyWarp" }
+
+task createVersionJson() {
+    def head = grgit.head()
+    def gitTag = grgit.tag.list().find { it.commit == head }?.name ?: ""
+
+
+    def data = [
+            build  : [
+                    by        : rootProject.ciSystem,
+                    number    : rootProject.buildNumber,
+                    successful: "true", //REVIEW do we really need this?
+                    date      : new Date().format("dd/MM/YYYY").toString()
+            ],
+            version: [
+                    shortVersion: project.version,
+                    longVersion : project.internalVersion
+            ],
+            commit : [
+                    short_hash: rootProject.commitHash,
+                    message   : head.shortMessage,
+                    author    : head.author.name,
+                    tag       : gitTag,
+            ]
+    ]
+    def json = JsonOutput.prettyPrint(JsonOutput.toJson(data))
+    File file = new File(buildDir, "/tmp/version.json")
+    file.getParentFile().mkdirs()
+    file.write(json)
+}
+gitPublishReset.dependsOn(createVersionJson)
+
+

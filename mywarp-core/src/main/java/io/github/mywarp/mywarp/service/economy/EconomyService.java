@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -36,7 +36,7 @@ public class EconomyService {
 
   private static final DynamicMessages msg = new DynamicMessages("io.github.mywarp.mywarp.lang.Economy");
 
-  private EconomyCapability capability;
+  private final EconomyCapability capability;
 
   /**
    * Creates an instance that uses the given {@code capability} to resolve requests.

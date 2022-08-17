@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -26,8 +26,8 @@ import org.slf4j.Marker;
 import java.util.function.Function;
 
 /**
- * A custom logger that actually delegates all input to an underlying {@link Logger}, but allows to modify the
- * message beforehand.
+ * A custom logger that actually delegates all input to an underlying {@link Logger}, but allows to modify the message
+ * beforehand.
  */
 public class MyWarpLogger implements Logger {
 
@@ -63,8 +63,8 @@ public class MyWarpLogger implements Logger {
   /**
    * Sets the modifier of log messages.
    *
-   * <p>Each log message is given to the Function given to this method. The output of this Function is than delegated to
-   * the underlying logging framework. </p>
+   * <p>Each log message is given to the Function given to this method. The output of this Function is than delegated
+   * to the underlying logging framework. </p>
    *
    * <p>This method can be used to append custom prefixes to log messages.</p>
    *

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,23 +22,20 @@ package io.github.mywarp.mywarp.command.parametric.provider;
 import com.sk89q.intake.Require;
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
-
-import io.github.mywarp.mywarp.command.parametric.provider.exception.NoSuchPlayerIdentifierException;
+import io.github.mywarp.mywarp.command.util.ProfilePlayerMatcher;
 import io.github.mywarp.mywarp.platform.PlayerNameResolver;
 import io.github.mywarp.mywarp.util.playermatcher.GroupPlayerMatcher;
 import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
-import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Optional;
-
-import javax.annotation.Nullable;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Provides {@link PlayerMatcher} instances.
  */
-class InvitationProvider extends AbstractProvider<PlayerMatcher> {
+class InvitationProvider extends AbstractProvider<CompletableFuture<PlayerMatcher>> {
 
   private final PlayerNameResolver resolver;
 
@@ -46,15 +43,16 @@ class InvitationProvider extends AbstractProvider<PlayerMatcher> {
     this.resolver = resolver;
   }
 
-  @Nullable
   @Override
-  public PlayerMatcher get(CommandArgs arguments, List<? extends Annotation> modifiers) throws ArgumentException {
+  public CompletableFuture<PlayerMatcher> get(CommandArgs arguments, List<? extends Annotation> modifiers)
+      throws ArgumentException {
     String argument = arguments.next();
 
     if (argument.charAt(1) == ':') {
       String realArgument = argument.substring(2);
 
       switch (argument.charAt(0)) {
+        //group-name
         case 'g':
           Optional<Require>
               require =
@@ -62,14 +60,14 @@ class InvitationProvider extends AbstractProvider<PlayerMatcher> {
           if (require.isPresent()) {
             ProviderUtil.checkPermissions(ProviderUtil.actor(arguments.getNamespace()), require.get().value());
           }
-          return new GroupPlayerMatcher(realArgument);
+          return CompletableFuture.completedFuture(new GroupPlayerMatcher(realArgument));
+        //unique identifier
         case 'u':
-          return new UuidPlayerMatcher(ProviderUtil.parseUuid(realArgument));
+          return resolver.getByUniqueId(ProviderUtil.parseUuid(realArgument)).thenApply(ProfilePlayerMatcher::new);
         default: //fall-through
       }
     }
 
-    return new UuidPlayerMatcher(
-        resolver.getByName(argument).orElseThrow(() -> new NoSuchPlayerIdentifierException(argument)));
+    return resolver.getByName(argument).thenApply(ProfilePlayerMatcher::new);
   }
 }

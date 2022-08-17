@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,7 +23,6 @@ import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableSet;
-
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
@@ -85,7 +84,7 @@ public interface Warp extends Comparable<Warp> {
   }
 
   /**
-   * Returns whether this warp already has the given PlayerMatcher.
+   * Returns whether this warp already has the given Invitation.
    *
    * @param invitation the playermatcher to check
    * @return true if this warp already has the given playermatcher
@@ -140,8 +139,8 @@ public interface Warp extends Comparable<Warp> {
    * Gets the unique identifier of the world this warp is positioned in.
    *
    * <p>The loaded world identified by the identifier can be acquired from the Game by calling
-   * {@link Game#getWorld(UUID)}. There is however no guarantee, that a warp's world is actually loaded,  calling
-   * {@code Game.getWorld(UUID} with the unique identifier returned by this methid m retun an empty Optional.</p>
+   * {@link Game#getWorld(UUID)}. There is however no guarantee, that a warp's world is actually loaded,  calling {@code
+   * Game.getWorld(UUID} with the unique identifier returned by this methid m retun an empty Optional.</p>
    *
    * @return the world's unique identifier
    */
@@ -226,7 +225,8 @@ public interface Warp extends Comparable<Warp> {
     /**
      * A private Warp.
      */
-    PRIVATE, /**
+    PRIVATE,
+    /**
      * A public Warp.
      */
     PUBLIC
@@ -236,22 +236,23 @@ public interface Warp extends Comparable<Warp> {
    * Orders Warps by popularity: popular Warps come first, unpopular last.
    *
    * <p>Warps with a higher popularity score are preferred over Warps with lower score. If the score is equal, newer
-   * Warps are preferred over older Warps. If both Warps were created at the same millisecond, the alphabetically
-   * first is preferred.</p>
+   * Warps are preferred over older Warps. If both Warps were created at the same millisecond, the alphabetically first
+   * is preferred.</p>
    */
   class PopularityComparator implements Comparator<Warp> {
 
     private static final double GRAVITY_CONSTANT = 0.8;
 
     @Override
-    public int compare(Warp w1, Warp w2) {
-      return ComparisonChain.start().compare(popularityScore(w2), popularityScore(w1))
-          .compare(w2.getCreationDate(), w1.getCreationDate()).compare(w1.getName(), w2.getName()).result();
+    public int compare(Warp first, Warp second) {
+      return ComparisonChain.start().compare(popularityScore(second), popularityScore(first))
+          .compare(second.getCreationDate(), first.getCreationDate()).compare(first.getName(), second.getName())
+          .result();
     }
 
     /**
-     * Computes the popularity score of the given {@code warp}. The score depends on the number of visits of the
-     * Warp as well as the warp's age.
+     * Computes the popularity score of the given {@code warp}. The score depends on the number of visits of the Warp as
+     * well as the warp's age.
      *
      * @return the popularity score of this Warp
      */

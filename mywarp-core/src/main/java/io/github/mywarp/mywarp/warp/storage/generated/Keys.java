@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,13 +23,7 @@
 package io.github.mywarp.mywarp.warp.storage.generated;
 
 
-import io.github.mywarp.mywarp.warp.storage.generated.tables.Group;
-import io.github.mywarp.mywarp.warp.storage.generated.tables.Player;
-import io.github.mywarp.mywarp.warp.storage.generated.tables.Warp;
-import io.github.mywarp.mywarp.warp.storage.generated.tables.WarpGroupMap;
-import io.github.mywarp.mywarp.warp.storage.generated.tables.WarpPlayerMap;
-import io.github.mywarp.mywarp.warp.storage.generated.tables.World;
-
+import io.github.mywarp.mywarp.warp.storage.generated.tables.*;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Record;
@@ -109,11 +103,11 @@ public class Keys {
     public static final UniqueKey<Record>
         KEY_WARP_GROUP_MAP_PRIMARY =
         createUniqueKey(WarpGroupMap.WARP_GROUP_MAP, WarpGroupMap.WARP_GROUP_MAP.WARP_ID,
-                        WarpGroupMap.WARP_GROUP_MAP.GROUP_ID);
+            WarpGroupMap.WARP_GROUP_MAP.GROUP_ID);
     public static final UniqueKey<Record>
         KEY_WARP_PLAYER_MAP_PRIMARY =
         createUniqueKey(WarpPlayerMap.WARP_PLAYER_MAP, WarpPlayerMap.WARP_PLAYER_MAP.WARP_ID,
-                        WarpPlayerMap.WARP_PLAYER_MAP.PLAYER_ID);
+            WarpPlayerMap.WARP_PLAYER_MAP.PLAYER_ID);
     public static final UniqueKey<Record> KEY_WORLD_PRIMARY = createUniqueKey(World.WORLD, World.WORLD.WORLD_ID);
     public static final UniqueKey<Record> KEY_WORLD_WORLD_UUID_UQ = createUniqueKey(World.WORLD, World.WORLD.UUID);
   }
@@ -138,6 +132,6 @@ public class Keys {
     public static final ForeignKey<Record, Record>
         WARP_PLAYER_MAP_PLAYER_ID_FK =
         createForeignKey(Keys.KEY_PLAYER_PRIMARY, WarpPlayerMap.WARP_PLAYER_MAP,
-                         WarpPlayerMap.WARP_PLAYER_MAP.PLAYER_ID);
+            WarpPlayerMap.WARP_PLAYER_MAP.PLAYER_ID);
   }
 }

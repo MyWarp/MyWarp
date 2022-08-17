@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -17,10 +17,27 @@
  * along with MyWarp. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Paginates collections of objects into displayable lists of multiple pages.
- */
-@ParametersAreNonnullByDefault
-package io.github.mywarp.mywarp.command.util.paginator;
+package io.github.mywarp.mywarp.platform.paginatedcontent;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import io.github.mywarp.mywarp.command.util.UserViewableException;
+import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
+
+/**
+ * Indicates that there are no results to be paginated.
+ */
+public class NoResultsException extends Exception implements UserViewableException {
+
+  protected DynamicMessages msg = new DynamicMessages(SimplePaginatedContent.RESOURCE_BUNDLE_NAME);
+
+  /**
+   * Creates an instance.
+   */
+  public NoResultsException() {
+    super();
+  }
+
+  @Override
+  public String getUserMessage() {
+    return msg.getString("no-results");
+  }
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,7 +22,7 @@ package io.github.mywarp.mywarp.util.playermatcher;
 import java.util.Objects;
 
 /**
- * A PlayerMatcher that takes and stores a criteria that implementations use for matching.
+ * A Invitation that takes and stores a criteria that implementations use for matching.
  */
 abstract class AbstractPlayerMatcher<C> implements PlayerMatcher {
 

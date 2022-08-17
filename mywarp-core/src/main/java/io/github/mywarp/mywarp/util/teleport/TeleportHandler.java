@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,7 +21,6 @@ package io.github.mywarp.mywarp.util.teleport;
 
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
-
 import io.github.mywarp.mywarp.platform.LocalEntity;
 
 import java.util.UUID;
@@ -50,13 +49,16 @@ public interface TeleportHandler {
     /**
      * The teleport was not executed as the requested world does not exist.
      */
-    NO_SUCH_WORLD(false), /**
+    NO_SUCH_WORLD(false),
+    /**
      * The entity has not been teleported.
      */
-    NONE(false), /**
+    NONE(false),
+    /**
      * The entity has been teleported to the desired position.
      */
-    ORIGINAL(true), /**
+    ORIGINAL(true),
+    /**
      * The entity has been teleported, but the position is not equal to the desired one.
      */
     MODIFIED(true);

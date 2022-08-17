@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,14 +23,13 @@ import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalEntity;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.capability.TimerCapability;
-import io.github.mywarp.mywarp.service.teleport.timer.Duration;
 import io.github.mywarp.mywarp.service.teleport.timer.WarpCooldown;
 import io.github.mywarp.mywarp.service.teleport.timer.WarpWarmup;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 import io.github.mywarp.mywarp.warp.Warp;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 /**
  * Sets timers for users who want to teleport.
@@ -74,12 +73,12 @@ public class TimerTeleportService extends ForwardingTeleportService {
     // check for already running timers
     TimerCapability.EvaluationResult cooldownResult = capability.has(player.getUniqueId(), WarpCooldown.class);
     if (cooldownResult.isTimerRunning()) {
-      player.sendError(msg.getString("timer-already-running", cooldownResult.getDurationLeft().get(TimeUnit.SECONDS)));
+      cooldownResult.getRunningTimer().informTimerRunning(player, cooldownResult.getDurationLeft());
       return TeleportHandler.TeleportStatus.NONE;
     }
     TimerCapability.EvaluationResult warmupResult = capability.has(player.getUniqueId(), WarpWarmup.class);
     if (warmupResult.isTimerRunning()) {
-      player.sendError(msg.getString("timer-already-running", warmupResult.getDurationLeft().get(TimeUnit.SECONDS)));
+      warmupResult.getRunningTimer().informTimerRunning(player, warmupResult.getDurationLeft());
       return TeleportHandler.TeleportStatus.NONE;
     }
 
@@ -87,7 +86,7 @@ public class TimerTeleportService extends ForwardingTeleportService {
     Duration duration = capability.getDuration(player, WarpWarmup.class);
     capability.start(player.getUniqueId(), duration, new WarpWarmup(player, warp, game, delegate(), capability));
     if (capability.notifyOnWarmupStart()) {
-      player.sendMessage(msg.getString("warp-warmup.started", warp.getName(), duration.get(TimeUnit.SECONDS)));
+      player.sendMessage(msg.getString("warp-warmup.started", warp.getName(), duration.getSeconds()));
     }
 
     // teleport will be scheduled by WarpWarmup once the warmup ended

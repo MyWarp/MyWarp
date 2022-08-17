@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,7 +21,6 @@ package io.github.mywarp.mywarp.service.teleport;
 
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.LocalEntity;
-import io.github.mywarp.mywarp.platform.PlayerNameResolver;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 import io.github.mywarp.mywarp.warp.PlaceholderResolver;
@@ -39,17 +38,14 @@ public class HandlerTeleportService implements TeleportService {
   private static final DynamicMessages msg = new DynamicMessages("io.github.mywarp.mywarp.lang.Teleports");
 
   private final TeleportHandler handler;
-  private final PlaceholderResolver resolver;
 
   /**
    * Creates an instance that delegates calls to the given {@code handler}.
    *
-   * @param handler            the handler to handle teleports
-   * @param playerNameResolver the playerNameResolver used to resolve player names in messages send by this service
+   * @param handler the handler to handle teleports
    */
-  public HandlerTeleportService(TeleportHandler handler, PlayerNameResolver playerNameResolver) {
+  public HandlerTeleportService(TeleportHandler handler) {
     this.handler = handler;
-    this.resolver = new PlaceholderResolver(playerNameResolver);
   }
 
   @Override
@@ -62,7 +58,7 @@ public class HandlerTeleportService implements TeleportService {
         case ORIGINAL:
           String welcomeMsg = warp.getWelcomeMessage();
           if (!welcomeMsg.isEmpty()) {
-            actor.sendMessage(resolver.values(warp, actor).resolvePlaceholders(welcomeMsg));
+            actor.sendMessage(PlaceholderResolver.from(warp, actor).resolvePlaceholders(welcomeMsg));
           }
           break;
         case MODIFIED:

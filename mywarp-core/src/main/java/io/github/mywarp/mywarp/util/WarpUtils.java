@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,10 +19,15 @@
 
 package io.github.mywarp.mywarp.util;
 
+import com.google.common.collect.Ordering;
 import io.github.mywarp.mywarp.warp.Warp;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Comparator;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Utility methods to work with warps.
@@ -49,6 +54,43 @@ public final class WarpUtils {
     if (days < 1) {
       days = 1;
     }
-    return warp.getVisits() / days;
+    return warp.getVisits() / (double) (days);
+  }
+
+  /**
+   * Gets the Comparator that matches the given {@code key}.
+   *
+   * @param key the key
+   * @return the matching Comparator
+   */
+  public static Comparator<Warp> getComparator(String key) {
+    switch (key) {
+      case "alp":
+      case "alphabetically":
+        return Comparator.comparing(Warp::getName);
+      case "dat":
+      case "creationDate":
+        return Comparator.comparing(Warp::getCreationDate);
+      case "pop":
+      case "popularity":
+        return new Warp.PopularityComparator();
+      case "ran":
+      case "random":
+        return random();
+      case "vis":
+      case "visits":
+        return Comparator.comparing(Warp::getVisits);
+      case "def":
+      case "default":
+      default:
+        return Ordering.natural();
+    }
+  }
+
+  private static <T> Comparator<T> random() {
+    Map<Object, UUID> randomIds = new IdentityHashMap<>();
+    Map<Object, Integer> uniqueIds = new IdentityHashMap<>();
+    return Comparator.comparing((T t) -> randomIds.computeIfAbsent(t, k -> UUID.randomUUID()))
+        .thenComparing(t -> uniqueIds.computeIfAbsent(t, k -> uniqueIds.size()));
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -24,7 +24,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-
 import io.github.mywarp.mywarp.bukkit.settings.BukkitSettings;
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalWorld;
@@ -36,31 +35,25 @@ import io.github.mywarp.mywarp.warp.event.WarpAdditionEvent;
 import io.github.mywarp.mywarp.warp.event.WarpDeletionEvent;
 import io.github.mywarp.mywarp.warp.event.WarpEvent;
 import io.github.mywarp.mywarp.warp.event.WarpUpdateEvent;
-
 import org.bukkit.plugin.Plugin;
 import org.dynmap.DynmapCommonAPI;
-import org.dynmap.markers.GenericMarker;
-import org.dynmap.markers.Marker;
-import org.dynmap.markers.MarkerAPI;
-import org.dynmap.markers.MarkerIcon;
-import org.dynmap.markers.MarkerSet;
+import org.dynmap.markers.*;
 import org.slf4j.Logger;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
-
 /**
  * Displays markers for warps using <a href="https://github.com/webbukkit/dynmap">dynmap</a>.
  *
- * <p>Warps are only displayed if they match a filter ({@link Predicate#test(Object)})  returns {@code true}) given when
- * an instance is created.</p>
+ * <p>Warps are only displayed if they match a filter ({@link Predicate#test(Object)})  returns {@code true}) given
+ * when an instance is created.</p>
  *
  * <p>In addition to using the provided methods to manually add or remove warps, instances can be registered at an
- * {@link EventBus} that raises {@link WarpEvent}s to
- * automatically add, update or delete warps when the appropriate events are raised.</p>
+ * {@link EventBus} that raises {@link WarpEvent}s to automatically add, update or delete warps when the appropriate
+ * events are raised.</p>
  */
 public class DynmapMarker {
 
@@ -76,7 +69,6 @@ public class DynmapMarker {
   private final Plugin plugin;
   private final MarkerAPI api;
   private final Predicate<Warp> filter;
-  private final PlaceholderResolver tokenizer;
 
   /**
    * Creates an instance that works on the given {@code DynmapCommonAPI} implementation, uses the given {@code
@@ -88,17 +80,14 @@ public class DynmapMarker {
    * @param filter   the filter warps must matched in order to be displayed
    */
   DynmapMarker(DynmapCommonAPI dynmap, MyWarpPlugin plugin, BukkitPlatform platform, Predicate<Warp> filter) {
-    this(dynmap.getMarkerAPI(), plugin, platform.getSettings(), platform.getGame(),
-         new PlaceholderResolver(platform.getPlayerNameResolver()), filter);
+    this(dynmap.getMarkerAPI(), plugin, platform.getSettings(), platform.getGame(), filter);
   }
 
-  private DynmapMarker(MarkerAPI api, MyWarpPlugin plugin, BukkitSettings settings, Game game,
-                       PlaceholderResolver tokenizer, Predicate<Warp> filter) {
+  private DynmapMarker(MarkerAPI api, MyWarpPlugin plugin, BukkitSettings settings, Game game, Predicate<Warp> filter) {
     this.api = api;
     this.plugin = plugin;
     this.game = game;
     this.settings = settings;
-    this.tokenizer = tokenizer;
     this.filter = filter;
   }
 
@@ -225,7 +214,7 @@ public class DynmapMarker {
     if (ret == null) {
       ret =
           api.createMarkerSet(DEFAULT_SET_ID, settings.getDynmapLayerDisplayName(), ImmutableSet.of(getOrCreateIcon()),
-                              false);
+              false);
       if (ret == null) {
         throw new IllegalStateException("Failed to create MarkerSet '" + DEFAULT_SET_ID + "', Dynmap returns null.");
       }
@@ -294,7 +283,7 @@ public class DynmapMarker {
         ret =
         getOrCreateSet()
             .createMarker(identifier(warp), label(warp), true, worldOptional.get().getName(), warp.getPosition().getX(),
-                          warp.getPosition().getY(), warp.getPosition().getZ(), getOrCreateIcon(), false);
+                warp.getPosition().getY(), warp.getPosition().getZ(), getOrCreateIcon(), false);
 
     Preconditions.checkState(ret != null, "Failed to create Marker for " + warp + ", Dynmap returns null.");
 
@@ -319,7 +308,7 @@ public class DynmapMarker {
    * @see Marker#getLabel()
    */
   private String label(Warp warp) {
-    return tokenizer.values(warp)
+    return PlaceholderResolver.from(warp)
         .resolvePlaceholders(MESSAGES.getString("marker.label", settings.getLocalizationDefaultLocale()));
   }
 

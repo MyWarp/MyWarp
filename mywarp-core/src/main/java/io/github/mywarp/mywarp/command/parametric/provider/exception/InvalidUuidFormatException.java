@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -35,6 +35,11 @@ public class InvalidUuidFormatException extends NonMatchingInputException {
 
   @Override
   public String getLocalizedMessage() {
+    return getUserMessage();
+  }
+
+  @Override
+  public String getUserMessage() {
     return msg.getString("exception.invalid-uuid", getInput());
   }
 }

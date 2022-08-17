@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,10 +21,10 @@ package io.github.mywarp.mywarp.bukkit;
 
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
-
 import io.github.mywarp.mywarp.bukkit.settings.BukkitSettings;
 import io.github.mywarp.mywarp.bukkit.settings.DurationBundle;
 import io.github.mywarp.mywarp.bukkit.settings.FeeBundle;
+import io.github.mywarp.mywarp.bukkit.util.CubicSafetyValidationCapability;
 import io.github.mywarp.mywarp.bukkit.util.jdbc.JdbcConfiguration;
 import io.github.mywarp.mywarp.bukkit.util.permission.BundleProvider;
 import io.github.mywarp.mywarp.platform.InvalidFormatException;
@@ -35,9 +35,7 @@ import io.github.mywarp.mywarp.platform.capability.PositionValidationCapability;
 import io.github.mywarp.mywarp.platform.capability.TimerCapability;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
 import io.github.mywarp.mywarp.warp.storage.SqlDataService;
-
 import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -55,7 +53,6 @@ public class BukkitPlatform implements Platform {
 
   private final MyWarpPlugin plugin;
 
-  private final File dataFolder;
   private final BukkitSettings settings;
   private final BukkitGame game;
   private final SquirrelIdPlayerNameResolver profileCache;
@@ -64,17 +61,12 @@ public class BukkitPlatform implements Platform {
 
   BukkitPlatform(MyWarpPlugin plugin, File dataFolder, FileConfiguration defaultConfig) {
     this.plugin = plugin;
-    this.dataFolder = dataFolder;
 
     //initialize platform support
     this.settings = new BukkitSettings(new File(dataFolder, "config.yml"), defaultConfig);
     this.game = new BukkitGame(plugin, new BukkitExecutor(plugin));
     this.profileCache = new SquirrelIdPlayerNameResolver(new File(dataFolder, "profiles.db"));
-  }
-
-  @Override
-  public File getDataFolder() {
-    return dataFolder;
+    plugin.registerClosable(profileCache);
   }
 
   @Override
@@ -143,14 +135,13 @@ public class BukkitPlatform implements Platform {
       TimerCapability timerCapability = new BukkitTimerCapability(plugin, durationProvider, settings);
       registeredCapabilities.putInstance(TimerCapability.class, timerCapability);
       registered = (C) timerCapability;
-
     }
 
     //PositionSafetyCapability
     if (capabilityClass.isAssignableFrom(PositionValidationCapability.class) && settings.isSafetyEnabled()) {
       PositionValidationCapability
           positionValidationCapability =
-          new CubicSafetyValidationCapability(settings.getSafetySearchRadius());
+          new CubicSafetyValidationCapability(settings.getSafetySearchRadius(), plugin.createMaterialInformation());
       registeredCapabilities.putInstance(PositionValidationCapability.class, positionValidationCapability);
       registered = (C) positionValidationCapability;
     }

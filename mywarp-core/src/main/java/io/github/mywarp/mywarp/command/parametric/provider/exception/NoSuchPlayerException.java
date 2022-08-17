@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,7 +20,7 @@
 package io.github.mywarp.mywarp.command.parametric.provider.exception;
 
 import io.github.mywarp.mywarp.platform.LocalPlayer;
-import io.github.mywarp.mywarp.platform.PlayerNameResolver;
+import io.github.mywarp.mywarp.platform.Profile;
 
 import java.util.UUID;
 
@@ -32,11 +32,17 @@ public class NoSuchPlayerException extends NonMatchingInputException {
   /**
    * Creates an instance.
    *
-   * @param uniqueId the unique identifier of the Player
-   * @param resolver the PlayerNameResolver to convert the identifier into a human readable name
+   * @param profile the profile of the Player
    */
-  public NoSuchPlayerException(UUID uniqueId, PlayerNameResolver resolver) {
-    this(resolver.getByUniqueId(uniqueId).orElse(uniqueId.toString()));
+  public NoSuchPlayerException(Profile profile) {
+    this(profile.getNameOrId());
+  }
+
+  /**
+   * Creates an instance.
+   */
+  public NoSuchPlayerException(UUID uniqueId) {
+    this(uniqueId.toString());
   }
 
   /**
@@ -50,6 +56,11 @@ public class NoSuchPlayerException extends NonMatchingInputException {
 
   @Override
   public String getLocalizedMessage() {
+    return getUserMessage();
+  }
+
+  @Override
+  public String getUserMessage() {
     return msg.getString("exception.no-such-player", getInput());
   }
 }

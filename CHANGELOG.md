@@ -1,21 +1,134 @@
 # Change Log
 
 All notable changes to this project will be documented in this file.
-Starting with version 3, this project adheres to [Semantic Versioning](http://semver.org/).
-
-Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 
 ## [Unreleased]
+
+### Added
+
+* [[#63](https://github.com/MyWarp/MyWarp/issues/63)] - Add a configuration option to specify which
+  warps are shown on Dynmap
+
+### Changed
+
+* Update SLF4j-API to 1.7.36
+* Update SpigotAPI (formerly Bukkit) to 1.19.2
+
+## [3.1.1] - 2021-01-12
+
+### Changed
+
+* [Bukkit] Update SquirrelID to 0.2.0
+* Update SLF4j-API to 1.7.30
+* [[#249](https://github.com/TheE/MyWarp/issues/249)] - Update `exception.no-such-player` message
+* [Bukkit][[#256](https://github.com/TheE/MyWarp/issues/256)] - Improve the warning message if a
+  limit's world does not exist
+* Update SpigotAPI (formerly Bukkit) to 1.16.4
+* Update JOOQ to 3.14.3
+* Update Flyway to 7.5
+* [[#283](https://github.com/TheE/MyWarp/issues/283)] Switch from Travis to Github Actions. As a
+  result, the build-number of dev-builds starts once again from 1.
+* Update Gradle to 6.7 and use up-to-date versions of all plugins used in the build process
+
+### Fixed
+* [Bukkit][[#224](https://github.com/TheE/MyWarp/issues/224)] - Remove superficial cancellation of
+  interaction events for warp signs
+* [Bukkit] Do not log an Exception when using LegacyFaceBlockResolver on Bukkit 1.12 and below
+* [[#255](https://github.com/TheE/MyWarp/issues/255)] - Correctly display the invitee's name when
+  using `mw invote`
+
+## [3.1] - 2019-12-01
+
+### Known Issues
+* [[#223](https://github.com/TheE/MyWarp/issues/223)] - Facing for warps in unloaded chunks is not
+  set when used via pressure plate
+
+### Added
+* [[#207](https://github.com/TheE/MyWarp/issues/213)] - Optional cooldowns and warmups for warp
+  signs
+* [[#213](https://github.com/TheE/MyWarp/issues/213)] - Configurable sorting for the `list` command
+
+### Changed
+* Build against Bukkit 1.14.4
+* Update Gradle to 5.6.1
+* Deploy development artifacts to our website using gradle
+* [[#186](https://github.com/TheE/MyWarp/issues/186)] - Update Flyway to 6.0.8. Users running
+  versions older than 3.0-beta4 **must** run MyWarp 3.0.1 at least once before updating.
+* Update JOOQ to 3.12.3
+
+### Fixed
+* [Bukkit] Properly cancel physical interaction events in order to fix rare `Player moved wrongly!` errors
+* [Bukkit] [[#205](https://github.com/TheE/MyWarp/issues/205)] - Restore compatibility with Essential's `/back` command
+* [[#211](https://github.com/TheE/MyWarp/issues/211)] - Evaluation of warp sign returns a false value. On Bukkit, this caused the cancellation of every interactions with buttons, levers and pressure plates.
+
+## [3.0.1] - 2019-02-19
+
+### Changed
+* [Bukkit] Update VaultAPI to 1.7 hosted in our own repository
+
+### Fixed
+* [Bukkit][[#196](https://github.com/TheE/MyWarp/issues/196)] - Warps on blocks added in 1.13 are marked unsafe even if they are safe
+* [Bukkit][[#198](https://github.com/TheE/MyWarp/issues/198)] - Translation files are missing from build
+
+## [3.0] - 2019-01-01
+
+### Changed
+* [Bukkit][[#191](https://github.com/TheE/MyWarp/issues/191)] - Increase the conversation timeout to 60 seconds
+* [[#191](https://github.com/TheE/MyWarp/issues/191)] - Make warp numbers in the `assets` command translatable
+* [Bukkit] - Build against Bukkit 1.13.2-R0.1-SNAPSHOT
+* Update Gradle to 5.0 and use up-to-date versions of all plugins used in the build process
+
+### Fixed
+* [[#181](https://github.com/TheE/MyWarp/issues/181)] - Warp limits fail to account for warps on multiple worlds
+* [[#192](https://github.com/TheE/MyWarp/issues/192)] - Using MySQL 5.7 or newer raises unsupported database errors
+
+## [3.0-rc-1] - 2018-09-05
 
 ### Changed
 * [[#143](https://github.com/TheE/MyWarp/issues/143)] - Change group-id and package structure to `io.github.mywarp.mywarp`
 * [[#71](https://github.com/TheE/MyWarp/issues/71)] - Require Java 8 to run MyWarp, update internals to use new, native Java constructs where possible
-* Update to JOOQ 3.9.3
-* FlyWay to JOOQ 4.2.0
-* [Bukkit] Build against Bukkit 1.12-R0.1-SNAPSHOT
+* Update JOOQ to 3.11
+* Update FlyWay to 4.2.0
+* [Bukkit] Build against Bukkit 1.13.1-R0.1-SNAPSHOT
+* [[#151](https://github.com/TheE/MyWarp/issues/151)] - Use new crowdin API
+* [Spigot][[#118](https://github.com/TheE/MyWarp/issues/118)] - Use `player.getLocale()` if it exists
+* [[#160](https://github.com/TheE/MyWarp/issues/160)] - Move LocaleResolver to VersionSupport
+* [[#144](https://github.com/TheE/MyWarp/issues/140)] - Make DBMS configuration way more flexible
+* Update Gradle to 4.8 and use up-to-date versions of all plugins used in the build process
+* Groups in `/warp invite` and `/warp uninvite` have to be prefixed by `g:` rather than using the `-g` flag.
+* [[#185](https://github.com/TheE/MyWarp/issues/185)] - Store all strings as `UTF8MB4` on MySQL
+* [[#145](https://github.com/TheE/MyWarp/issues/145)] - Resolve player-names and identifiers asynchronously
+* Move user downloadable development builds to [mywarp.github.io](https://mywarp.github.io/builds.html).
+* [Bukkit][[#187](https://github.com/TheE/MyWarp/issues/187)] - Update H2 to 1.4
+* [Bukkit][[#178](https://github.com/TheE/MyWarp/issues/178)] - Add a way to specify JDBC configuration options
+* [Bukkit][[#189](https://github.com/TheE/MyWarp/issues/189)] - Use MaterialData when checking for buttons and levers, improving forward compatibility
+* [[#146](https://github.com/TheE/MyWarp/issues/146)] - Optionally allow platforms to use their own service to display paginated content
 
 ### Added
 * [[#142](https://github.com/TheE/MyWarp/issues/142)] - Add an option to disallow warps with different capitalization
+* Accept UUIDs in `/warp invite`, `/warp uninvite` and `/warp give` using the `u:` prefix
+* [[#176](https://github.com/TheE/MyWarp/issues/176)] - Validate compatibility with older versions of Bukkit and Guava using AnimalSniffer
+* [Bukkit][[#189](https://github.com/TheE/MyWarp/issues/189)] - Resolve material information from a bundled configuration file, rather than hard-coding them
+
+### Fixed
+* [[#148](https://github.com/TheE/MyWarp/issues/148)] - `/warp list` flags are not working
+* [[#153](https://github.com/TheE/MyWarp/issues/153)] - Invalid date formatting in `/warp info`
+* [[#150](https://github.com/TheE/MyWarp/issues/150)] - slf4bukkit does not work on PaperSpigot
+* [[#157](https://github.com/TheE/MyWarp/issues/157), [[#61](https://github.com/TheE/MyWarp/issues/161)] - Issues with line endings ìn messages on Windows based servers
+* [[#166](https://github.com/TheE/MyWarp/issues/166), [[#167](https://github.com/TheE/MyWarp/issues/167)] - Dynmap shows public and private warps
+* [[#173](https://github.com/TheE/MyWarp/issues/173)] - Fix calculation of visits per day for just created warps
+* [[#156](https://github.com/TheE/MyWarp/issues/156)] - Fix teleporting with donkeys and mules on 1.12
+* Fix Guava compatibility of the Dynmap bridge
+* Fix handling of manually thrown AuthorizationExceptions in commands
+* [[#179](https://github.com/TheE/MyWarp/issues/179)] - Fix `give.is-owner` error message
+* [[#182](https://github.com/TheE/MyWarp/issues/182)] - Fix warp signs when warp names are not handled case sensitive
+* [Bukkit] Fix incompatibilities with Bukkit 1.7.10
+
+
+### Removed:
+* Remove `%creator%` placeholder from welcome messages and Dynmap markers
+* [Bukkit][[#146](https://github.com/TheE/MyWarp/issues/146)] - Remove explicit position correction for warps created in MyWarp 2 (the default warp safety algorithm is now responsible for handling these)
+* Remove dependency on commons-lang
 
 ## [3.0-beta-4] - 2017-02-26
 
@@ -30,7 +143,7 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 * Construct `MyWarp` with a factory rather than a constructor
 * [Bukkit] Overhaul Bukkit implementation
 * Unify naming of internal components, refactor most classes into a cleaner package structure
-* Make the core handled teleporting of tamed horses
+* Make the core handle teleports of tamed horses
 * [[#108](https://github.com/TheE/MyWarp/issues/108)] - Update FlyWay to 4.1.1
 * [[#86](https://github.com/TheE/MyWarp/issues/86)] - Replace EulerDirection with Vectors
 * Require at least Java8 to build (not to run) MyWarp
@@ -424,19 +537,37 @@ Unreleased APIs may change dramatically between `SNAPSHOT` versions.
 ## 1.10.5b
 
 ### Added
+
 * Added GroupManager support
 
 ### Changed
+
 * Updated for CraftBukkit RB `#677` (also tested with CB `#678`)
 * Updated for Permissions 2.5.5 or higher (tested with 2.6 and 2.7)
 * Changed update URL where MyWarp downloads sqlite libraries
 
-[Unreleased]: https://github.com/TheE/MyWarp/compare/v3.0-beta-4...HEAD
+[Unreleased]: https://github.com/TheE/MyWarp/compare/v3.1.1...HEAD
+
+[3.1.1]: https://github.com/TheE/MyWarp/compare/v3.1...v3.1.1
+
+[3.1]: https://github.com/TheE/MyWarp/compare/v3.0.1...v3.1
+
+[3.0.1]: https://github.com/TheE/MyWarp/compare/v3.0...v3.0.1
+
+[3.0]: https://github.com/TheE/MyWarp/compare/v3.0-rc-1...v3.0
+
+[3.0-rc-1]: https://github.com/TheE/MyWarp/compare/v3.0-beta-4...v3.0-rc-1
+
 [3.0-beta-4]: https://github.com/TheE/MyWarp/compare/v3.0-beta-3...v3.0-beta-4
+
 [3.0-beta-3]: https://github.com/TheE/MyWarp/compare/v3.0-beta-2...v3.0-beta-3
+
 [3.0-beta-2]: https://github.com/TheE/MyWarp/compare/v3.0-beta-1...v3.0-beta-2
+
 [3.0-beta-1]: https://github.com/TheE/MyWarp/compare/v2.6.5...v3.0-beta-1
+
 [2.6.5]: https://github.com/TheE/MyWarp/compare/v2.6.4...v2.6.5
+
 [2.6.4]: https://github.com/TheE/MyWarp/compare/v2.6.3...v2.6.4
 [2.6.3]: https://github.com/TheE/MyWarp/compare/v2.6.2...v2.6.3
 [2.6.2]: https://github.com/TheE/MyWarp/compare/v2.6.1...v2.6.2

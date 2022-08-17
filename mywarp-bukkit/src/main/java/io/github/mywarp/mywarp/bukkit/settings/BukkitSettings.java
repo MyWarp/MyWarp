@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,12 +20,13 @@
 package io.github.mywarp.mywarp.bukkit.settings;
 
 import com.google.common.collect.ImmutableSet;
-
 import io.github.mywarp.mywarp.bukkit.util.jdbc.JdbcConfiguration;
 import io.github.mywarp.mywarp.platform.InvalidFormatException;
 import io.github.mywarp.mywarp.platform.Settings;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
-
+import io.github.mywarp.mywarp.util.WarpUtils;
+import io.github.mywarp.mywarp.warp.Warp;
+import io.github.mywarp.mywarp.warp.Warp.Type;
 import org.apache.commons.lang.LocaleUtils;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
@@ -33,13 +34,14 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.slf4j.Logger;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-
-import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 /**
  * The settings when running on Bukkit. This implementation relies on Bukkit's configuration API to manage the actual
@@ -86,7 +88,7 @@ public class BukkitSettings implements Settings {
         ((FileConfiguration) config).save(configFile);
       } catch (IOException e) {
         log.error(String.format("Failed to save configuration to '%1$s', using build-in defaults for missing values.",
-                                configFile.getAbsolutePath()), e);
+            configFile.getAbsolutePath()), e);
       }
     }
 
@@ -206,7 +208,7 @@ public class BukkitSettings implements Settings {
       @Nullable ConfigurationSection section = configuredLimits.getConfigurationSection(key);
       if (section == null) {
         log.warn("The configuration section with the key '{}' does not contain any readable values and will be ignored."
-                 + " Is your configuration file correctly formatted?", key);
+            + " Is your configuration file correctly formatted?", key);
         continue;
       }
       ret.add(LimitBundle.create(key, section));
@@ -221,6 +223,15 @@ public class BukkitSettings implements Settings {
    */
   public boolean isTimersEnabled() {
     return config.getBoolean("timers.enabled");
+  }
+
+  /**
+   * Returns whether timers should be used for warp signs, too.
+   *
+   * @return {@code true} if timers should be used for signs
+   */
+  public boolean isTimersEnabledForSigns() {
+    return config.getBoolean("timers.forSigns");
   }
 
   /**
@@ -286,7 +297,7 @@ public class BukkitSettings implements Settings {
       @Nullable ConfigurationSection section = configuredTimers.getConfigurationSection(key);
       if (section == null) {
         log.warn("The configuration section with the key '{}' does not contain any readable values and will be ignored."
-                 + " Is your configuration file correctly formatted?", key);
+            + " Is your configuration file correctly formatted?", key);
         continue;
       }
       ret.add(DurationBundle.create(key, configuredTimers.getConfigurationSection(key)));
@@ -327,6 +338,11 @@ public class BukkitSettings implements Settings {
     return config.getBoolean("settings.informPlayersOnInvitation");
   }
 
+  @Override
+  public Comparator<Warp> getDefaultListComparator() {
+    return WarpUtils.getComparator(config.getString("settings.defaultListComparator"));
+  }
+
   /**
    * Gets the default FeeBundle.
    *
@@ -353,7 +369,7 @@ public class BukkitSettings implements Settings {
       @Nullable ConfigurationSection section = configuredFees.getConfigurationSection(key);
       if (section == null) {
         log.warn("The configuration section with the key '{}' does not contain any readable values and will be ignored."
-                 + " Is your configuration file correctly formatted?", key);
+            + " Is your configuration file correctly formatted?", key);
         continue;
       }
       ret.add(FeeBundle.create(key, configuredFees.getConfigurationSection(key)));
@@ -424,4 +440,21 @@ public class BukkitSettings implements Settings {
     return config.getBoolean("dynmap.marker.showLabel");
   }
 
+  /**
+   * Returns a Predicate that matches all Warps that should be shown.
+   *
+   * @return a Predicate that matches all Warps to be shown
+   */
+  public Predicate<Warp> getDynmapShowTypes() {
+    return config.getStringList("dynmap.showTypes").stream().map(s -> {
+      if (s.equalsIgnoreCase("public")) {
+        return (Predicate<Warp>) w -> w.isType(Type.PUBLIC);
+      } else if (s.equalsIgnoreCase("private")) {
+        return (Predicate<Warp>) w -> w.isType(Type.PRIVATE);
+      } else {
+        log.warn("Unknown type '{}' for 'dynmap.showTypes'. The entry will be ignored.", s);
+        return (Predicate<Warp>) w -> false;
+      }
+    }).reduce(Predicate::or).orElse(w -> false);
+  }
 }

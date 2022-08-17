@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,52 +19,35 @@
 
 package io.github.mywarp.mywarp.warp.storage;
 
-import static org.jooq.SQLDialect.MARIADB;
-import static org.jooq.SQLDialect.MYSQL;
-import static org.jooq.SQLDialect.SQLITE;
-import static org.jooq.impl.DSL.field;
-import static org.jooq.impl.DSL.name;
-import static org.jooq.impl.DSL.table;
-
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-
 import io.github.mywarp.mywarp.platform.PlayerNameResolver;
+import io.github.mywarp.mywarp.platform.Profile;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
 import io.github.mywarp.mywarp.util.playermatcher.GroupPlayerMatcher;
 import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpBuilder;
-
-import org.jooq.Allow;
-import org.jooq.Configuration;
-import org.jooq.Name;
-import org.jooq.Record13;
-import org.jooq.Require;
-import org.jooq.Result;
-import org.jooq.SQLDialect;
+import org.jooq.*;
 import org.jooq.conf.Settings;
 import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultConfiguration;
 import org.jooq.tools.jdbc.JDBCUtils;
 import org.slf4j.Logger;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.UUID;
-
 import javax.annotation.Nullable;
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+
+import static org.jooq.SQLDialect.*;
+import static org.jooq.impl.DSL.*;
 
 /**
  * A {@link WarpSource} for databases with a legacy scheme (pre 3.0).
@@ -73,7 +56,7 @@ import javax.sql.DataSource;
  * #getWarps()} will convert both. Player names are acquired by calling the configured {@link PlayerNameResolver}, witch
  * may result in a blocking call.</p>
  *
- * <p>Call {@link #from(DataSource, String, String)} to create instances.</p>
+ * <p>Call {@link #using(DataSource, String, String)} to create instances.</p>
  */
 @SuppressWarnings("checkstyle:indentation")
 @Allow({SQLITE, MYSQL, MARIADB})
@@ -90,7 +73,7 @@ public final class LegacyWarpSource implements WarpSource {
   private final ImmutableMap<String, UUID> worldMap;
 
   private LegacyWarpSource(Configuration configuration, Name name, PlayerNameResolver resolver,
-                           Map<String, UUID> worldMap) {
+      Map<String, UUID> worldMap) {
     this.configuration = configuration;
     this.tableName = name;
     this.playerResolver = resolver;
@@ -105,32 +88,30 @@ public final class LegacyWarpSource implements WarpSource {
    *
    * @param dataSource   the DataSource that provides a connection to the DBMS
    * @param tableName    the name of the DB table that contains the warps
-   * @param databaseName the name of the database (somtimes also called schema that contains the table. May be {@code
+   * @param databaseName the name of the database (sometimes also called schema that contains the table. May be {@code
    *                     null} if the DBMS does not support multiple databases.
    * @return a builder step
-   * @throws StorageInitializationException if the given dataSource does not connect to a DBMS or the DBMS is not
-   *                                        supported
+   * @throws SQLException                if the connection to the DBMS fails
+   * @throws UnsupportedDialectException if the dialect if the {@code dataSource} is not supported
    */
-  public static LegacyWarpImporterBuilder from(DataSource dataSource, String tableName, @Nullable String databaseName)
-      throws StorageInitializationException {
-    return from(dataSource, databaseName != null ? name(databaseName, tableName) : name(tableName));
+  public static LegacyWarpImporterBuilder using(DataSource dataSource, String tableName, @Nullable String databaseName)
+      throws UnsupportedDialectException, SQLException {
+    return using(dataSource, databaseName != null ? name(databaseName, tableName) : name(tableName));
   }
 
-  private static LegacyWarpImporterBuilder from(DataSource source, Name tableName)
-      throws StorageInitializationException {
+  private static LegacyWarpImporterBuilder using(DataSource source, Name tableName)
+      throws UnsupportedDialectException, SQLException {
     SQLDialect dialect;
     try (Connection conn = source.getConnection()) {
       dialect = JDBCUtils.dialect(conn);
 
-      if (!SUPPORTED_DIALECTS.contains(dialect)) {
-        throw new StorageInitializationException(String.format("%s is not supported!", dialect.getName()));
+      if (SUPPORTED_DIALECTS.stream().noneMatch(dialect::supports)) {
+        throw new UnsupportedDialectException(dialect);
       }
 
-    } catch (SQLException e) {
-      throw new StorageInitializationException("Failed to connect due to an SQLException.", e);
     }
     return new LegacyWarpImporterBuilder(new DefaultConfiguration().set(dialect).set(new Settings()).set(source),
-                                         tableName);
+        tableName);
   }
 
   @Override
@@ -141,18 +122,18 @@ public final class LegacyWarpSource implements WarpSource {
         String>>
         results =
         DSL.using(configuration).select(field(name("name"), String.class), //1
-                      field(name("creator"), String.class), //2
-                      field(name("publicAll"), Boolean.class), //3
-                      field(name("x"), Double.class), //4
-                      field(name("y"), Double.class), //5
-                      field(name("z"), Double.class), //6
-                      field(name("yaw"), Float.class), //7
-                      field(name("pitch"), Float.class), //8
-                      field(name("world"), String.class), //9
-                      field(name("visits"), Integer.class), //10
-                      field(name("welcomeMessage"), String.class), //11
-                      field(name("permissions"), String.class), //12
-                      field(name("groupPermissions"), String.class)) //13
+            field(name("creator"), String.class), //2
+            field(name("publicAll"), Boolean.class), //3
+            field(name("x"), Double.class), //4
+            field(name("y"), Double.class), //5
+            field(name("z"), Double.class), //6
+            field(name("yaw"), Float.class), //7
+            field(name("pitch"), Float.class), //8
+            field(name("world"), String.class), //9
+            field(name("visits"), Integer.class), //10
+            field(name("welcomeMessage"), String.class), //11
+            field(name("permissions"), String.class), //12
+            field(name("groupPermissions"), String.class)) //13
             .from(table(tableName)).fetch();
     // @formatter:on
     log.info("{} entries found.", results.size());
@@ -163,12 +144,26 @@ public final class LegacyWarpSource implements WarpSource {
     }
     log.info("Looking up unique IDs for {} unique players.", playerNames.size());
 
-    ImmutableMap<String, UUID> cache = playerResolver.getByName(playerNames);
+    Set<Profile> cache;
+    try {
+      //the method getWarps() should never be called on the main thread, so we simply block execution until the
+      // profiles are available.
+      cache = playerResolver.getByName(playerNames).get();
+    } catch (InterruptedException | ExecutionException e) {
+      log.error("Failed to resolve player names.", e);
+      return Collections.emptyList();
+    }
     log.info("{} unique IDs found.", cache.size());
 
     // the legacy database may contain player-names with a wrong case, so the lookup must be case insensitive
     TreeMap<String, UUID> profileLookup = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    profileLookup.putAll(cache);
+    for (Profile profile : cache) {
+      if (!profile.getName().isPresent()) {
+        //this should not happen as we generate this list using names
+        continue;
+      }
+      profileLookup.put(profile.getName().get(), profile.getUuid());
+    }
 
     List<Warp> ret = new ArrayList<>(results.size());
 
@@ -180,7 +175,7 @@ public final class LegacyWarpSource implements WarpSource {
       UUID creator = profileLookup.get(creatorName);
       if (creator == null) {
         log.warn("For the creator of '{}' ({}) no unique ID could be found. The warp will be ignored.", warpName,
-                 creatorName);
+            creatorName);
         continue;
       }
 
@@ -193,7 +188,7 @@ public final class LegacyWarpSource implements WarpSource {
       UUID worldId = worldMap.get(worldName);
       if (worldId == null) {
         log.warn("For the world of '{}' ({}) no unique ID could be found. The warp will be ignored.", warpName,
-                 worldName);
+            worldName);
         continue;
       }
 
@@ -210,8 +205,7 @@ public final class LegacyWarpSource implements WarpSource {
         UUID invitee = profileLookup.get(playerName);
         if (invitee == null) {
           log.warn("{}, who is criteria to '{}' does not have a unique ID. The playermatcher will be ignored.",
-                   playerName,
-                   warpName);
+              playerName, warpName);
           continue;
         }
         builder.addInvitation(new UuidPlayerMatcher(invitee));
@@ -228,7 +222,7 @@ public final class LegacyWarpSource implements WarpSource {
   /**
    * Builder class for {@link LegacyWarpSource}s.
    *
-   * @see LegacyWarpSource#from(DataSource, String, String)
+   * @see LegacyWarpSource#using(DataSource, String, String)
    */
   public static class LegacyWarpImporterBuilder {
 

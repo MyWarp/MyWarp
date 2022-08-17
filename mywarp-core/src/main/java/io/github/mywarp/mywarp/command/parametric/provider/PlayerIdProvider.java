@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,21 +21,23 @@ package io.github.mywarp.mywarp.command.parametric.provider;
 
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
-
-import io.github.mywarp.mywarp.command.parametric.provider.exception.NoSuchPlayerIdentifierException;
+import com.sk89q.intake.parametric.Provider;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.PlayerNameResolver;
+import io.github.mywarp.mywarp.platform.Profile;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Provides {@link UUID} instances that identify players.
  *
  * @see LocalPlayer#getUniqueId()
  */
-class PlayerIdProvider extends AbstractProvider<UUID> {
+class PlayerIdProvider extends AbstractProvider<CompletableFuture<Profile>>
+    implements Provider<CompletableFuture<Profile>> {
 
   private final PlayerNameResolver resolver;
 
@@ -44,14 +46,16 @@ class PlayerIdProvider extends AbstractProvider<UUID> {
   }
 
   @Override
-  public UUID get(CommandArgs arguments, List<? extends Annotation> modifiers) throws ArgumentException {
+  public CompletableFuture<Profile> get(CommandArgs arguments, List<? extends Annotation> modifiers)
+      throws ArgumentException {
     String argument = arguments.next();
 
     if (argument.charAt(1) == ':' && argument.charAt(0) == 'u') {
-      return ProviderUtil.parseUuid(argument.substring(2));
+      UUID uuid = ProviderUtil.parseUuid(argument.substring(2));
+      return resolver.getByUniqueId(uuid);
     }
 
-    return resolver.getByName(argument).orElseThrow(() -> new NoSuchPlayerIdentifierException(argument));
+    return resolver.getByName(argument);
   }
 
 }

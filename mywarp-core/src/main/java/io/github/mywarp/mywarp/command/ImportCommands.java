@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,7 +22,6 @@ package io.github.mywarp.mywarp.command;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.Require;
 import com.sk89q.intake.parametric.annotation.OptArg;
-
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.LocalWorld;
@@ -31,12 +30,9 @@ import io.github.mywarp.mywarp.util.Message;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
-import io.github.mywarp.mywarp.warp.storage.LegacyWarpSource;
-import io.github.mywarp.mywarp.warp.storage.SqlDataService;
-import io.github.mywarp.mywarp.warp.storage.StorageInitializationException;
-import io.github.mywarp.mywarp.warp.storage.WarpSource;
-import io.github.mywarp.mywarp.warp.storage.WarpStorageFactory;
+import io.github.mywarp.mywarp.warp.storage.*;
 
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -72,18 +68,19 @@ public final class ImportCommands {
 
   @Command(aliases = {"current", "curr"}, desc = "import.current.description", help = "import.current.help")
   @Require(IMPORT_PERMISSION)
-  public void current(Actor actor, SqlDataService dataService) throws StorageInitializationException {
-    WarpSource source = WarpStorageFactory.create(dataService);
+  public void current(Actor actor, SqlDataService dataService)
+      throws UnsupportedDialectException, SQLException, TableInitializationException {
+    WarpSource source = WarpStorageBuilder.using(dataService).build();
     start(actor, dataService, source);
   }
 
   @Command(aliases = {"legacy"}, desc = "import.legacy.description", help = "import.legacy.help")
   @Require(IMPORT_PERMISSION)
   public void legacy(Actor actor, SqlDataService dataService, @OptArg("warpTable") String tableName)
-      throws StorageInitializationException {
+      throws UnsupportedDialectException, SQLException {
     WarpSource
         source =
-        LegacyWarpSource.from(dataService.getDataSource(), tableName, dataService.getDatabase().orElse(null))
+        LegacyWarpSource.using(dataService.getDataSource(), tableName, dataService.getDatabase().orElse(null))
             .using(playerNameResolver, getWorldSnapshot());
 
     start(actor, dataService, source);

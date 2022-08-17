@@ -1,0 +1,16 @@
+version: 2
+updates:
+  - package-ecosystem: gradle
+    directory: "/"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+    assignees:
+      - TheE
+    labels:
+      - dependencies
+    ignore:
+      - dependency-name: com.google.guava:guava
+        versions:
+          - "> 21.0"
+      - dependency-name: org.bukkit:bukkit

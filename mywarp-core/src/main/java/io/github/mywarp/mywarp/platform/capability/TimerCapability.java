@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,13 +19,13 @@
 
 package io.github.mywarp.mywarp.platform.capability;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import io.github.mywarp.mywarp.platform.LocalPlayer;
-import io.github.mywarp.mywarp.service.teleport.timer.Duration;
 import io.github.mywarp.mywarp.service.teleport.timer.TimerAction;
 
 import javax.annotation.Nullable;
+import java.time.Duration;
+
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * The capability of a platform to run timers.
@@ -98,15 +98,20 @@ public interface TimerCapability {
     private final boolean timerRunning;
     @Nullable
     private final Duration durationLeft;
+    @Nullable
+    private final TimerAction timerAction;
 
     /**
      * Creates an instance.
      *
-     * @param durationLeft the Duration left on the running Timer
+     * @param timerRunning true if the timer is running
+     * @param durationLeft the Duration left on the running Timer (may be null)
+     * @param timerAction  the TimerAction currently running (may be null)
      */
-    private EvaluationResult(boolean timerRunning, @Nullable Duration durationLeft) {
+    public EvaluationResult(boolean timerRunning, @Nullable Duration durationLeft, @Nullable TimerAction timerAction) {
       this.timerRunning = timerRunning;
       this.durationLeft = durationLeft;
+      this.timerAction = timerAction;
     }
 
     /**
@@ -119,33 +124,34 @@ public interface TimerCapability {
     }
 
     /**
+     * Creates an instance that indicates no running timers.
+     *
+     * @return an instance
+     */
+    public static EvaluationResult noRunningTimer() {
+      return new EvaluationResult(false, null, null);
+    }
+
+    /**
      * Gets the duration left on the running timer.
      *
      * @return the duration left
      * @throws IllegalStateException if no timer is running and thus {@link #isTimerRunning()} returns {@code true}
      */
     public Duration getDurationLeft() {
-      checkState(timerRunning);
+      checkState(timerRunning && durationLeft != null);
       return durationLeft;
     }
 
     /**
-     * Creates an instance that indicates no running timers.
+     * Gets the running timer.
      *
-     * @return an instance
+     * @return the running timer
+     * @throws IllegalStateException if no timer is running and thus {@link #isTimerRunning()} returns {@code true}
      */
-    public static EvaluationResult noRunningTimer() {
-      return new EvaluationResult(false, null);
-    }
-
-    /**
-     * Creates an instance that indicates a timer is running and the given {@code duration} is left until it finishes.
-     *
-     * @param duration the duration left
-     * @return an instance
-     */
-    public static EvaluationResult runningTimer(Duration duration) {
-      return new EvaluationResult(true, duration);
+    public TimerAction getRunningTimer() {
+      checkState(timerRunning && timerAction != null);
+      return timerAction;
     }
   }
 }

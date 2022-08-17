@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,8 +20,8 @@
 package io.github.mywarp.mywarp.command.parametric.namespace;
 
 import com.sk89q.intake.parametric.ProvisionException;
-
 import io.github.mywarp.mywarp.command.CommandHandler;
+import io.github.mywarp.mywarp.command.util.UserViewableException;
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 
@@ -29,7 +29,7 @@ import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
  * Thrown when an sub-instance of Actor is required, but the Actor who called the command is not an instance of the
  * required type.
  */
-public class IllegalCommandSenderException extends ProvisionException {
+public class IllegalCommandSenderException extends ProvisionException implements UserViewableException {
 
   private static final DynamicMessages msg = new DynamicMessages(CommandHandler.RESOURCE_BUNDLE_NAME);
 
@@ -55,7 +55,7 @@ public class IllegalCommandSenderException extends ProvisionException {
   }
 
   @Override
-  public String getLocalizedMessage() {
+  public String getUserMessage() {
     return msg.getString("exception.illegal-command-sender");
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,16 +19,13 @@
 
 package io.github.mywarp.mywarp.bukkit;
 
-import static com.google.common.base.Preconditions.checkState;
-
-import com.flowpowered.math.vector.Vector3i;
-import com.google.common.primitives.Ints;
-
 import io.github.mywarp.mywarp.MyWarp;
 import io.github.mywarp.mywarp.bukkit.settings.BukkitSettings;
 import io.github.mywarp.mywarp.bukkit.util.conversation.AcceptancePromptFactory;
 import io.github.mywarp.mywarp.bukkit.util.conversation.WelcomeEditorFactory;
 import io.github.mywarp.mywarp.bukkit.util.jdbc.JdbcConfiguration;
+import io.github.mywarp.mywarp.bukkit.util.material.ConfigurableMaterialInfo;
+import io.github.mywarp.mywarp.bukkit.util.material.MaterialInfo;
 import io.github.mywarp.mywarp.bukkit.util.permission.BukkitPermissionsRegistration;
 import io.github.mywarp.mywarp.bukkit.util.permission.group.GroupResolver;
 import io.github.mywarp.mywarp.bukkit.util.permission.group.GroupResolverFactory;
@@ -36,18 +33,16 @@ import io.github.mywarp.mywarp.bukkit.util.stats.StatisticService;
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.InvalidFormatException;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
-import io.github.mywarp.mywarp.platform.LocalWorld;
+import io.github.mywarp.mywarp.platform.capability.TimerCapability;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.i18n.FolderSourcedControl;
 import io.github.mywarp.mywarp.util.i18n.LocaleManager;
-import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.storage.SqlDataService;
-import io.github.mywarp.mywarp.warp.storage.StorageInitializationException;
-
+import io.github.mywarp.mywarp.warp.storage.TableInitializationException;
+import io.github.mywarp.mywarp.warp.storage.UnsupportedDialectException;
 import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -61,16 +56,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapCommonAPI;
 import org.slf4j.Logger;
 
+import javax.annotation.Nullable;
 import java.io.Closeable;
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.util.Collections;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.sql.SQLException;
+import java.util.*;
 
-import javax.annotation.Nullable;
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * The MyWarp plugin singleton when running on Bukkit.
@@ -80,7 +73,7 @@ import javax.annotation.Nullable;
 public final class MyWarpPlugin extends JavaPlugin {
 
   public static final String CONVERSATION_RESOURCE_BUNDLE_NAME = "io.github.mywarp.mywarp.lang.Conversations";
-  public static final int CONVERSATION_TIMEOUT = 30;
+  public static final int CONVERSATION_TIMEOUT = 60;
 
   private static final Logger log = MyWarpLogger.getLogger(MyWarpPlugin.class);
 
@@ -110,14 +103,14 @@ public final class MyWarpPlugin extends JavaPlugin {
         return;
       }
     }
-    platform =
-        new BukkitPlatform(this, dataFolder, YamlConfiguration.loadConfiguration(this.getTextResource("config.yml")));
+    platform = new BukkitPlatform(this, dataFolder, YamlConfiguration.loadConfiguration(getTextResource("config.yml")));
 
     // setup the core
     try {
       myWarp = MyWarp.initialize(platform, createDataService(getSettings().getJdbcStorageConfiguration()));
-    } catch (StorageInitializationException | InvalidFormatException e) {
-      log.error("Failed to initialize warp storage.", e);
+    } catch (InvalidFormatException | UnsupportedDialectException | SQLException | TableInitializationException e) {
+      log.error("Failed to initialize warp storage.");
+      log.error(e.getLocalizedMessage(), e);
       log.error("MyWarp is unable to continue and will be disabled.");
       Bukkit.getPluginManager().disablePlugin(this);
       return;
@@ -127,7 +120,7 @@ public final class MyWarpPlugin extends JavaPlugin {
     groupResolver = GroupResolverFactory.createResolver();
     acceptancePromptFactory =
         new AcceptancePromptFactory(createConversationFactory(), myWarp.getAuthorizationResolver(), platform.getGame(),
-                                    platform.getPlayerNameResolver(), this);
+            platform.getPlayerNameResolver(), this);
     welcomeEditorFactory = new WelcomeEditorFactory(createConversationFactory());
 
     notifyCoreInitialized();
@@ -169,7 +162,13 @@ public final class MyWarpPlugin extends JavaPlugin {
 
     //register warp sign listener
     if (getSettings().isWarpSignsEnabled()) {
-      new WarpSignListener(this, myWarp.createWarpSignHandler()).registerEvents(this);
+      TimerCapability capability = null;
+      if (getSettings().isTimersEnabledForSigns()) {
+        capability = platform.getCapability(TimerCapability.class).orElse(null);
+      }
+      platform.getCapability(TimerCapability.class);
+      new WarpSignListener(this, myWarp.createWarpSignHandler(capability), createMaterialInformation())
+          .registerEvents(this);
     }
 
     // register world access permissions
@@ -188,7 +187,7 @@ public final class MyWarpPlugin extends JavaPlugin {
     if (getSettings().isDynmapEnabled()) {
       Plugin dynmap = getServer().getPluginManager().getPlugin("dynmap");
       if (dynmap != null && dynmap.isEnabled() && dynmap instanceof DynmapCommonAPI) {
-        marker = new DynmapMarker((DynmapCommonAPI) dynmap, this, platform, w -> w.isType(Warp.Type.PUBLIC));
+        marker = new DynmapMarker((DynmapCommonAPI) dynmap, this, platform, getSettings().getDynmapShowTypes());
         marker.addMarker(myWarp.getWarpManager().getAll(warp -> true));
         myWarp.getEventBus().register(marker);
       } else {
@@ -253,7 +252,7 @@ public final class MyWarpPlugin extends JavaPlugin {
    */
   public LocalPlayer wrap(Player player) {
     return new BukkitPlayer(player, getAcceptancePromptFactory(), getWelcomeEditorFactory(), getGroupResolver(),
-                            getSettings());
+        getSettings());
   }
 
   /**
@@ -291,7 +290,7 @@ public final class MyWarpPlugin extends JavaPlugin {
    *
    * @return the configured settings
    */
-  protected BukkitSettings getSettings() {
+  private BukkitSettings getSettings() {
     checkState(platform != null, "'platform' is not yet initialized");
     return platform.getSettings();
   }
@@ -343,16 +342,8 @@ public final class MyWarpPlugin extends JavaPlugin {
     return ret;
   }
 
-  /**
-   * Gets the {@code Material} of the block at the given position within the given world.
-   *
-   * @param world    the world
-   * @param position the position
-   * @return the Material of the block at the given position
-   */
-  static Material getMaterial(LocalWorld world, Vector3i position) {
-    return BukkitAdapter.adapt(world).getBlockAt(Ints.checkedCast(position.getX()), Ints.checkedCast(position.getY()),
-                                                 Ints.checkedCast(position.getZ())).getType();
+  MaterialInfo createMaterialInformation() {
+    return new ConfigurableMaterialInfo(YamlConfiguration.loadConfiguration(getTextResource("material-info.yml")));
   }
 
 }

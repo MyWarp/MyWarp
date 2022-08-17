@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -27,7 +27,7 @@ import java.util.UUID;
  * Thrown when an attempt is made to access a world that does not exist on the server at the moment, the attempt was
  * made.
  */
-public class NoSuchWorldException extends CommandException {
+public class NoSuchWorldException extends CommandException implements UserViewableException {
 
   private final UUID worldIdentifier;
 
@@ -47,5 +47,10 @@ public class NoSuchWorldException extends CommandException {
    */
   public UUID getWorldIdentifier() {
     return worldIdentifier;
+  }
+
+  @Override
+  public String getUserMessage() {
+    return msg.getString("exception.no-such-world", worldIdentifier);
   }
 }

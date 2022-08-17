@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -33,7 +33,7 @@ import java.util.function.Predicate;
  */
 public class AuthorizationResolver {
 
-  private AuthorizationStrategy strategy;
+  private final AuthorizationStrategy strategy;
 
   /**
    * Creates an instance that uses the given strategy to resolve authentications.
@@ -47,8 +47,8 @@ public class AuthorizationResolver {
   /**
    * Returns whether the given {@code Warp} is modifiable by the given {@code Actor}.
    *
-   * <p>If this method returns {@code true} it is guaranteed that {@link #isUsable(Warp, LocalEntity)} as well as {@link
-   * #isViewable(Warp, Actor)} also return {@code true}.</p>
+   * <p>If this method returns {@code true} it is guaranteed that {@link #isUsable(Warp, LocalEntity)} as well as
+   * {@link #isViewable(Warp, Actor)} also return {@code true}.</p>
    *
    * @param warp  the warp to check
    * @param actor the Actor to check

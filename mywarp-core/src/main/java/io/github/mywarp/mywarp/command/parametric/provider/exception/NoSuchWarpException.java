@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,10 +20,8 @@
 package io.github.mywarp.mywarp.command.parametric.provider.exception;
 
 import com.google.common.collect.ImmutableList;
-
+import io.github.mywarp.mywarp.util.McUtil;
 import io.github.mywarp.mywarp.warp.Warp;
-
-import org.apache.commons.lang.text.StrBuilder;
 
 /**
  * Thrown when a given input does not match an existing {@link Warp}.
@@ -45,11 +43,16 @@ public class NoSuchWarpException extends NonMatchingInputException {
 
   @Override
   public String getLocalizedMessage() {
-    StrBuilder builder = new StrBuilder();
+    return getUserMessage();
+  }
+
+  @Override
+  public String getUserMessage() {
+    StringBuilder builder = new StringBuilder();
     builder.append(msg.getString("exception.no-such-warp", getInput()));
 
     if (!matches.isEmpty()) {
-      builder.appendNewLine();
+      builder.append(McUtil.lineSeparator());
       builder.append(msg.getString("exception.no-such-warp.suggestion", matches.get(1).getName()));
     }
     return builder.toString();

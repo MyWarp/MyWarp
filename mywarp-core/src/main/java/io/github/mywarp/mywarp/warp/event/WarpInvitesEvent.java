@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -36,7 +36,7 @@ public class WarpInvitesEvent extends WarpEvent {
    *
    * @param warp             the warp
    * @param invitationStatus the invitationStatus
-   * @param invitation          the PlayerMatcher
+   * @param invitation       the Invitation
    */
   public WarpInvitesEvent(Warp warp, InvitationStatus invitationStatus, PlayerMatcher invitation) {
     super(warp);
@@ -58,7 +58,7 @@ public class WarpInvitesEvent extends WarpEvent {
   }
 
   /**
-   * Represents the status of an PlayerMatcher that is indicated by an WarpInvitesEvent.
+   * Represents the status of an Invitation that is indicated by an WarpInvitesEvent.
    */
   public enum InvitationStatus {
     ADDITION, REMOVAL

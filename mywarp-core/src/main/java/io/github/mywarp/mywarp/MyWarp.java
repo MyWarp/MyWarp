@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,7 +20,6 @@
 package io.github.mywarp.mywarp;
 
 import com.google.common.eventbus.EventBus;
-
 import io.github.mywarp.mywarp.command.CommandHandler;
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.Platform;
@@ -28,35 +27,24 @@ import io.github.mywarp.mywarp.platform.PlayerNameResolver;
 import io.github.mywarp.mywarp.platform.Settings;
 import io.github.mywarp.mywarp.platform.capability.EconomyCapability;
 import io.github.mywarp.mywarp.platform.capability.PositionValidationCapability;
+import io.github.mywarp.mywarp.platform.capability.TimerCapability;
 import io.github.mywarp.mywarp.sign.WarpSignHandler;
 import io.github.mywarp.mywarp.util.InvitationInformationListener;
 import io.github.mywarp.mywarp.util.MyWarpLogger;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
-import io.github.mywarp.mywarp.util.teleport.LegacyPositionCorrectionCapability;
 import io.github.mywarp.mywarp.util.teleport.StrategicTeleportHandler;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
-import io.github.mywarp.mywarp.warp.EventfulPopulatableWarpManager;
-import io.github.mywarp.mywarp.warp.MemoryPopulatableWarpManager;
-import io.github.mywarp.mywarp.warp.PopulatableWarpManager;
-import io.github.mywarp.mywarp.warp.StoragePopulatableWarpManager;
-import io.github.mywarp.mywarp.warp.WarpManager;
+import io.github.mywarp.mywarp.warp.*;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
 import io.github.mywarp.mywarp.warp.authorization.PermissionAuthorizationStrategy;
 import io.github.mywarp.mywarp.warp.authorization.WarpPropertiesAuthorizationStrategy;
 import io.github.mywarp.mywarp.warp.authorization.WorldAccessAuthorizationStrategy;
-import io.github.mywarp.mywarp.warp.storage.AsyncWritingWarpStorage;
-import io.github.mywarp.mywarp.warp.storage.SqlDataService;
-import io.github.mywarp.mywarp.warp.storage.StorageInitializationException;
-import io.github.mywarp.mywarp.warp.storage.WarpStorage;
-import io.github.mywarp.mywarp.warp.storage.WarpStorageFactory;
-
+import io.github.mywarp.mywarp.warp.storage.*;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
 import javax.annotation.Nullable;
+import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Entry point and container for a working MyWarp implementation.
@@ -82,7 +70,7 @@ public final class MyWarp {
   private InvitationInformationListener invitationInformationListener;
 
   private MyWarp(Platform platform, SqlDataService dataService, WarpStorage warpStorage,
-                 PopulatableWarpManager warpManager, EventBus eventBus, AuthorizationResolver authorizationResolver) {
+      PopulatableWarpManager warpManager, EventBus eventBus, AuthorizationResolver authorizationResolver) {
     this.platform = platform;
     this.dataService = dataService;
     this.warpStorage = warpStorage;
@@ -105,13 +93,16 @@ public final class MyWarp {
    * @param platform    the platform MyWarp will run on
    * @param dataService the SqlDataService warps are stored in
    * @return a fully operational instance of MyWarp that runs on {@code platform}
-   * @throws StorageInitializationException if the Storage system could not be initialized
+   * @throws SQLException                 if the connection to the DBMS fails
+   * @throws UnsupportedDialectException  if the dialect of if configuration is not supported
+   * @throws TableInitializationException if the connection works, but the initialization of the table structure fails
    */
-  public static MyWarp initialize(Platform platform, SqlDataService dataService) throws StorageInitializationException {
+  public static MyWarp initialize(Platform platform, SqlDataService dataService)
+      throws UnsupportedDialectException, SQLException, TableInitializationException {
     WarpStorage
         warpStorage =
-        new AsyncWritingWarpStorage(WarpStorageFactory.createAndInitialize(dataService),
-                                    dataService.getExecutorService());
+        new AsyncWritingWarpStorage(WarpStorageBuilder.using(dataService).initTables().build(),
+            dataService.getExecutorService());
 
     EventBus eventBus = new EventBus();
 
@@ -124,7 +115,7 @@ public final class MyWarp {
         authorizationResolver =
         new AuthorizationResolver(new PermissionAuthorizationStrategy(
             new WorldAccessAuthorizationStrategy(new WarpPropertiesAuthorizationStrategy(), platform.getGame(),
-                                                 platform.getSettings())));
+                platform.getSettings())));
 
     MyWarp myWarp = new MyWarp(platform, dataService, warpStorage, warpManager, eventBus, authorizationResolver);
     myWarp.initializeMutableFields();
@@ -232,17 +223,15 @@ public final class MyWarp {
    *
    * @return a new WarpSign instance
    */
-  public WarpSignHandler createWarpSignHandler() {
+  public WarpSignHandler createWarpSignHandler(@Nullable TimerCapability capability) {
     return new WarpSignHandler(getSettings().getWarpSignsIdentifiers(), this,
-                               platform.getCapability(EconomyCapability.class).orElse(null));
+        platform.getCapability(EconomyCapability.class).orElse(null), capability);
   }
 
   private void initializeMutableFields() {
-    List<PositionValidationCapability> validationStrategies = new ArrayList<PositionValidationCapability>();
-    validationStrategies.add(new LegacyPositionCorrectionCapability());
-    platform.getCapability(PositionValidationCapability.class).ifPresent(validationStrategies::add);
-
-    teleportHandler = new StrategicTeleportHandler(getSettings(), getGame(), validationStrategies);
+    teleportHandler =
+        new StrategicTeleportHandler(getSettings(), getGame(),
+            platform.getCapability(PositionValidationCapability.class).orElse(null));
 
     commandHandler = new CommandHandler(this, platform);
 

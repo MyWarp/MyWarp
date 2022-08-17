@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,21 +21,18 @@ package io.github.mywarp.mywarp.bukkit;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
-
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.Sign;
 import io.github.mywarp.mywarp.util.BlockFace;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
-
-import javax.annotation.Nullable;
 
 /**
  * A reference to a World in Bukkit.
@@ -64,11 +61,6 @@ public class BukkitWorld implements LocalWorld {
   }
 
   @Override
-  public boolean isNotFullHeight(Vector3i position) {
-    return MaterialInfo.isNotFullHeight(MyWarpPlugin.getMaterial(this, position));
-  }
-
-  @Override
   public void playTeleportEffect(Vector3d position) {
     Location loc = new Location(getLoadedWorld(), position.getX(), position.getY(), position.getZ());
 
@@ -80,7 +72,6 @@ public class BukkitWorld implements LocalWorld {
 
   @Override
   public Optional<Sign> getSign(Vector3i position) {
-    //Generics are stupid and throw an error when not casting
     return Optional.ofNullable(getBukkitSign(position));
   }
 
@@ -89,7 +80,6 @@ public class BukkitWorld implements LocalWorld {
     BukkitSign sign = getBukkitSign(position);
 
     if (sign != null && sign.isAttachedTo(blockFace)) {
-      //Generics are stupid and throw an error when not casting
       return Optional.of(sign);
     }
     return Optional.empty();

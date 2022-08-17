@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,9 +19,8 @@
 
 package io.github.mywarp.mywarp.bukkit.util.jdbc;
 
-import java.util.Properties;
-
 import javax.sql.DataSource;
+import java.util.Properties;
 
 /**
  * Creates pre-configured {@link DataSource}s to supported databases.
@@ -45,8 +44,9 @@ public final class DataSourceFactory {
     if (config.getProtocol().equals("sqlite")) {
       properties.setProperty("foreign_keys", "on");
 
-      //REVIEW Remove this?
-      //CraftBukkit bundles SQLite 3.7.2 witch does not yet implement Connection#isValid(int)
+      //CraftBukkit < 1.11 bundled SQLite 3.7.2 witch does not yet implement Connection.isValid(int).
+      // Unfortunately there is no easy way to check the SQLite version or whether isValid() is supported,
+      // so we default to false.
       driverSupportsIsValid = false;
     } else if (config.getProtocol().equals("h2")) {
       try {

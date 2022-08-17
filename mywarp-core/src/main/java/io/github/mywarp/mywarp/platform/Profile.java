@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -17,26 +17,37 @@
  * along with MyWarp. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.mywarp.mywarp.command.parametric.provider.exception;
+package io.github.mywarp.mywarp.platform;
 
-import java.io.File;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
- * Thrown when the given input does not match an existing {@link File}.
+ * A profile of a user.
  */
-public class NoSuchFileException extends NonMatchingInputException {
+public interface Profile {
 
   /**
-   * Creates an instance for the given File.
+   * Gets the unique identifier of this profile.
    *
-   * @param nonExisting the non existing file
+   * @return the unique ID
    */
-  public NoSuchFileException(File nonExisting) {
-    super(nonExisting.getAbsolutePath());
+  UUID getUuid();
+
+  /**
+   * Gets the name associated with this profile, if any.
+   *
+   * @return the name
+   */
+  Optional<String> getName();
+
+  /**
+   * Gets the name associated with this profile or, if no such name exists, the profile's unique ID as a String.
+   *
+   * @return name or unique ID
+   */
+  default String getNameOrId() {
+    return getName().orElse(getUuid().toString());
   }
 
-  @Override
-  public String getLocalizedMessage() {
-    return msg.getString("exception.file-not-found", getInput());
-  }
 }

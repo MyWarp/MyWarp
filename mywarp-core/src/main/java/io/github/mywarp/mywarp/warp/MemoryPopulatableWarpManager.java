@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,14 +19,14 @@
 
 package io.github.mywarp.mywarp.warp;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Stores managed warp in memory.
@@ -37,7 +37,7 @@ public class MemoryPopulatableWarpManager implements PopulatableWarpManager {
 
   @Override
   public void add(Warp warp) {
-    checkArgument(!containsByName(warp.getName()), "A warp with the name '%s' does already exist!", warp.getName());
+    checkArgument(!containsByName(warp.getName()), "A warp with the name '" + warp.getName() + "' does already exist!");
     warpMap.put(warp.getName(), warp);
   }
 

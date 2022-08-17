@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,7 +22,6 @@ package io.github.mywarp.mywarp.command.parametric.provider;
 import com.google.common.collect.Iterables;
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
-
 import io.github.mywarp.mywarp.command.CommandHandler;
 import io.github.mywarp.mywarp.command.parametric.provider.exception.InvalidWarpNameException;
 import io.github.mywarp.mywarp.platform.Settings;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,10 +21,12 @@ package io.github.mywarp.mywarp.bukkit.util.versionsupport;
 
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
+import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 
 /**
  * Checks whether a given entity is any variant of a horse and is tamed when running on 1.12 and newer.
  */
+@IgnoreJRERequirement
 class TamedHorseChecker112 extends LegacyTamedHorseChecker {
 
   private TamedHorseChecker112() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -17,26 +17,26 @@
  * along with MyWarp. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.mywarp.mywarp.command.parametric.provider.exception;
+package io.github.mywarp.mywarp.bukkit.util.versionsupport;
+
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.material.Attachable;
+import org.bukkit.material.MaterialData;
+
+import java.util.Optional;
 
 /**
- * Thrown when a given input does not match a known player.
- * <p/>
- * Typically this is caused by a malformed query or unavailable UUID servers.
+ * Resolves the attached BlockFace using legacy {@link Attachable}.
  */
-public class NoSuchPlayerIdentifierException extends NonMatchingInputException {
-
-  /**
-   * Creates an instance.
-   *
-   * @param input the input
-   */
-  public NoSuchPlayerIdentifierException(String input) {
-    super(input);
-  }
+class LegacyBlockFaceResolver implements BlockFaceResolver {
 
   @Override
-  public String getLocalizedMessage() {
-    return msg.getString("exception.no-such-profile", getInput());
+  public Optional<BlockFace> getBlockFace(Block toTest) {
+    MaterialData data = toTest.getState().getData();
+    if (data instanceof Attachable) {
+      return Optional.of(((Attachable) data).getAttachedFace());
+    }
+    return Optional.empty();
   }
 }

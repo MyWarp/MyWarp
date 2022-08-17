@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,12 +19,8 @@
 
 package io.github.mywarp.mywarp.command;
 
-import com.sk89q.intake.CommandCallable;
-import com.sk89q.intake.CommandException;
-import com.sk89q.intake.CommandMapping;
-import com.sk89q.intake.Intake;
-import com.sk89q.intake.InvalidUsageException;
-import com.sk89q.intake.InvocationCommandException;
+import com.google.common.base.Joiner;
+import com.sk89q.intake.*;
 import com.sk89q.intake.argument.Namespace;
 import com.sk89q.intake.dispatcher.Dispatcher;
 import com.sk89q.intake.dispatcher.NoSubcommandsException;
@@ -34,7 +30,6 @@ import com.sk89q.intake.parametric.Injector;
 import com.sk89q.intake.parametric.ParametricBuilder;
 import com.sk89q.intake.parametric.provider.PrimitivesModule;
 import com.sk89q.intake.util.auth.AuthorizationException;
-
 import io.github.mywarp.mywarp.MyWarp;
 import io.github.mywarp.mywarp.command.parametric.ActorAuthorizer;
 import io.github.mywarp.mywarp.command.parametric.CommandResourceProvider;
@@ -46,7 +41,6 @@ import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.Game;
 import io.github.mywarp.mywarp.platform.Platform;
 import io.github.mywarp.mywarp.platform.PlayerNameResolver;
-import io.github.mywarp.mywarp.platform.Settings;
 import io.github.mywarp.mywarp.platform.capability.EconomyCapability;
 import io.github.mywarp.mywarp.platform.capability.LimitCapability;
 import io.github.mywarp.mywarp.platform.capability.TimerCapability;
@@ -63,19 +57,10 @@ import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.teleport.TeleportHandler;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
-
-import org.apache.commons.lang.text.StrBuilder;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
-
 import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * Handles MyWarp's commands.
@@ -83,6 +68,7 @@ import javax.annotation.Nullable;
 public final class CommandHandler {
 
   public static final String RESOURCE_BUNDLE_NAME = "io.github.mywarp.mywarp.lang.Commands";
+  private static final String[] ROOT_COMMANDS = {"warp", "mywarp", "mw"};
   private static final char CMD_PREFIX = '/';
 
   private static final DynamicMessages msg = new DynamicMessages(RESOURCE_BUNDLE_NAME);
@@ -98,12 +84,12 @@ public final class CommandHandler {
    */
   public CommandHandler(MyWarp myWarp, Platform platform) {
     this(myWarp, platform, myWarp.getWarpManager(), myWarp.getAuthorizationResolver(), platform.getPlayerNameResolver(),
-         platform.getGame(), platform.getSettings(), myWarp.getTeleportHandler());
+        platform.getGame(), myWarp.getTeleportHandler());
   }
 
   private CommandHandler(MyWarp myWarp, Platform platform, WarpManager warpManager,
-                         AuthorizationResolver authorizationResolver, PlayerNameResolver playerNameResolver, Game game,
-                         Settings settings, TeleportHandler teleportHandler) {
+      AuthorizationResolver authorizationResolver, PlayerNameResolver playerNameResolver, Game game,
+      TeleportHandler teleportHandler) {
 
     // create injector and register modules
     Injector injector = Intake.createInjector();
@@ -126,7 +112,7 @@ public final class CommandHandler {
     //create services...
 
     //...basic TeleportService used by '/warp player <player> <warp>'
-    TeleportService basic = new HandlerTeleportService(teleportHandler, playerNameResolver);
+    TeleportService basic = new HandlerTeleportService(teleportHandler);
 
     //...usage service used by '/warp <warp>'
     TeleportService usageService = basic;
@@ -150,14 +136,13 @@ public final class CommandHandler {
     UsageCommands.DefaultUsageCommand defaultUsageCmd = usageCmd.new DefaultUsageCommand();
 
     //register commands
-    dispatcher =
-        new CommandGraph().builder(builder).commands().registerMethods(usageCmd).group("warp", "mywarp", "mw")
-            .registerMethods(defaultUsageCmd).registerMethods(
-            new InformativeCommands(warpManager, limitService, authorizationResolver, game, playerNameResolver))
-            .registerMethods(new ManagementCommands(warpManager, limitService))
-            .registerMethods(new SocialCommands(game, playerNameResolver, limitService))
-            .registerMethods(new UtilityCommands(myWarp, this, basic, game)).group("import", "migrate")
-            .registerMethods(new ImportCommands(warpManager, playerNameResolver, game)).graph().getDispatcher();
+    dispatcher = new CommandGraph().builder(builder).commands().registerMethods(usageCmd).group(ROOT_COMMANDS)
+        .registerMethods(defaultUsageCmd).registerMethods(
+            new InformativeCommands(warpManager, limitService, authorizationResolver, platform, playerNameResolver,
+                game)).registerMethods(new ManagementCommands(warpManager, limitService))
+        .registerMethods(new SocialCommands(game, playerNameResolver, limitService))
+        .registerMethods(new UtilityCommands(myWarp, this, basic, platform, game)).group("import", "migrate")
+        .registerMethods(new ImportCommands(warpManager, playerNameResolver, game)).graph().getDispatcher();
   }
 
   /**
@@ -248,8 +233,7 @@ public final class CommandHandler {
    * @return {@code true} if the String is a sub command of the warp command
    */
   public boolean isSubCommand(String str) {
-    //XXX this should probably be covered by unit tests
-    CommandMapping mapping = dispatcher.get("mywarp");
+    CommandMapping mapping = dispatcher.get(ROOT_COMMANDS[0]);
     if (mapping == null || !(mapping.getCallable() instanceof Dispatcher)) {
       return false;
     }
@@ -305,7 +289,7 @@ public final class CommandHandler {
     if (!currentCallable.testPermission(namespace)) {
       return;
     }
-    StrBuilder builder = new StrBuilder().append(prefix).append(prefix.isEmpty() ? CMD_PREFIX : ' ');
+    StringBuilder builder = new StringBuilder().append(prefix).append(prefix.isEmpty() ? CMD_PREFIX : ' ');
 
     //subcommands
     if (currentCallable instanceof Dispatcher) {
@@ -313,7 +297,7 @@ public final class CommandHandler {
       flattenCommands(entries, namespace, builder.toString(), (Dispatcher) currentCallable);
     } else {
       // the end
-      builder.appendWithSeparators(current.getAllAliases(), "|");
+      Joiner.on('|').appendTo(builder, current.getAllAliases());
       builder.append(' ');
       builder.append(current.getDescription().getUsage());
       entries.add(builder.toString());

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,16 +20,12 @@
 package io.github.mywarp.mywarp.command.parametric.provider.exception;
 
 import com.sk89q.intake.argument.ArgumentParseException;
-
-import io.github.mywarp.mywarp.command.CommandHandler;
-import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
+import io.github.mywarp.mywarp.command.util.UserViewableException;
 
 /**
  * Thrown when a given input does not match the requirements.
  */
-public abstract class NonMatchingInputException extends ArgumentParseException {
-
-  protected static final DynamicMessages msg = new DynamicMessages(CommandHandler.RESOURCE_BUNDLE_NAME);
+public abstract class NonMatchingInputException extends ArgumentParseException implements UserViewableException {
 
   private final String input;
 
@@ -53,5 +49,7 @@ public abstract class NonMatchingInputException extends ArgumentParseException {
   }
 
   @Override
-  public abstract String getLocalizedMessage();
+  public String getLocalizedMessage() {
+    return getUserMessage();
+  }
 }

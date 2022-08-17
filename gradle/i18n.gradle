@@ -1,0 +1,62 @@
+//variables
+def crowdinApiKey = rootProject.resolveProperty("CROWDIN_KEY", null)
+def crowdinTempDir = "$buildDir/tmp/crowdin"
+def crowdinProjectId = "mywarp"
+def translationPackage = "io/github/mywarp/mywarp/lang"
+def translationOutputDir = new File(sourceSets.main.output.resourcesDir, translationPackage)
+
+task crowdinDownload {
+    description "Downloads the translations from Crowdin to a temporary folder"
+    onlyIf { crowdinApiKey != null }
+
+    // We are still using the Crowdin API v1: https://support.crowdin.com/api/api-integration-setup/
+    // REVIEW move to v2 of the API, v1 is scheduled to be removed at the end of 2021
+    doLast {
+        //create the export folder
+        def exportDir = new File(crowdinTempDir, "crowdin-export")
+        exportDir.mkdirs()
+
+        //tell Crowdin to do an export
+        def crowdinExportUrl = "https://api.crowdin.com/api/project/$crowdinProjectId/export?key=$crowdinApiKey"
+        ant.get(src: crowdinExportUrl, dest: new File(exportDir.getPath(), "export.xml"), verbose: true)
+
+        //download actual zip file
+        def crowdinDowloadUrl = "https://api.crowdin.com/api/project/$crowdinProjectId/download/all.zip?key=$crowdinApiKey"
+        def translationZip = new File(exportDir.getPath(), "all.zip")
+        ant.get(src: crowdinDowloadUrl, dest: translationZip, verbose: 'on')
+
+        //extract
+        ant.unzip(src: translationZip, dest: crowdinTempDir, overwrite: true)
+    }
+}
+
+task crowdinCopy(type: Copy) {
+    description "Copies the files downloaded from crodwin to the appropiate destination"
+    dependsOn(crowdinDownload)
+
+    from crowdinTempDir
+    into translationOutputDir
+    include "**/$project.name/**/*.properties"
+
+    //copy files without their directories
+    eachFile {
+        path = name
+    }
+    includeEmptyDirs = false
+}
+
+task createDefaultLocalizations(type: Copy) {
+    description "Creates the default i18n files (without extension) from the bundled English files (with '_en' extension)"
+
+    from "src/main/resources/$translationPackage"
+    into translationOutputDir
+
+    include("*.properties")
+    exclude("*_*.properties")
+
+    rename { fileName -> fileName.replace(".", "_en.") }
+}
+
+///configure tasks dependencies
+processResources.dependsOn(crowdinCopy)
+processResources.dependsOn(createDefaultLocalizations)

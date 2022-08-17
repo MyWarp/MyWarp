@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,11 +19,9 @@
 
 package io.github.mywarp.mywarp.command.util.printer;
 
-import static com.google.common.base.Preconditions.checkState;
-
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-
 import io.github.mywarp.mywarp.command.CommandHandler;
 import io.github.mywarp.mywarp.platform.Actor;
 import io.github.mywarp.mywarp.platform.Game;
@@ -37,13 +35,12 @@ import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Prints a certain player's assets, showing active limit and Warps sorted to the corresponding limit.
@@ -62,9 +59,9 @@ public class AssetsPrinter {
   private final WarpManager warpManager;
 
   private AssetsPrinter(LocalPlayer creator, @Nullable LimitService limitService, @Nullable Game game,
-                        @Nullable WarpManager warpManager) {
+      @Nullable WarpManager warpManager) {
     checkState((limitService != null && game == null && warpManager == null) != (limitService == null && game != null
-                                                                                 && warpManager != null));
+        && warpManager != null));
     this.creator = creator;
     this.limitService = limitService;
     this.game = game;
@@ -97,33 +94,6 @@ public class AssetsPrinter {
     return new AssetsPrinter(forWhom, null, game, warpManager);
   }
 
-  /**
-   * Prints the assets to the given receiver.
-   *
-   * @param receiver the Actor who is receiving this print
-   */
-  public void print(Actor receiver) {
-    // display the heading
-    String heading = " " + msg.getString("assets.heading", creator.getName()) + " ";
-    receiver.sendMessage(Message.builder().append(Message.Style.HEADLINE_1).append(heading).build());
-
-    // display the limit
-    Map<Limit, LimitValueWarpMapping> index;
-
-    if (limitService != null) {
-      index = limitService.getAssets(creator);
-    } else {
-      assert game != null && warpManager != null;
-      index =
-          ImmutableMap.of(createDummyLimit(game),
-                          new LimitValueWarpMapping(warpManager, w -> w.isCreator(creator.getUniqueId())));
-    }
-
-    for (Map.Entry<Limit, LimitValueWarpMapping> entry : index.entrySet()) {
-      printLimit(receiver, entry.getKey(), entry.getValue());
-    }
-  }
-
   private static Limit createDummyLimit(final Game game) {
     return new Limit() {
       @Override
@@ -143,18 +113,43 @@ public class AssetsPrinter {
     };
   }
 
+  private static <I> String join(Collection<I> items, Function<I, String> mapper) {
+    return Joiner.on(", ").join(items.stream().map(mapper).sorted().collect(Collectors.toList()));
+  }
+
+  /**
+   * Prints the assets to the given receiver.
+   *
+   * @param receiver the Actor who is receiving this print
+   */
+  public void print(Actor receiver) {
+    // display the heading
+    receiver.sendMessage(Message.of(Message.Style.HEADLINE_1, msg.getString("assets.heading", creator.getName())));
+
+    // display the limit
+    Map<Limit, LimitValueWarpMapping> index;
+
+    if (limitService != null) {
+      index = limitService.getAssets(creator);
+    } else {
+      assert game != null && warpManager != null;
+      index =
+          ImmutableMap.of(createDummyLimit(game),
+              new LimitValueWarpMapping(warpManager, w -> w.isCreator(creator.getUniqueId())));
+    }
+
+    for (Map.Entry<Limit, LimitValueWarpMapping> entry : index.entrySet()) {
+      printLimit(receiver, entry.getKey(), entry.getValue());
+    }
+  }
+
   private void printLimit(Actor receiver, Limit limit, LimitValueWarpMapping mapping) {
 
     // ...the total value (max. number & worlds)
     Message.Builder totalMsg = Message.builder();
     totalMsg.append(Message.Style.HEADLINE_2);
-
-    totalMsg.append(msg.getString("assets.total"));
-    totalMsg.append(" ");
-    totalMsg.appendWithSeparators(limit.getAffectedWorlds());
-    totalMsg.append(" ");
-    appendCurrentAndMaximum(totalMsg, mapping.get(Limit.Value.TOTAL).size(), limit.get(Limit.Value.TOTAL));
-    totalMsg.append(":");
+    totalMsg.append(msg.getString("assets.total", join(limit.getAffectedWorlds(), LocalWorld::getName),
+        mapping.get(Limit.Value.TOTAL).size(), limit.get(Limit.Value.TOTAL)));
 
     receiver.sendMessage(totalMsg.build());
 
@@ -164,24 +159,13 @@ public class AssetsPrinter {
 
       Message.Builder limitMsg = Message.builder();
       limitMsg.append(Message.Style.KEY);
-      limitMsg.append(msg.getString("assets." + value.lowerCaseName()));
-      limitMsg.append(" ");
-      appendCurrentAndMaximum(limitMsg, typeWarps.size(), limit.get(value));
-      limitMsg.append(": ");
+      limitMsg.append(msg.getString("assets." + value.lowerCaseName(), typeWarps.size(), limit.get(value)));
       limitMsg.append(Message.Style.VALUE);
+      limitMsg.append(" ");
       limitMsg.appendWithSeparators(typeWarps);
 
       receiver.sendMessage(limitMsg.build());
     }
   }
 
-  private Message.Builder appendCurrentAndMaximum(Message.Builder builder, int current, int max) {
-    builder.append("(");
-    builder.append(current);
-    if (0 <= max) {
-      builder.append('/').append(max);
-    }
-    builder.append(")");
-    return builder;
-  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -28,8 +28,7 @@ import io.github.mywarp.mywarp.warp.Warp;
  * Resolves a user's authentication for a certain warp based on properties of the warp.<ul> <li>A warp is
  * <i>modifiable</i> if the Actor is the creator,</li> <li>A warp is <i>usable</i> if the entity is the creator, or is
  * an criteria player, or the warp is public,</li> <li>A warp is viewable if the Actor is an entity who can use the
- * warp,
- * or the warp is public.</li> </ul>
+ * warp, or the warp is public.</li> </ul>
  */
 public class WarpPropertiesAuthorizationStrategy implements AuthorizationStrategy {
 

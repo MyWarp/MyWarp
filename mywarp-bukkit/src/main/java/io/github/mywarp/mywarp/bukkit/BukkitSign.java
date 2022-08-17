@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,6 +19,8 @@
 
 package io.github.mywarp.mywarp.bukkit;
 
+import io.github.mywarp.mywarp.bukkit.util.versionsupport.BlockFaceResolver;
+import io.github.mywarp.mywarp.bukkit.util.versionsupport.VersionSupport;
 import io.github.mywarp.mywarp.platform.Sign;
 import io.github.mywarp.mywarp.util.BlockFace;
 
@@ -29,6 +31,7 @@ import java.util.Optional;
  */
 class BukkitSign implements Sign {
 
+  private final BlockFaceResolver blockFaceResolver = VersionSupport.getBlockFaceResolver();
   private final org.bukkit.block.Sign bukkitSign;
 
   /**
@@ -53,17 +56,13 @@ class BukkitSign implements Sign {
   /**
    * Returns whether this sign is attached to the given block face.
    *
-   * @param blockFace the block face.
+   * @param toTest the block face.
    * @return {@code true} if this sign is attached to the given block face
    */
-  boolean isAttachedTo(BlockFace blockFace) {
-    org.bukkit.material.Sign signMat = (org.bukkit.material.Sign) bukkitSign.getData();
-
-    if (signMat.isWallSign()) {
-      Optional<BlockFace> adapt = BukkitAdapter.adapt(signMat.getAttachedFace());
-      return adapt.isPresent() && adapt.get().equals(blockFace);
-    }
-    return false;
+  boolean isAttachedTo(BlockFace toTest) {
+    Optional<BlockFace>
+        signBlockFace =
+        blockFaceResolver.getBlockFace(bukkitSign.getBlock()).flatMap(BukkitAdapter::adapt);
+    return signBlockFace.isPresent() && signBlockFace.get().equals(toTest);
   }
-
 }

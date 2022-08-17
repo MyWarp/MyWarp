@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,27 +19,25 @@
 
 package io.github.mywarp.mywarp.util;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.collect.ImmutableList;
-
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.warp.Warp;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * An immutable chat message.
  *
  * <p>A message consists of a list of non-null objects. To form a human readable message, these must be interpreted by
  * the client. While there is no guarantee about the type of objects inside the message, the following ones should be
- * expected: <ul> <li>{@link Warp}</li> <li>{@link LocalPlayer}</li> <li>{@link
- * LocalWorld}</li> <li>{@link Style}</li> <li>{@link CharSequence}</li> <li>{@link Number}</li> </ul> </p>
+ * expected: <ul> <li>{@link Warp}</li> <li>{@link LocalPlayer}</li> <li>{@link LocalWorld}</li> <li>{@link Style}</li>
+ * <li>{@link CharSequence}</li> <li>{@link Number}</li> </ul> </p>
  *
  * <p>Use a {@link Builder} to create instances.</p>
  */
@@ -85,6 +83,47 @@ public class Message {
       msgBuilder = msgBuilder.append(obj);
     }
     return msgBuilder.build();
+  }
+
+  /**
+   * A combination of color and emphasis to be used in a certain context.
+   */
+  public enum Style {
+    /**
+     * The default style: non emphasised, aquamarine text.
+     */
+    DEFAULT,
+    /**
+     * Indicates an error: non emphasised, light red text.
+     */
+    ERROR,
+    /**
+     * Indicates an additional information: non emphasised, grey text.
+     *
+     * <p>An additional information is a message that contains information the user might not have asked for, but that
+     * are still important for her.</p>
+     */
+    INFO,
+    /**
+     * Indicates a headline on the first level: bold, gold text.
+     *
+     * <p>Similar to {@code <h1>} in HTML.</p>
+     */
+    HEADLINE_1,
+    /**
+     * Indicates a headline on the second level: non emphasised, white text.
+     *
+     * <p>Similar to {@code <h2>} in HTML, should only be used if {@link #HEADLINE_1} has already been applied.</p>
+     */
+    HEADLINE_2,
+    /**
+     * Indicates a key of a key - value listing: non emphasised, grey text.
+     */
+    KEY,
+    /**
+     * Indicates the value of a key - value listing: non emphasised, white text.
+     */
+    VALUE
   }
 
   /**
@@ -206,9 +245,7 @@ public class Message {
      * @return this Builder
      */
     public Builder appendNewLine() {
-      // Apparently MC requires '\n' only, regardless of the OS it is running on,
-      // see issues #157 and #61.
-      return append("\n");
+      return append(McUtil.lineSeparator());
     }
 
     /**
@@ -220,40 +257,5 @@ public class Message {
       return new Message(elements);
     }
 
-  }
-
-  /**
-   * A combination of color and emphasis to be used in a certain context.
-   */
-  public enum Style {
-    /**
-     * The default style: non emphasised, aquamarine text.
-     */
-    DEFAULT, /**
-     * Indicates an error: non emphasised, light red text.
-     */
-    ERROR, /**
-     * Indicates an additional information: non emphasised, grey text.
-     *
-     * <p>An additional information is a message that contains information the user might not have asked for, but that
-     * are still important for him.</p>
-     */
-    INFO, /**
-     * Indicates a headline on the first level: bold, gold text.
-     *
-     * <p>Similar to {@code <h1>} in HTML.</p>
-     */
-    HEADLINE_1, /**
-     * Indicates a headline on the second level: non emphasised, white text.
-     *
-     * <p>Similar to {@code <h2>} in HTML, should only be used if {@link #HEADLINE_1} has already been applied.</p>
-     */
-    HEADLINE_2, /**
-     * Indicates a key of a key - value listing: non emphasised, grey text.
-     */
-    KEY, /**
-     * Indicates the value of a key - value listing: non emphasised, white text.
-     */
-    VALUE
   }
 }

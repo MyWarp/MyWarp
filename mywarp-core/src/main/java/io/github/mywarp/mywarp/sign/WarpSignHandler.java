@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,17 +21,18 @@ package io.github.mywarp.mywarp.sign;
 
 import com.flowpowered.math.vector.Vector3i;
 import com.google.common.collect.Iterables;
-
 import io.github.mywarp.mywarp.MyWarp;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.Sign;
 import io.github.mywarp.mywarp.platform.capability.EconomyCapability;
+import io.github.mywarp.mywarp.platform.capability.TimerCapability;
 import io.github.mywarp.mywarp.service.economy.EconomyService;
 import io.github.mywarp.mywarp.service.economy.FeeType;
 import io.github.mywarp.mywarp.service.teleport.EconomyTeleportService;
 import io.github.mywarp.mywarp.service.teleport.HandlerTeleportService;
 import io.github.mywarp.mywarp.service.teleport.TeleportService;
+import io.github.mywarp.mywarp.service.teleport.TimerTeleportService;
 import io.github.mywarp.mywarp.util.BlockFace;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.util.i18n.LocaleManager;
@@ -39,17 +40,16 @@ import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.TreeSet;
 
-import javax.annotation.Nullable;
-
 /**
  * Handles interaction with warp signs.
  *
- * <p>A warp sign is a sign that has an identifier (e.g. 'MyWarp') enclosed by brackets in the second and the name of an
- * existing warp in the third line. If a player interacts with a sign by clicking it, he is teleported to the warp
+ * <p>A warp sign is a sign that has an identifier (e.g. 'MyWarp') enclosed by brackets in the second and the name of
+ * an existing warp in the third line. If a player interacts with a sign by clicking it, he is teleported to the warp
  * specified on the sign, if he meets certain conditions.</p>
  *
  * <p>As of itself this class does nothing. It must be feat by a event system that tracks creation and clinking on
@@ -77,16 +77,18 @@ public class WarpSignHandler {
    * @param identifiers       the identifiers of warp signs
    * @param myWarp            the MyWarp instance
    * @param economyCapability the EconomyCapability used by this instance - can be null if no economy should be used
+   * @param timerCapability   the TimerCapabilty used by this instance - can be null if timers should no be used
    */
-  public WarpSignHandler(Iterable<String> identifiers, MyWarp myWarp, @Nullable EconomyCapability economyCapability) {
+  public WarpSignHandler(Iterable<String> identifiers, MyWarp myWarp, @Nullable EconomyCapability economyCapability,
+      @Nullable TimerCapability timerCapability) {
     this(identifiers, myWarp.getSettings().isCaseSensitiveWarpNames(), myWarp.getAuthorizationResolver(),
-         createEconomyService(economyCapability), createTeleportService(myWarp, economyCapability),
-         myWarp.getWarpManager());
+        createEconomyService(economyCapability), createTeleportService(myWarp, economyCapability, timerCapability),
+        myWarp.getWarpManager());
   }
 
   private WarpSignHandler(Iterable<String> identifiers, boolean caseSensitiveWarpNames,
-                          AuthorizationResolver authorizationResolver, @Nullable EconomyService economyService,
-                          TeleportService teleportService, WarpManager warpManager) {
+      AuthorizationResolver authorizationResolver, @Nullable EconomyService economyService,
+      TeleportService teleportService, WarpManager warpManager) {
     Iterables.addAll(this.identifiers, identifiers);
     this.caseSensitiveWarpNames = caseSensitiveWarpNames;
     this.authorizationResolver = authorizationResolver;
@@ -161,11 +163,15 @@ public class WarpSignHandler {
     return null;
   }
 
-  private static TeleportService createTeleportService(MyWarp myWarp, @Nullable EconomyCapability economyCapability) {
-    TeleportService ret = new HandlerTeleportService(myWarp.getTeleportHandler(), myWarp.getPlayerNameResolver());
+  private static TeleportService createTeleportService(MyWarp myWarp, @Nullable EconomyCapability economyCapability,
+      @Nullable TimerCapability timerCapability) {
+    TeleportService ret = new HandlerTeleportService(myWarp.getTeleportHandler());
 
     if (economyCapability != null) {
       ret = new EconomyTeleportService(ret, createEconomyService(economyCapability), FeeType.WARP_SIGN_USE);
+    }
+    if (timerCapability != null) {
+      ret = new TimerTeleportService(ret, myWarp.getGame(), timerCapability);
     }
     return ret;
   }
@@ -207,7 +213,6 @@ public class WarpSignHandler {
       player.sendError(msg.getString("permission.use.to-warp", warpName));
       return true;
     }
-
     teleportService.teleport(player, warp);
     return true;
   }
@@ -246,7 +251,7 @@ public class WarpSignHandler {
         sign = world.getSign(position);
     }
 
-    return !sign.isPresent() || handleInteraction(player, sign.get());
+    return sign.isPresent() && handleInteraction(player, sign.get());
   }
 
   private Optional<Warp> getWarp(String warpName) {

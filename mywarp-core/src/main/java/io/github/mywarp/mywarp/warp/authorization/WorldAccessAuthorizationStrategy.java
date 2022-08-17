@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,11 +19,7 @@
 
 package io.github.mywarp.mywarp.warp.authorization;
 
-import io.github.mywarp.mywarp.platform.Actor;
-import io.github.mywarp.mywarp.platform.Game;
-import io.github.mywarp.mywarp.platform.LocalEntity;
-import io.github.mywarp.mywarp.platform.LocalWorld;
-import io.github.mywarp.mywarp.platform.Settings;
+import io.github.mywarp.mywarp.platform.*;
 import io.github.mywarp.mywarp.warp.Warp;
 
 import java.util.Optional;
@@ -39,8 +35,8 @@ public class WorldAccessAuthorizationStrategy extends ForwardingAuthorizationStr
   private final Settings settings;
 
   /**
-   * Creates an instance using the given {@code Settings}. If the tested user may visit the world of the tested warp
-   * in question, further tests are delegated to the given {@code AuthorizationStrategy}.
+   * Creates an instance using the given {@code Settings}. If the tested user may visit the world of the tested warp in
+   * question, further tests are delegated to the given {@code AuthorizationStrategy}.
    *
    * @param delegate the strategy to delegate further tests to
    * @param game     the configured Game instance

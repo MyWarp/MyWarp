@@ -1,9 +1,0 @@
-language: java
-notifications:
-  email: false
-jdk:
-- oraclejdk8
-before_install:
-- chmod +x gradlew
-- chmod +x config/publish-javadoc.sh
-after_success: config/publish-javadoc.sh

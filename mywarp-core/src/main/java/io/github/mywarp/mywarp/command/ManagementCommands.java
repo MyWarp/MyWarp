@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,7 +22,6 @@ package io.github.mywarp.mywarp.command;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.Require;
-
 import io.github.mywarp.mywarp.command.parametric.annotation.Billable;
 import io.github.mywarp.mywarp.command.parametric.annotation.Modifiable;
 import io.github.mywarp.mywarp.command.parametric.annotation.Sender;
@@ -96,7 +95,7 @@ public final class ManagementCommands {
 
     warpManager.add(
         new WarpBuilder(name, creator.getUniqueId(), creator.getWorld().getUniqueId(), creator.getPosition(),
-                        creator.getRotation()).setType(type).build());
+            creator.getRotation()).setType(type).build());
   }
 
   @Command(aliases = {"delete", "remove"}, desc = "delete.description", help = "delete.help")

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,14 +20,12 @@
 package io.github.mywarp.mywarp.bukkit.util.versionsupport;
 
 import io.github.mywarp.mywarp.util.MyWarpLogger;
-
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.slf4j.Logger;
 
-import java.util.function.Predicate;
-
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 /**
  * Handles functionality that requires different implementations for different versions of Minecraft or Bukkit.
@@ -40,6 +38,8 @@ public final class VersionSupport {
   private static LocaleResolver localeResolver;
   @Nullable
   private static Predicate<Entity> horseChecker;
+  @Nullable
+  private static BlockFaceResolver blockFaceResolver;
 
   /**
    * Gets a {@link LocaleResolver} implementation.
@@ -59,7 +59,7 @@ public final class VersionSupport {
         } catch (ReflectiveOperationException e2) {
           localeResolver = new FallbackLocaleResolver();
           log.warn("Unable to create the LocaleResolver appropriate for this Bukkit implementation."
-                   + "Player locales WILL NOT be resolved!");
+              + "Player locales WILL NOT be resolved!");
         }
       }
     }
@@ -82,6 +82,24 @@ public final class VersionSupport {
       }
     }
     return horseChecker;
+  }
+
+  /**
+   * Gets a{@link BlockFaceResolver} implementation.
+   *
+   * @return a working block face resolver
+   */
+  public static BlockFaceResolver getBlockFaceResolver() {
+    if (blockFaceResolver == null) {
+      try {
+        blockFaceResolver = BlockFaceResolver113.create();
+        log.debug("Using BlockFaceResolver113.");
+      } catch (Exception e) {
+        blockFaceResolver = new LegacyBlockFaceResolver();
+        log.debug("Using LegacyBlockFaceResolver.");
+      }
+    }
+    return blockFaceResolver;
   }
 
 }

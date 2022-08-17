@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -31,19 +31,24 @@ public enum BlockFace {
   /**
    * The norther side of a block (-z).
    */
-  NORTH(new Vector3i(0, 0, -1)), /**
+  NORTH(new Vector3i(0, 0, -1)),
+  /**
    * The eastern side of a block (+x).
    */
-  EAST(new Vector3i(1, 0, 0)), /**
+  EAST(new Vector3i(1, 0, 0)),
+  /**
    * The souther side of a block (+z).
    */
-  SOUTH(new Vector3i(0, 0, 1)), /**
+  SOUTH(new Vector3i(0, 0, 1)),
+  /**
    * The western side of a block (-x).
    */
-  WEST(new Vector3i(-1, 0, 0)), /**
+  WEST(new Vector3i(-1, 0, 0)),
+  /**
    * The top side of a block (+y).
    */
-  UP(new Vector3i(0, 1, 0)), /**
+  UP(new Vector3i(0, 1, 0)),
+  /**
    * The bottom side of a block (-y).
    */
   DOWN(new Vector3i(0, -1, 0));

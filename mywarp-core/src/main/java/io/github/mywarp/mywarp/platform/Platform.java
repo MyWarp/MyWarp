@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -22,23 +22,16 @@ package io.github.mywarp.mywarp.platform;
 import io.github.mywarp.mywarp.platform.capability.EconomyCapability;
 import io.github.mywarp.mywarp.platform.capability.LimitCapability;
 import io.github.mywarp.mywarp.platform.capability.TimerCapability;
+import io.github.mywarp.mywarp.platform.paginatedcontent.PaginatedContent;
+import io.github.mywarp.mywarp.platform.paginatedcontent.SimplePaginatedContent;
 import io.github.mywarp.mywarp.warp.storage.SqlDataService;
 
-import java.io.File;
 import java.util.Optional;
 
 /**
  * A platform MyWarp has been adapted to run on.
  */
 public interface Platform {
-
-  /**
-   * Gets the data-folder when running in this Platform. The folder is expected to exist and be read- and writable for
-   * MyWarp.
-   *
-   * @return the data-folder
-   */
-  File getDataFolder();
 
   /**
    * Gets the {@link Game} as implemented by this Platform.
@@ -66,8 +59,7 @@ public interface Platform {
    * provide support.
    *
    * <p>None of the capabilities requested by calling this method are required for MyWarp to run. The following
-   * capabilities can be expected and should - if possible - be covered: <ul> <li>{@link
-   * EconomyCapability}</li>
+   * capabilities can be expected and should - if possible - be covered: <ul> <li>{@link EconomyCapability}</li>
    * <li>{@link LimitCapability}</li>
    * <li>{@link TimerCapability}</li> </ul></p>
    *
@@ -106,4 +98,16 @@ public interface Platform {
    * this state, all initialization should be complete.
    */
   void onWarpsLoaded();
+
+  /**
+   * Creates a new Builder for {@link PaginatedContent} instances.
+   *
+   * <p>Platforms should overwrite this method, and implement their own instances of {@link PaginatedContent} and
+   * {@link PaginatedContent.Builder}, if the platform provides a native solution to display paginated content.</p>
+   *
+   * @return a new builder for PaginatedContent
+   */
+  default PaginatedContent.Builder createPaginatedContentBuilder() {
+    return SimplePaginatedContent.builder();
+  }
 }

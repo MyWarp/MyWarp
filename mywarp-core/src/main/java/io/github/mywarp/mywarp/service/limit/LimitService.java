@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,11 +19,8 @@
 
 package io.github.mywarp.mywarp.service.limit;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.platform.capability.LimitCapability;
@@ -31,11 +28,11 @@ import io.github.mywarp.mywarp.service.limit.Limit.Value;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 
-import java.util.Arrays;
+import javax.annotation.Nullable;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Resolves and evaluates warp creation limits for individual players on a set of worlds.
@@ -99,38 +96,18 @@ public class LimitService {
     return evaluate(creator, world, builder.build());
   }
 
-  private EvaluationResult evaluate(LocalPlayer creator, LocalWorld world, Iterable<Value> values) {
-    LimitValueWarpMapping valueWarpMapping = new LimitValueWarpMapping(warpManager, createPredicate(creator, world));
-
-    for (Value toCheck : values) {
-      if (toCheck.canDisobey(creator, world)) {
-        continue;
-      }
-      int max = capability.getLimit(creator, world).get(toCheck);
-
-      if (valueWarpMapping.atLeast(toCheck, max)) {
-        return EvaluationResult.exceeded(toCheck, max);
-      }
-    }
-    return EvaluationResult.limitMet();
-  }
-
-  private static Predicate<Warp> createPredicate(final LocalPlayer creator, LocalWorld... worlds) {
-    return createPredicate(creator, Arrays.asList(worlds));
-  }
-
-  private static Predicate<Warp> createPredicate(final LocalPlayer creator, final Iterable<LocalWorld> worlds) {
-    return input -> input.isCreator(creator.getUniqueId()) && containsIdentifiedWorld(worlds,
-                                                                                      input.getWorldIdentifier());
+  private static Predicate<Warp> createPredicate(final LocalPlayer creator, Limit limit) {
+    return input -> input.isCreator(creator.getUniqueId()) && containsIdentifiedWorld(limit.getAffectedWorlds(),
+        input.getWorldIdentifier());
   }
 
   /**
    * Returns an ImmutableMap with every Limit that could affect the given player mapped to the corresponding
    * LimitValueMapping.
    *
-   * <p>Which limit actually applies to a certain player depends on the world, the check is run for. The map returned by
-   * this method contains all limits that could apply for a player; it therefore contains all possible LimitValueMapping
-   * and can be used to display a player's assets.</p>
+   * <p>Which limit actually applies to a certain player depends on the world, the check is run for. The map returned
+   * by this method contains all limits that could apply for a player; it therefore contains all possible
+   * LimitValueMapping and can be used to display a player's assets.</p>
    *
    * @param player the player
    * @return a Map that mapps every limit that could affect the given player to the corresponding LimtiValueMapping
@@ -139,9 +116,27 @@ public class LimitService {
     ImmutableMap.Builder<Limit, LimitValueWarpMapping> builder = ImmutableMap.builder();
 
     for (Limit limit : capability.getEffectiveLimits(player)) {
-      builder.put(limit, new LimitValueWarpMapping(warpManager, createPredicate(player, limit.getAffectedWorlds())));
+      builder.put(limit, new LimitValueWarpMapping(warpManager, createPredicate(player, limit)));
     }
     return builder.build();
+  }
+
+  private EvaluationResult evaluate(LocalPlayer creator, LocalWorld world, Iterable<Value> values) {
+    Limit limit = capability.getLimit(creator, world);
+
+    LimitValueWarpMapping valueWarpMapping = new LimitValueWarpMapping(warpManager, createPredicate(creator, limit));
+
+    for (Value toCheck : values) {
+      if (toCheck.canDisobey(creator, world)) {
+        continue;
+      }
+      int max = limit.get(toCheck);
+
+      if (valueWarpMapping.atLeast(toCheck, max)) {
+        return EvaluationResult.exceeded(toCheck, max);
+      }
+    }
+    return EvaluationResult.limitMet();
   }
 
   private static boolean containsIdentifiedWorld(Iterable<LocalWorld> worlds, UUID worldIdentifier) {
@@ -167,10 +162,10 @@ public class LimitService {
     /**
      * Creates an instance with the given values.
      *
-     * @param exceedsLimit    whether a limit was exceeded
-     * @param exceededValue   the exceeded limit or {@code null} if no limit was exceeded
+     * @param exceedsLimit   whether a limit was exceeded
+     * @param exceededValue  the exceeded limit or {@code null} if no limit was exceeded
      * @param allowedMaximum the maximum number of warps a user can create under the exceeded limit or {@code null} if
-     *                        no limit was exceeded
+     *                       no limit was exceeded
      */
     private EvaluationResult(boolean exceedsLimit, @Nullable Value exceededValue, @Nullable Integer allowedMaximum) {
       this.exceedsLimit = exceedsLimit;

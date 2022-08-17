@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,9 +20,7 @@
 package io.github.mywarp.mywarp.bukkit.util.permission.group;
 
 import io.github.mywarp.mywarp.util.MyWarpLogger;
-
 import net.milkbowl.vault.permission.Permission;
-
 import org.anjocaido.groupmanager.GroupManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;

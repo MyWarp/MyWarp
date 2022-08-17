@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -17,26 +17,30 @@
  * along with MyWarp. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.mywarp.mywarp.command.util.paginator;
+package io.github.mywarp.mywarp.command.util;
+
+import com.sk89q.intake.CommandException;
 
 /**
- * Indicates that there are no results to be paginated.
+ * Indicates an otherwise unknown exception.
+ *
+ * <p>This calss should be used as a fallback whenever multi-threaded chains may throw exceptions that are not {@link
+ * UserViewableException}s.</p>
  */
-public class NoResultsException extends Exception {
+public class UnknownException extends CommandException implements UserViewableException {
 
-  NoResultsException() {
-    super();
-  }
-
-  NoResultsException(String message) {
-    super(message);
-  }
-
-  NoResultsException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
-  NoResultsException(Throwable cause) {
+  /**
+   * Creates an instance caused by the given Throwable.
+   *
+   * @param cause the cause
+   */
+  public UnknownException(Throwable cause) {
     super(cause);
   }
+
+  @Override
+  public String getUserMessage() {
+    return msg.getString("exception.unknown");
+  }
+
 }

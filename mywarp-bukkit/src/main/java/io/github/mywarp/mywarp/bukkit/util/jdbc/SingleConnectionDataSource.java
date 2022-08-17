@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,26 +20,19 @@
 package io.github.mywarp.mywarp.bukkit.util.jdbc;
 
 import com.google.common.base.Objects;
-
 import io.github.mywarp.mywarp.util.MyWarpLogger;
 
-import java.io.Closeable;
+import javax.annotation.Nullable;
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Logger;
-
-import javax.annotation.Nullable;
-import javax.sql.DataSource;
 
 /**
  * A {@link DataSource} implementation that uses a single {@link Connection}. {@code Connection}s returned by this the
@@ -47,7 +40,7 @@ import javax.sql.DataSource;
  *
  * <p>Obviously this class is not threadsafe.</p>
  */
-public class SingleConnectionDataSource implements DataSource, Closeable {
+public class SingleConnectionDataSource implements DataSource, AutoCloseable {
 
   private static final org.slf4j.Logger log = MyWarpLogger.getLogger(SingleConnectionDataSource.class);
 
@@ -97,7 +90,7 @@ public class SingleConnectionDataSource implements DataSource, Closeable {
         .equal(this.properties.getProperty("password"), password)) {
       throw new SQLException(
           "SingleConnectionDataSource does not support retrieving of connections with custom username and "
-          + "password.");
+              + "password.");
     }
     return getConnection();
   }
@@ -198,7 +191,7 @@ public class SingleConnectionDataSource implements DataSource, Closeable {
    */
   private Connection getCloseSuppressingConnectionProxy(Connection target) {
     return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(), new Class<?>[]{Connection.class},
-                                               new CloseSuppressingInvocationHandler(target));
+        new CloseSuppressingInvocationHandler(target));
   }
 
 
@@ -222,25 +215,30 @@ public class SingleConnectionDataSource implements DataSource, Closeable {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
       // Invocation on ConnectionProxy interface coming in...
 
-      if (method.getName().equals("equals")) {
-        // Only consider equal when proxies are identical.
-        return (proxy == args[0]);
-      } else if (method.getName().equals("hashCode")) {
-        // Use hashCode of Connection proxy.
-        return System.identityHashCode(proxy);
-      } else if (method.getName().equals("unwrap")) {
-        if (((Class<?>) args[0]).isInstance(proxy)) {
-          return proxy;
-        }
-      } else if (method.getName().equals("isWrapperFor")) {
-        if (((Class<?>) args[0]).isInstance(proxy)) {
-          return true;
-        }
-      } else if (method.getName().equals("close")) {
-        // Handle close method: don't pass the call on.
-        return null;
-      } else if (method.getName().equals("isClosed")) {
-        return false;
+      switch (method.getName()) {
+        case "equals":
+          // Only consider equal when proxies are identical.
+          return (proxy == args[0]);
+        case "hashCode":
+          // Use hashCode of Connection proxy.
+          return System.identityHashCode(proxy);
+        case "unwrap":
+          if (((Class<?>) args[0]).isInstance(proxy)) {
+            return proxy;
+          }
+          break;
+        case "isWrapperFor":
+          if (((Class<?>) args[0]).isInstance(proxy)) {
+            return true;
+          }
+          break;
+        case "close":
+          // Handle close method: don't pass the call on.
+          return null;
+        case "isClosed":
+          return false;
+        default:
+          //fall though
       }
 
       // Invoke method on target Connection.

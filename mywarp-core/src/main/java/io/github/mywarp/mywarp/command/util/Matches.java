@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -21,15 +21,12 @@ package io.github.mywarp.mywarp.command.util;
 
 import com.google.common.collect.ImmutableList;
 
-import org.apache.commons.lang.StringUtils;
-
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-
-import javax.annotation.Nullable;
 
 /**
  * Matches string representations of object instances to a given query and groups the results.
@@ -61,11 +58,11 @@ public class Matches<E> {
 
       if (toTest.equals(query)) {
         equalMatches.add(element);
-      } else if (StringUtils.equalsIgnoreCase(toTest, query)) {
+      } else if (toTest.equalsIgnoreCase(query)) {
         equalIgnoreCaseMatches.add(element);
       } else if (toTest.contains(query)) {
         containsMatches.add(element);
-      } else if (StringUtils.containsIgnoreCase(toTest, query)) {
+      } else if (CommandUtil.containsIgnoreCase(toTest, query)) {
         containsIgnoreCaseMatches.add(element);
       }
     }

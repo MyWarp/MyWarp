@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -55,16 +55,20 @@ public class WarpUpdateEvent extends WarpEvent {
     /**
      * The warp's creator was updated.
      */
-    CREATOR, /**
+    CREATOR,
+    /**
      * The warp's location was updated.
      */
-    LOCATION, /**
+    LOCATION,
+    /**
      * The warp's type was updated.
      */
-    TYPE, /**
+    TYPE,
+    /**
      * The warp's visit-counter was updated.
      */
-    VISITS, /**
+    VISITS,
+    /**
      * The warp's welcome-message was updated.
      */
     WELCOME_MESSAGE

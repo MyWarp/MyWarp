@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -29,7 +29,6 @@ import com.sk89q.intake.parametric.provider.exception.OverRangeException;
 import com.sk89q.intake.parametric.provider.exception.StringFormatException;
 import com.sk89q.intake.parametric.provider.exception.UnderRangeException;
 import com.sk89q.intake.util.auth.AuthorizationException;
-
 import io.github.mywarp.mywarp.command.CommandHandler;
 import io.github.mywarp.mywarp.command.parametric.provider.exception.ArgumentAuthorizationException;
 import io.github.mywarp.mywarp.command.parametric.provider.exception.NonMatchingInputException;
@@ -82,7 +81,7 @@ public class ArgumentExceptionConverter extends ExceptionConverterHelper {
   @ExceptionMatch
   public void convert(OverRangeException e, ExceptionContext context) throws InvalidUsageException {
     throwInvalidUsage(msg.getString("exception.primitives.invalid.greater-or-equal", e.getMaximum(), e.getInput()),
-                      context, e);
+        context, e);
   }
 
   /**
@@ -95,7 +94,7 @@ public class ArgumentExceptionConverter extends ExceptionConverterHelper {
   @ExceptionMatch
   public void convert(UnderRangeException e, ExceptionContext context) throws InvalidUsageException {
     throwInvalidUsage(msg.getString("exception.primitives.invalid.less-or-equal", e.getMinimum(), e.getInput()),
-                      context, e);
+        context, e);
   }
 
   //-- BaseModule
@@ -109,7 +108,7 @@ public class ArgumentExceptionConverter extends ExceptionConverterHelper {
    */
   @ExceptionMatch
   public void convert(NonMatchingInputException e, ExceptionContext context) throws InvalidUsageException {
-    throwInvalidUsage(e.getLocalizedMessage(), context, e);
+    throwInvalidUsage(e.getUserMessage(), context, e);
   }
 
   /**
@@ -141,7 +140,7 @@ public class ArgumentExceptionConverter extends ExceptionConverterHelper {
           context.getAliasStack(), false, cause);
     }
     throw new InvalidUsageException(msg.getString("exception.argument.error.unknown", errorMsg), context.getCommand(),
-                                    context.getAliasStack(), false, cause);
+        context.getAliasStack(), false, cause);
 
   }
 

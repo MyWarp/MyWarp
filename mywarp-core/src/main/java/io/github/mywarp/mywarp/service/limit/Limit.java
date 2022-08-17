@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,7 +20,6 @@
 package io.github.mywarp.mywarp.service.limit;
 
 import com.google.common.collect.ImmutableSet;
-
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.platform.LocalWorld;
 import io.github.mywarp.mywarp.warp.Warp;
@@ -65,10 +64,12 @@ public interface Limit {
     /**
      * The total limit (accounts all warps).
      */
-    TOTAL(EnumSet.allOf(Warp.Type.class)), /**
+    TOTAL(EnumSet.allOf(Warp.Type.class)),
+    /**
      * The private limit (accounts only private warps).
      */
-    PRIVATE(Warp.Type.PRIVATE), /**
+    PRIVATE(Warp.Type.PRIVATE),
+    /**
      * The public limit (accounts only public warps).
      */
     PUBLIC(Warp.Type.PUBLIC);

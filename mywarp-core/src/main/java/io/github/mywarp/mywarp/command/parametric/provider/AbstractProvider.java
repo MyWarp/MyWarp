@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -26,8 +26,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * An abstract Provider that by default consumes arguments from the command stack to provide values and does not
- * suggest any commands.
+ * An abstract Provider that by default consumes arguments from the command stack to provide values and does not suggest
+ * any commands.
  */
 abstract class AbstractProvider<T> implements Provider<T> {
 

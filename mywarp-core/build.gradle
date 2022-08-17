@@ -1,15 +1,42 @@
-repositories {
-    maven { url "http://repository-thee140.forge.cloudbees.com/snapshot/" }
+import ru.vyarus.gradle.plugin.animalsniffer.signature.BuildSignatureTask
+
+plugins {
+    id "ru.vyarus.animalsniffer" version "1.5.4"
+    id 'java-library'
 }
 
+configurations.create("createSignature")
+
 dependencies {
-    compile "org.jooq:jooq:3.10.7"
-    compile "org.flywaydb:flyway-core:4.2.0"
-    // Bukkit 1.7.10 only bundles 2.3
-    compile "commons-lang:commons-lang:2.3"
-    // Bukkit 1.7.10 only bundles 10.0.1
-    compile "com.google.guava:guava:10.0.1"
-    compile "org.slf4j:slf4j-api:1.7.25"
-    compile "com.flowpowered:flow-math:1.0.3"
-    compile "io.github.mywarp.intake:intake:4.2-SNAPSHOT"
+    implementation "org.jooq:jooq:3.14.11"
+    annotationProcessor "org.jooq:jooq-checker:3.14.11"
+    implementation "org.flywaydb:flyway-core:7.8.1"
+    implementation "com.google.guava:guava:21.0"
+    implementation "com.github.mywarp.intake:intake:b57bff7cd9"
+
+    api "org.slf4j:slf4j-api:1.7.36"
+    api "com.flowpowered:flow-math:1.0.3"
+
+    signature "org.codehaus.mojo.signature:java18:1.0@signature"
+    //required to build custom signature
+    createSignature "com.google.guava:guava:10.0.1"
+    //bundled by Bukkit 1.7.10, we should try to stay compatible
 }
+
+// Use JOOQ's annotation processor
+compileJava.options.compilerArgs << "-processor" << "org.jooq.checker.SQLDialectChecker"
+
+task sig(type: BuildSignatureTask) {
+    //build new signature as an extension to the JDK's
+    signatures configurations.signature
+    files configurations.createSignature
+}
+animalsniffer {
+    //use the signature generated above
+    signatures = sig.outputFiles
+    excludeJars "guava-*"
+    //the cache cannot be used due to incompatibilities with Java 8,
+    //see https://github.com/xvik/gradle-animalsniffer-plugin/wiki/Check-task-performance#known-issues
+}
+
+

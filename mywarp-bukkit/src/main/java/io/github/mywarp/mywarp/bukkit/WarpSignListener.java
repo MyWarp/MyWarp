@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,23 +20,20 @@
 package io.github.mywarp.mywarp.bukkit;
 
 import com.flowpowered.math.vector.Vector3i;
-import com.google.common.collect.ImmutableSet;
-
 import io.github.mywarp.mywarp.bukkit.util.AbstractListener;
+import io.github.mywarp.mywarp.bukkit.util.material.MaterialInfo;
+import io.github.mywarp.mywarp.bukkit.util.versionsupport.BlockFaceResolver;
+import io.github.mywarp.mywarp.bukkit.util.versionsupport.VersionSupport;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.sign.WarpSignHandler;
 import io.github.mywarp.mywarp.util.BlockFace;
-
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.material.Attachable;
-import org.bukkit.material.MaterialData;
 
 import java.util.Optional;
 
@@ -45,24 +42,20 @@ import java.util.Optional;
  */
 class WarpSignListener extends AbstractListener {
 
-  private static final ImmutableSet<Material>
-      SUPPORTED_ATTACHABLES =
-      ImmutableSet.of(Material.STONE_BUTTON, Material.WOOD_BUTTON, Material.LEVER);
-  private static final ImmutableSet<Material>
-      SUPPORTED_PLATES =
-      ImmutableSet.of(Material.WOOD_PLATE, Material.STONE_PLATE, Material.GOLD_PLATE, Material.IRON_PLATE);
-
   private final MyWarpPlugin plugin;
   private final WarpSignHandler warpSignHandler;
+  private final MaterialInfo materialInfo;
+  private final BlockFaceResolver blockFaceResolver = VersionSupport.getBlockFaceResolver();
 
   /**
    * Initializes this listener.
    *
    * @param warpSignHandler the warpSignHandler that will be feat by this listener
    */
-  WarpSignListener(MyWarpPlugin plugin, WarpSignHandler warpSignHandler) {
+  WarpSignListener(MyWarpPlugin plugin, WarpSignHandler warpSignHandler, MaterialInfo materialInfo) {
     this.plugin = plugin;
     this.warpSignHandler = warpSignHandler;
+    this.materialInfo = materialInfo;
   }
 
   /**
@@ -99,23 +92,24 @@ class WarpSignListener extends AbstractListener {
       case RIGHT_CLICK_BLOCK:
         //player clicked on a sign directly
         if (block.getState() instanceof Sign) {
-          boolean cancel = warpSignHandler.handleInteraction(toPlayer(event), new BukkitSign((Sign) block.getState()));
-          event.setCancelled(cancel);
+          event.setCancelled(
+              warpSignHandler.handleInteraction(toPlayer(event), new BukkitSign((Sign) block.getState())));
           return;
         }
 
         //player clicked on something that might trigger a warp sign
-        if (SUPPORTED_ATTACHABLES.contains(block.getType())) {
-          Optional<BlockFace> blockFace = attachedBlockFace(block);
+        if (materialInfo.isClickable(block.getType())) {
+          Optional<BlockFace> blockFace = blockFaceResolver.getBlockFace(block).flatMap(BukkitAdapter::adapt);
 
           if (blockFace.isPresent()) {
             warpSignHandler.handleInteraction(toPlayer(event), toVector(block), blockFace.get());
           }
+
         }
         break;
       case PHYSICAL:
         //player stepped on something that might trigger a warp sign
-        if (SUPPORTED_PLATES.contains(block.getType())) {
+        if (materialInfo.isTriggerable(block.getType())) {
           warpSignHandler.handleInteraction(toPlayer(event), toVector(block), BlockFace.UP);
         }
         break;
@@ -135,7 +129,7 @@ class WarpSignListener extends AbstractListener {
   /**
    * A sign that is actually a wrapped event.
    */
-  private class EventSign implements io.github.mywarp.mywarp.platform.Sign {
+  private static class EventSign implements io.github.mywarp.mywarp.platform.Sign {
 
     private final SignChangeEvent event;
 
@@ -152,15 +146,6 @@ class WarpSignListener extends AbstractListener {
     public void setLine(int line, String text) {
       event.setLine(line, text);
     }
-  }
-
-  private Optional<BlockFace> attachedBlockFace(Block block) {
-    MaterialData materialData = block.getState().getData();
-
-    if (materialData instanceof Attachable) {
-      return BukkitAdapter.adapt(((Attachable) materialData).getAttachedFace());
-    }
-    return Optional.empty();
   }
 
 }

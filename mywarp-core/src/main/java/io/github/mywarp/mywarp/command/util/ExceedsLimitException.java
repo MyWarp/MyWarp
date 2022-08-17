@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,7 +20,6 @@
 package io.github.mywarp.mywarp.command.util;
 
 import com.sk89q.intake.CommandException;
-
 import io.github.mywarp.mywarp.command.CommandHandler;
 import io.github.mywarp.mywarp.platform.LocalPlayer;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
@@ -30,7 +29,7 @@ import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
  *
  * @see ExceedsInitiatorLimitException for an Exception thrown when the limit of the initiator is exceeded
  */
-public class ExceedsLimitException extends CommandException {
+public class ExceedsLimitException extends CommandException implements UserViewableException {
 
   private static final DynamicMessages msg = new DynamicMessages(CommandHandler.RESOURCE_BUNDLE_NAME);
 
@@ -46,7 +45,7 @@ public class ExceedsLimitException extends CommandException {
   }
 
   @Override
-  public String getLocalizedMessage() {
+  public String getUserMessage() {
     return msg.getString("exception.exceeds-limit", subject.getName());
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -25,12 +25,7 @@ import io.github.mywarp.mywarp.bukkit.util.BukkitMessageInterpreter;
 import io.github.mywarp.mywarp.util.Message;
 import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 import io.github.mywarp.mywarp.warp.Warp;
-
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.ConversationFactory;
-import org.bukkit.conversations.MessagePrompt;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.StringPrompt;
+import org.bukkit.conversations.*;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -95,7 +90,7 @@ public class WelcomeEditorFactory {
           message =
           Message.builder().append(
               msg.getString("welcome-message.enter-message", locale, warp.getName(), REMOVE_SEQUENCE, ESCAPE_SEQUENCE,
-                            MyWarpPlugin.CONVERSATION_TIMEOUT)).build();
+                  MyWarpPlugin.CONVERSATION_TIMEOUT)).build();
 
       return BukkitMessageInterpreter.interpret(message);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -17,31 +17,26 @@
  * along with MyWarp. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.mywarp.mywarp.command.util.paginator;
+package io.github.mywarp.mywarp.platform.paginatedcontent;
+
+import io.github.mywarp.mywarp.command.util.UserViewableException;
+import io.github.mywarp.mywarp.util.i18n.DynamicMessages;
 
 /**
  * Indicates that the requested page does not exist.
  */
-public class UnknownPageException extends Exception {
+public class UnknownPageException extends Exception implements UserViewableException {
+
+  protected DynamicMessages msg = new DynamicMessages(SimplePaginatedContent.RESOURCE_BUNDLE_NAME);
 
   private final int highestPage;
 
-  UnknownPageException(int highestPage) {
-    this.highestPage = highestPage;
-  }
-
-  UnknownPageException(String message, int highestPage) {
-    super(message);
-    this.highestPage = highestPage;
-  }
-
-  UnknownPageException(String message, Throwable cause, int highestPage) {
-    super(message, cause);
-    this.highestPage = highestPage;
-  }
-
-  UnknownPageException(Throwable cause, int highestPage) {
-    super(cause);
+  /**
+   * Creats an instance.
+   *
+   * @param highestPage the number of the highest available page
+   */
+  public UnknownPageException(int highestPage) {
     this.highestPage = highestPage;
   }
 
@@ -52,5 +47,10 @@ public class UnknownPageException extends Exception {
    */
   public int getHighestPage() {
     return highestPage;
+  }
+
+  @Override
+  public String getUserMessage() {
+    return msg.getString("unknown-page", getHighestPage());
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,8 +19,6 @@
 
 package io.github.mywarp.mywarp.bukkit.util.versionsupport;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
@@ -28,12 +26,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Parses Strings in Minecraft's locale format into {@link Locale} objects.
  */
 class MinecraftLocaleParser {
 
-  //XXX use Guava's LoadingCache once we updated to Guava 11
+  //REVIEW when Guava >10: use LoadingCache
   private static final Map<String, Locale> cache = new HashMap<>();
 
   /**

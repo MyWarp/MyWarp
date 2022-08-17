@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -20,7 +20,6 @@
 package io.github.mywarp.mywarp.util.i18n;
 
 import io.github.mywarp.mywarp.util.MyWarpLogger;
-
 import org.slf4j.Logger;
 
 import java.text.MessageFormat;

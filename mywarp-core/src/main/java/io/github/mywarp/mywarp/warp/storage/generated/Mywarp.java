@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -23,21 +23,14 @@
 package io.github.mywarp.mywarp.warp.storage.generated;
 
 
-import io.github.mywarp.mywarp.warp.storage.generated.tables.Group;
-import io.github.mywarp.mywarp.warp.storage.generated.tables.Player;
-import io.github.mywarp.mywarp.warp.storage.generated.tables.Warp;
-import io.github.mywarp.mywarp.warp.storage.generated.tables.WarpGroupMap;
-import io.github.mywarp.mywarp.warp.storage.generated.tables.WarpPlayerMap;
-import io.github.mywarp.mywarp.warp.storage.generated.tables.World;
-
+import io.github.mywarp.mywarp.warp.storage.generated.tables.*;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 
+import javax.annotation.Generated;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.annotation.Generated;
 
 
 /**
@@ -70,6 +63,6 @@ public class Mywarp extends SchemaImpl {
 
   private final List<Table<?>> getTables0() {
     return Arrays.<Table<?>>asList(Group.GROUP, Player.PLAYER, Warp.WARP, WarpGroupMap.WARP_GROUP_MAP,
-                                   WarpPlayerMap.WARP_PLAYER_MAP, World.WORLD);
+        WarpPlayerMap.WARP_PLAYER_MAP, World.WORLD);
   }
 }

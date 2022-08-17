@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2018, MyWarp team and contributors
+ * Copyright (C) 2011 - 2022, MyWarp team and contributors
  *
  * This file is part of MyWarp.
  *
@@ -19,19 +19,8 @@
 
 package io.github.mywarp.mywarp.warp.storage;
 
-import static io.github.mywarp.mywarp.warp.storage.generated.Tables.GROUP;
-import static io.github.mywarp.mywarp.warp.storage.generated.Tables.PLAYER;
-import static io.github.mywarp.mywarp.warp.storage.generated.Tables.WARP;
-import static io.github.mywarp.mywarp.warp.storage.generated.Tables.WARP_GROUP_MAP;
-import static io.github.mywarp.mywarp.warp.storage.generated.Tables.WARP_PLAYER_MAP;
-import static io.github.mywarp.mywarp.warp.storage.generated.Tables.WORLD;
-import static org.jooq.impl.DSL.select;
-import static org.jooq.impl.DSL.selectOne;
-import static org.jooq.impl.DSL.val;
-
 import com.flowpowered.math.vector.Vector2f;
 import com.flowpowered.math.vector.Vector3d;
-
 import io.github.mywarp.mywarp.util.playermatcher.GroupPlayerMatcher;
 import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
 import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
@@ -39,33 +28,17 @@ import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.Warp.Type;
 import io.github.mywarp.mywarp.warp.WarpBuilder;
 import io.github.mywarp.mywarp.warp.storage.generated.tables.Player;
-
-import org.jooq.Allow;
-import org.jooq.Configuration;
-import org.jooq.DSLContext;
-import org.jooq.Insert;
-import org.jooq.InsertOnDuplicateStep;
-import org.jooq.InsertSetMoreStep;
-import org.jooq.Record;
-import org.jooq.Record14;
-import org.jooq.Require;
-import org.jooq.Result;
-import org.jooq.SQLDialect;
-import org.jooq.Table;
-import org.jooq.TableField;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.types.UInteger;
 
+import javax.annotation.Nullable;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
+import static io.github.mywarp.mywarp.warp.storage.generated.Tables.*;
+import static org.jooq.impl.DSL.select;
 
 /**
  * A storage implementation that stores warps in a relational database.
@@ -131,10 +104,10 @@ class JooqWarpStorage implements WarpStorage {
           .insertInto(WARP)
           .set(WARP.NAME, warp.getName())
           .set(WARP.PLAYER_ID,
-               select(PLAYER.PLAYER_ID)
-               .from(PLAYER)
-               .where(PLAYER.UUID.eq(warp.getCreator()))
-               .limit(1)
+              select(PLAYER.PLAYER_ID)
+                  .from(PLAYER)
+                  .where(PLAYER.UUID.eq(warp.getCreator()))
+                  .limit(1)
           )
           .set(WARP.TYPE, warp.getType())
           .set(WARP.X, position.getX())
@@ -143,14 +116,14 @@ class JooqWarpStorage implements WarpStorage {
           .set(WARP.PITCH, rotation.getX())
           .set(WARP.YAW, rotation.getY())
           .set(WARP.WORLD_ID,
-               select(WORLD.WORLD_ID)
-               .from(WORLD)
-               .where(WORLD.UUID.eq(warp.getWorldIdentifier()))
-               .limit(1))
+              select(WORLD.WORLD_ID)
+                  .from(WORLD)
+                  .where(WORLD.UUID.eq(warp.getWorldIdentifier()))
+                  .limit(1))
           .set(WARP.CREATION_DATE, warp.getCreationDate())
           .set(WARP.VISITS, UInteger.valueOf(warp.getVisits()))
           .set(WARP.WELCOME_MESSAGE, warp.getWelcomeMessage())
-      .execute();
+          .execute();
 
       //Insert all groups
       List<Insert<Record>> groupInserts = new ArrayList<>();
@@ -163,19 +136,19 @@ class JooqWarpStorage implements WarpStorage {
       List<InsertSetMoreStep<Record>> warpPlayerInserts = new ArrayList<>();
       invitedPlayerIds.forEach(playerId -> {
         warpPlayerInserts.add(create(configuration)
-          .insertInto(WARP_PLAYER_MAP)
-          .set(WARP_PLAYER_MAP.WARP_ID,
-               select(WARP.WARP_ID)
-                .from(WARP)
-                .where(WARP.NAME.eq(warp.getName()))
-                .limit(1)
-          )
-          .set(WARP_PLAYER_MAP.PLAYER_ID,
-               select(PLAYER.PLAYER_ID)
-               .from(PLAYER)
-               .where(PLAYER.UUID.eq(playerId))
-               .limit(1)
-          )
+            .insertInto(WARP_PLAYER_MAP)
+            .set(WARP_PLAYER_MAP.WARP_ID,
+                select(WARP.WARP_ID)
+                    .from(WARP)
+                    .where(WARP.NAME.eq(warp.getName()))
+                    .limit(1)
+            )
+            .set(WARP_PLAYER_MAP.PLAYER_ID,
+                select(PLAYER.PLAYER_ID)
+                    .from(PLAYER)
+                    .where(PLAYER.UUID.eq(playerId))
+                    .limit(1)
+            )
         );
       });
       create(configuration).batch(warpPlayerInserts).execute();
@@ -184,19 +157,19 @@ class JooqWarpStorage implements WarpStorage {
       List<InsertSetMoreStep<Record>> warpGroupInserts = new ArrayList<>();
       invitedGroupIds.forEach(groupName -> {
         warpGroupInserts.add(create(configuration)
-          .insertInto(WARP_GROUP_MAP)
-          .set(WARP_GROUP_MAP.WARP_ID,
-               select(WARP.WARP_ID)
-                .from(WARP)
-                .where(WARP.NAME.eq(warp.getName()))
-                .limit(1)
-          )
-          .set(WARP_GROUP_MAP.GROUP_ID,
-               select(GROUP.GROUP_ID)
-               .from(GROUP)
-               .where(GROUP.NAME.eq(groupName))
-               .limit(1)
-          )
+            .insertInto(WARP_GROUP_MAP)
+            .set(WARP_GROUP_MAP.WARP_ID,
+                select(WARP.WARP_ID)
+                    .from(WARP)
+                    .where(WARP.NAME.eq(warp.getName()))
+                    .limit(1)
+            )
+            .set(WARP_GROUP_MAP.GROUP_ID,
+                select(GROUP.GROUP_ID)
+                    .from(GROUP)
+                    .where(GROUP.NAME.eq(groupName))
+                    .limit(1)
+            )
         );
       });
       create(configuration).batch(warpGroupInserts).execute();
@@ -210,7 +183,7 @@ class JooqWarpStorage implements WarpStorage {
     create(configuration)
         .delete(WARP)
         .where(WARP.NAME.eq(warp.getName()))
-    .execute();
+        .execute();
     // @formatter:on
   }
 
@@ -224,23 +197,23 @@ class JooqWarpStorage implements WarpStorage {
     // @formatter:off
     Map<String, Result<Record14<String, UUID, Type, Double, Double, Double, Float, Float, UUID, Instant,
         UInteger, String, UUID, String>>> groupedResults = create(configuration)
-            .select(WARP.NAME, creatorTable.UUID, WARP.TYPE, WARP.X, WARP.Y, WARP.Z, WARP.YAW,
-                    WARP.PITCH, WORLD.UUID, WARP.CREATION_DATE, WARP.VISITS,
-                    WARP.WELCOME_MESSAGE, PLAYER.UUID, GROUP.NAME)
-            .from(WARP
-                    .join(WORLD)
-                        .on(WARP.WORLD_ID.eq(WORLD.WORLD_ID))
-                    .join(creatorTable)
-                        .on(WARP.PLAYER_ID.eq(creatorTable.PLAYER_ID))
-                    .leftOuterJoin(WARP_PLAYER_MAP)
-                        .on(WARP_PLAYER_MAP.WARP_ID.eq(WARP.WARP_ID))
-                    .leftOuterJoin(PLAYER)
-                        .on(WARP_PLAYER_MAP.PLAYER_ID.eq(PLAYER.PLAYER_ID)))
-                    .leftOuterJoin(WARP_GROUP_MAP)
-                        .on(WARP_GROUP_MAP.WARP_ID.eq(WARP.WARP_ID))
-                    .leftOuterJoin(GROUP)
-                        .on(WARP_GROUP_MAP.GROUP_ID.eq(GROUP.GROUP_ID))
-            .fetch().intoGroups(WARP.NAME);
+        .select(WARP.NAME, creatorTable.UUID, WARP.TYPE, WARP.X, WARP.Y, WARP.Z, WARP.YAW,
+            WARP.PITCH, WORLD.UUID, WARP.CREATION_DATE, WARP.VISITS,
+            WARP.WELCOME_MESSAGE, PLAYER.UUID, GROUP.NAME)
+        .from(WARP
+            .join(WORLD)
+            .on(WARP.WORLD_ID.eq(WORLD.WORLD_ID))
+            .join(creatorTable)
+            .on(WARP.PLAYER_ID.eq(creatorTable.PLAYER_ID))
+            .leftOuterJoin(WARP_PLAYER_MAP)
+            .on(WARP_PLAYER_MAP.WARP_ID.eq(WARP.WARP_ID))
+            .leftOuterJoin(PLAYER)
+            .on(WARP_PLAYER_MAP.PLAYER_ID.eq(PLAYER.PLAYER_ID)))
+        .leftOuterJoin(WARP_GROUP_MAP)
+        .on(WARP_GROUP_MAP.WARP_ID.eq(WARP.WARP_ID))
+        .leftOuterJoin(GROUP)
+        .on(WARP_GROUP_MAP.GROUP_ID.eq(GROUP.GROUP_ID))
+        .fetch().intoGroups(WARP.NAME);
     // @formatter:on
 
     // create warp-instances from the results
@@ -251,7 +224,7 @@ class JooqWarpStorage implements WarpStorage {
       WarpBuilder
           builder =
           new WarpBuilder(r.getValue(0, WARP.NAME), r.getValue(0, creatorTable.UUID), r.getValue(0, WORLD.UUID),
-                          position, rotation);
+              position, rotation);
 
       // optional values
       builder.setType(r.getValue(0, WARP.TYPE));
@@ -305,18 +278,18 @@ class JooqWarpStorage implements WarpStorage {
       create(configuration)
           .insertInto(WARP_PLAYER_MAP)
           .set(WARP_PLAYER_MAP.WARP_ID,
-               select(WARP.WARP_ID)
-                .from(WARP)
-                .where(WARP.NAME.eq(warp.getName()))
-                .limit(1)
+              select(WARP.WARP_ID)
+                  .from(WARP)
+                  .where(WARP.NAME.eq(warp.getName()))
+                  .limit(1)
           )
           .set(WARP_PLAYER_MAP.PLAYER_ID,
-               select(PLAYER.PLAYER_ID)
-               .from(PLAYER)
-               .where(PLAYER.UUID.eq(invitation.getCriteria()))
-               .limit(1)
+              select(PLAYER.PLAYER_ID)
+                  .from(PLAYER)
+                  .where(PLAYER.UUID.eq(invitation.getCriteria()))
+                  .limit(1)
           )
-      .execute();
+          .execute();
       // @formatter:on
     });
   }
@@ -327,18 +300,18 @@ class JooqWarpStorage implements WarpStorage {
         .delete(WARP_PLAYER_MAP)
         .where(
             WARP_PLAYER_MAP.WARP_ID.eq(
-              select(WARP.WARP_ID)
-              .from(WARP)
-              .where(WARP.NAME.eq(warp.getName()))
-              .limit(1))
-            .and(WARP_PLAYER_MAP.PLAYER_ID.eq(
-              select(PLAYER.PLAYER_ID)
-              .from(PLAYER)
-              .where(PLAYER.UUID.eq(invitation.getCriteria()))
-              .limit(1))
-            )
+                select(WARP.WARP_ID)
+                    .from(WARP)
+                    .where(WARP.NAME.eq(warp.getName()))
+                    .limit(1))
+                .and(WARP_PLAYER_MAP.PLAYER_ID.eq(
+                    select(PLAYER.PLAYER_ID)
+                        .from(PLAYER)
+                        .where(PLAYER.UUID.eq(invitation.getCriteria()))
+                        .limit(1))
+                )
         )
-    .execute();
+        .execute();
     // @formatter:on
   }
 
@@ -350,18 +323,18 @@ class JooqWarpStorage implements WarpStorage {
       create(configuration)
           .insertInto(WARP_GROUP_MAP)
           .set(WARP_GROUP_MAP.WARP_ID,
-               select(WARP.WARP_ID)
-                .from(WARP)
-                .where(WARP.NAME.eq(warp.getName()))
-                .limit(1)
+              select(WARP.WARP_ID)
+                  .from(WARP)
+                  .where(WARP.NAME.eq(warp.getName()))
+                  .limit(1)
           )
           .set(WARP_GROUP_MAP.GROUP_ID,
-               select(GROUP.GROUP_ID)
-               .from(GROUP)
-               .where(GROUP.NAME.eq(invitation.getCriteria()))
-               .limit(1)
+              select(GROUP.GROUP_ID)
+                  .from(GROUP)
+                  .where(GROUP.NAME.eq(invitation.getCriteria()))
+                  .limit(1)
           )
-      .execute();
+          .execute();
       // @formatter:on
     });
   }
@@ -372,18 +345,18 @@ class JooqWarpStorage implements WarpStorage {
         .delete(WARP_GROUP_MAP)
         .where(
             WARP_GROUP_MAP.WARP_ID.eq(
-              select(WARP.WARP_ID)
-              .from(WARP)
-              .where(WARP.NAME.eq(warp.getName()))
-              .limit(1))
-            .and(WARP_GROUP_MAP.GROUP_ID.eq(
-              select(GROUP.GROUP_ID)
-              .from(GROUP)
-              .where(GROUP.NAME.eq(invitation.getCriteria()))
-              .limit(1))
-            )
+                select(WARP.WARP_ID)
+                    .from(WARP)
+                    .where(WARP.NAME.eq(warp.getName()))
+                    .limit(1))
+                .and(WARP_GROUP_MAP.GROUP_ID.eq(
+                    select(GROUP.GROUP_ID)
+                        .from(GROUP)
+                        .where(GROUP.NAME.eq(invitation.getCriteria()))
+                        .limit(1))
+                )
         )
-    .execute();
+        .execute();
     // @formatter:on
   }
 
@@ -397,12 +370,12 @@ class JooqWarpStorage implements WarpStorage {
           .update(WARP)
           .set(WARP.PLAYER_ID,
               select(PLAYER.PLAYER_ID)
-              .from(PLAYER)
-              .where(PLAYER.UUID.eq(warp.getCreator()))
-              .limit(1)
+                  .from(PLAYER)
+                  .where(PLAYER.UUID.eq(warp.getCreator()))
+                  .limit(1)
           )
           .where(WARP.NAME.eq(warp.getName()))
-      .execute();
+          .execute();
       // @formatter:on
     });
   }
@@ -424,12 +397,12 @@ class JooqWarpStorage implements WarpStorage {
           .set(WARP.PITCH, rotation.getX())
           .set(WARP.YAW, rotation.getY())
           .set(WARP.WORLD_ID,
-               select(WORLD.WORLD_ID)
-               .from(WORLD)
-               .where(WORLD.UUID.eq(warp.getWorldIdentifier()))
-               .limit(1))
+              select(WORLD.WORLD_ID)
+                  .from(WORLD)
+                  .where(WORLD.UUID.eq(warp.getWorldIdentifier()))
+                  .limit(1))
           .where(WARP.NAME.eq(warp.getName()))
-      .execute();
+          .execute();
       // @formatter:on
     });
   }
@@ -441,7 +414,7 @@ class JooqWarpStorage implements WarpStorage {
         .update(WARP)
         .set(WARP.TYPE, warp.getType())
         .where(WARP.NAME.eq(warp.getName()))
-    .execute();
+        .execute();
     // @formatter:on
   }
 
@@ -452,7 +425,7 @@ class JooqWarpStorage implements WarpStorage {
         .update(WARP)
         .set(WARP.VISITS, UInteger.valueOf(warp.getVisits()))
         .where(WARP.NAME.eq(warp.getName()))
-    .execute();
+        .execute();
     // @formatter:on
   }
 
@@ -463,7 +436,7 @@ class JooqWarpStorage implements WarpStorage {
         .update(WARP)
         .set(WARP.WELCOME_MESSAGE, warp.getWelcomeMessage())
         .where(WARP.NAME.eq(warp.getName()))
-    .execute();
+        .execute();
     // @formatter:on
   }
 
@@ -479,22 +452,13 @@ class JooqWarpStorage implements WarpStorage {
    * @see InsertOnDuplicateStep#onDuplicateKeyIgnore()
    */
   private <R extends Record, T> Insert<R> insertOrIgnore(Configuration configuration, Table<R> table,
-                                                         TableField<R, T> uniqueField, T value) {
-    // REVIEW With JOOQ 3.7 the native implementation InsertOnDuplicateStep#onDuplicateKeyIgnore() should be usable.
-    // For some reason it fails with string values (at least on H2), rendering it unusable.
-    // For now, this workaround is still needed.
+      TableField<R, T> uniqueField, T value) {
     // @formatter:off
     return create(configuration)
         .insertInto(table)
         .columns(uniqueField)
-        .select(
-          select(val(value, uniqueField))
-          .whereNotExists(
-              selectOne()
-              .from(table)
-              .where(uniqueField.eq(value))
-          )
-        );
+        .values(value)
+        .onDuplicateKeyIgnore();
     // @formatter:on
   }
 }
