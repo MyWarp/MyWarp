@@ -23,6 +23,7 @@ dependencies {
     implementation "org.anjocaido:essentialsgroupmanager:2.10.1"
     implementation "de.bananaco:bpermissions:2.10.5"
     implementation "us.dynmap:DynmapCoreAPI:1.9.4"
+    implementation "org.bstats:bstats-bukkit:3.0.0"
 
     runtimeOnly "com.github.MyWarp:slf4bukkit:ca7affe246"
     runtimeOnly "com.h2database:h2:1.4.200"
@@ -78,6 +79,8 @@ shadowJar {
         include(dependency("org.flywaydb:flyway-core"))
         include(dependency("org.slf4j:slf4j-api"))
         include(dependency("com.github.MyWarp:slf4bukkit"))
+        include(dependency("org.bstats:bstats-base"))
+        include(dependency("org.bstats:bstats-bukkit"))
         include(dependency("com.sk89q:squirrelid"))
         include(dependency("com.github.mywarp.intake:intake"))
         include(dependency("com.h2database:h2"))
@@ -90,6 +93,7 @@ shadowJar {
     relocate("com.flowpowered", "${internalPath}.flow-math")
     relocate("org.slf4j", "${internalPath}.slf4j")
     relocate("info.ronjenkins", "${internalPath}.slf4bukkit")
+    relocate("org.bstats", "${internalPath}.bstats")
     relocate("com.sk89q.intake", "${internalPath}.intake")
     relocate("com.sk89q.squirrelid", "${internalPath}.squirrelid")
 

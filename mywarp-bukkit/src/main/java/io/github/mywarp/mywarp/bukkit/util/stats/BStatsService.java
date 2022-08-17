@@ -24,6 +24,9 @@ import io.github.mywarp.mywarp.bukkit.settings.BukkitSettings;
 import io.github.mywarp.mywarp.bukkit.util.jdbc.JdbcConfiguration;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimpleBarChart;
+import org.bstats.charts.SimplePie;
+import org.bstats.charts.SingleLineChart;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +38,7 @@ import java.util.Map;
  */
 class BStatsService implements StatisticService {
 
-  private static final int PLUGIN_ID = 2615;
+  private static final int PLUGIN_ID = 16163;
 
   private final Metrics metrics;
 
@@ -50,8 +53,8 @@ class BStatsService implements StatisticService {
 
   @Override
   public void addFeatureChart(BukkitSettings settings) {
-    metrics.addCustomChart(new Metrics.AdvancedBarChart("features", () -> {
-      Map<String, int[]> map = new HashMap<>();
+    metrics.addCustomChart(new SimpleBarChart("usedFeatures", () -> {
+      Map<String, Integer> map = new HashMap<>();
       map.put("TeleportSafety", parse(settings.isSafetyEnabled()));
       map.put("WarpSigns", parse(settings.isWarpSignsEnabled()));
       map.put("Limits", parse(settings.isLimitsEnabled()));
@@ -64,19 +67,19 @@ class BStatsService implements StatisticService {
 
   @Override
   public void addDbmsChart(JdbcConfiguration config) {
-    metrics.addCustomChart(new Metrics.SimplePie("protocol", config::getProtocol));
+    metrics.addCustomChart(new SimplePie("sqlProtocol", config::getProtocol));
   }
 
   @Override
   public void addWarpChart(WarpManager manager) {
-    metrics.addCustomChart(new Metrics.SingleLineChart("warps", manager::getNumberOfAllWarps));
+    metrics.addCustomChart(new SingleLineChart("numberOfWarps", manager::getNumberOfAllWarps));
   }
 
-  private int[] parse(boolean enabled) {
+  private int parse(boolean enabled) {
     if (enabled) {
-      return new int[]{1, 0};
+      return 1;
     } else {
-      return new int[]{0, 1};
+      return 0;
     }
   }
 
