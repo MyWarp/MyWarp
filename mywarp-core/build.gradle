@@ -11,7 +11,7 @@ dependencies {
     implementation "org.jooq:jooq:3.14.11"
     annotationProcessor "org.jooq:jooq-checker:3.14.11"
     implementation "org.flywaydb:flyway-core:7.8.1"
-    implementation "com.google.guava:guava:21.0"
+    implementation "com.google.guava:guava:20.0"
     implementation "com.github.mywarp.intake:intake:b57bff7cd9"
 
     api "org.slf4j:slf4j-api:1.7.36"
@@ -19,7 +19,7 @@ dependencies {
 
     signature "org.codehaus.mojo.signature:java18:1.0@signature"
     //required to build custom signature
-    createSignature "com.google.guava:guava:10.0.1"
+    createSignature "com.google.guava:guava:20.0"
     //bundled by Bukkit 1.7.10, we should try to stay compatible
 }
 
