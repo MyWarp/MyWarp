@@ -19,7 +19,7 @@
 
 package io.github.mywarp.mywarp.command.util;
 
-import io.github.mywarp.mywarp.platform.Profile;
+import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
 import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
 
 /**
@@ -27,26 +27,38 @@ import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
  *
  * <p>Unless a Profile is already available, {@link UuidPlayerMatcher} should be used instead.</p>
  */
-public class ProfilePlayerMatcher extends UuidPlayerMatcher {
+public class Invitation {
 
-  private final Profile profile;
+  private final PlayerMatcher matcher;
+  private final String identifier;
+
 
   /**
-   * Creates an instance that will match the player who has the unique identifer of the given profile.
+   * Creates a new invitation
    *
-   * @param profile the profile
+   * @param matcher    the invitation's PlayerMatcher
+   * @param identifier the invitation's given name as entered by the player
    */
-  public ProfilePlayerMatcher(Profile profile) {
-    super(profile.getUuid());
-    this.profile = profile;
+  public Invitation(PlayerMatcher matcher, String identifier) {
+    this.matcher = matcher;
+    this.identifier = identifier;
   }
 
   /**
-   * Gets the Profile of the player who this matcher matches.
+   * Gets the matcher.
    *
-   * @return the profile
+   * @return the matcher
    */
-  public Profile getProfile() {
-    return profile;
+  public PlayerMatcher getMatcher() {
+    return matcher;
+  }
+
+  /**
+   * Gets the given name.
+   *
+   * @return the given name
+   */
+  public String getIdentifier() {
+    return identifier;
   }
 }

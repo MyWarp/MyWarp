@@ -28,18 +28,8 @@ import io.github.mywarp.mywarp.command.parametric.annotation.Billable;
 import io.github.mywarp.mywarp.command.parametric.annotation.Modifiable;
 import io.github.mywarp.mywarp.command.parametric.provider.exception.ArgumentAuthorizationException;
 import io.github.mywarp.mywarp.command.parametric.provider.exception.NoSuchPlayerException;
-import io.github.mywarp.mywarp.command.util.CommandUtil;
-import io.github.mywarp.mywarp.command.util.ExceedsInitiatorLimitException;
-import io.github.mywarp.mywarp.command.util.ExceedsLimitException;
-import io.github.mywarp.mywarp.command.util.NoSuchWorldException;
-import io.github.mywarp.mywarp.command.util.ProfilePlayerMatcher;
-import io.github.mywarp.mywarp.command.util.UnknownException;
-import io.github.mywarp.mywarp.command.util.UserViewableException;
-import io.github.mywarp.mywarp.platform.Actor;
-import io.github.mywarp.mywarp.platform.Game;
-import io.github.mywarp.mywarp.platform.LocalPlayer;
-import io.github.mywarp.mywarp.platform.PlayerNameResolver;
-import io.github.mywarp.mywarp.platform.Profile;
+import io.github.mywarp.mywarp.command.util.*;
+import io.github.mywarp.mywarp.platform.*;
 import io.github.mywarp.mywarp.service.economy.FeeType;
 import io.github.mywarp.mywarp.service.limit.LimitService;
 import io.github.mywarp.mywarp.util.Message;
@@ -50,10 +40,11 @@ import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
 import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.Warp.Type;
+
+import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import javax.annotation.Nullable;
 
 /**
  * Bundles commands that involve social interaction with other players.
@@ -91,12 +82,7 @@ public final class SocialCommands {
   }
 
   private static String toName(PlayerMatcher invitation) {
-    if (invitation instanceof ProfilePlayerMatcher) {
-      return ((ProfilePlayerMatcher) invitation).getProfile().getNameOrId();
-    }
     if (invitation instanceof UuidPlayerMatcher) {
-      // This should not happen as the InvitationProvider always provides ProfilePlayerMatchers when a
-      // UuidPlayerMatcher is required.
       return ((UuidPlayerMatcher) invitation).getCriteria().toString();
     }
     if (invitation instanceof GroupPlayerMatcher) {
@@ -246,24 +232,25 @@ public final class SocialCommands {
   @Command(aliases = {"invite"}, desc = "invite.description", help = "invite.help")
   @Require("mywarp.cmd.invite")
   @Billable(FeeType.INVITE)
-  public void invite(Actor actor, @Require("mywarp.cmd.invite.group") CompletableFuture<PlayerMatcher> invitationFuture,
-      @Modifiable Warp warp) {
+  public void invite(Actor actor, @Require("mywarp.cmd.invite.group") CompletableFuture<Invitation> invitationFuture,
+                     @Modifiable Warp warp) {
     nameResolver.getByUniqueId(warp.getCreator()).thenApply(Profile::getNameOrId)
-        .thenAcceptBothAsync(invitationFuture, (creatorName, invitation) -> {
-          if (!warp.hasInvitation(invitation)) {
-            if (invitation instanceof UuidPlayerMatcher && warp
-                .isCreator(((UuidPlayerMatcher) invitation).getCriteria())) {
-              actor.sendError(msg.getString("invite.is-creator", creatorName));
-            }
-            warp.addInvitation(invitation);
+            .thenAcceptBothAsync(invitationFuture, (creatorName, invitation) -> {
+              PlayerMatcher matcher = invitation.getMatcher();
+              if (!warp.hasInvitation(matcher)) {
+                if (matcher instanceof UuidPlayerMatcher && warp
+                        .isCreator(((UuidPlayerMatcher) matcher).getCriteria())) {
+                  actor.sendError(msg.getString("invite.is-creator", creatorName));
+                }
+                warp.addInvitation(matcher);
 
-            actor
-                .sendMessage(msg.getString("invite.successful", parse(invitation), toName(invitation), warp.getName()));
-            if (warp.isType(Type.PUBLIC)) {
-              actor.sendMessage(Message.of(Style.INFO, msg.getString("invite.public", warp.getName())));
-            }
-          } else {
-            actor.sendError(msg.getString("invite.already-invited", parse(invitation), toName(invitation)));
+                actor
+                        .sendMessage(msg.getString("invite.successful", parse(matcher), invitation.getIdentifier(), warp.getName()));
+                if (warp.isType(Type.PUBLIC)) {
+                  actor.sendMessage(Message.of(Style.INFO, msg.getString("invite.public", warp.getName())));
+                }
+              } else {
+                actor.sendError(msg.getString("invite.already-invited", parse(matcher), invitation.getIdentifier()));
           }
         }, game.getExecutor()).exceptionally((ex) -> {
 
@@ -282,20 +269,21 @@ public final class SocialCommands {
   @Require("mywarp.cmd.uninvite")
   @Billable(FeeType.UNINVITE)
   public void uninvite(Actor actor,
-      @Require("mywarp.cmd.uninvite.group") CompletableFuture<PlayerMatcher> invitationFuture,
-      @Modifiable Warp warp) {
+                       @Require("mywarp.cmd.uninvite.group") CompletableFuture<Invitation> invitationFuture,
+                       @Modifiable Warp warp) {
     nameResolver.getByUniqueId(warp.getCreator()).thenApply(Profile::getNameOrId)
         .thenAcceptBothAsync(invitationFuture, (creatorName, invitation) -> {
-          if (warp.hasInvitation(invitation)) {
-            warp.removeInvitation(invitation);
+          PlayerMatcher matcher = invitation.getMatcher();
+          if (warp.hasInvitation(matcher)) {
+            warp.removeInvitation(matcher);
 
             actor.sendMessage(
-                msg.getString("uninvite.successful", parse(invitation), toName(invitation), warp.getName()));
+                    msg.getString("uninvite.successful", parse(matcher), invitation.getIdentifier(), warp.getName()));
             if (warp.isType(Type.PUBLIC)) {
               actor.sendMessage(Message.of(Style.INFO, msg.getString("uninvite.public", warp.getName())));
             }
           } else {
-            actor.sendError(msg.getString("uninvite.not-invited", parse(invitation), toName(invitation)));
+            actor.sendError(msg.getString("uninvite.not-invited", parse(matcher), invitation.getIdentifier()));
           }
         }, game.getExecutor()).exceptionally((ex) -> {
       UserViewableException userViewableException;

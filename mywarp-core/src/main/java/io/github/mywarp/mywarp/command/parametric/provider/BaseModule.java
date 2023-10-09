@@ -26,8 +26,8 @@ import io.github.mywarp.mywarp.command.parametric.annotation.Modifiable;
 import io.github.mywarp.mywarp.command.parametric.annotation.Usable;
 import io.github.mywarp.mywarp.command.parametric.annotation.Viewable;
 import io.github.mywarp.mywarp.command.parametric.annotation.WarpName;
+import io.github.mywarp.mywarp.command.util.Invitation;
 import io.github.mywarp.mywarp.platform.*;
-import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
 import io.github.mywarp.mywarp.warp.Warp;
 import io.github.mywarp.mywarp.warp.WarpManager;
 import io.github.mywarp.mywarp.warp.authorization.AuthorizationResolver;
@@ -108,7 +108,7 @@ public class BaseModule extends AbstractModule {
     })).toProvider(new WarpComparatorProvider());
 
     //invitations
-    bind(key(new TypeCapture<CompletableFuture<PlayerMatcher>>() {
+    bind(key(new TypeCapture<CompletableFuture<Invitation>>() {
     })).toProvider(new InvitationProvider(platform.getPlayerNameResolver()));
 
     //configuration

@@ -22,10 +22,11 @@ package io.github.mywarp.mywarp.command.parametric.provider;
 import com.sk89q.intake.Require;
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
-import io.github.mywarp.mywarp.command.util.ProfilePlayerMatcher;
+import io.github.mywarp.mywarp.command.util.Invitation;
 import io.github.mywarp.mywarp.platform.PlayerNameResolver;
 import io.github.mywarp.mywarp.util.playermatcher.GroupPlayerMatcher;
 import io.github.mywarp.mywarp.util.playermatcher.PlayerMatcher;
+import io.github.mywarp.mywarp.util.playermatcher.UuidPlayerMatcher;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -35,7 +36,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Provides {@link PlayerMatcher} instances.
  */
-class InvitationProvider extends AbstractProvider<CompletableFuture<PlayerMatcher>> {
+class InvitationProvider extends AbstractProvider<CompletableFuture<Invitation>> {
 
   private final PlayerNameResolver resolver;
 
@@ -44,8 +45,8 @@ class InvitationProvider extends AbstractProvider<CompletableFuture<PlayerMatche
   }
 
   @Override
-  public CompletableFuture<PlayerMatcher> get(CommandArgs arguments, List<? extends Annotation> modifiers)
-      throws ArgumentException {
+  public CompletableFuture<Invitation> get(CommandArgs arguments, List<? extends Annotation> modifiers)
+          throws ArgumentException {
     String argument = arguments.next();
 
     if (argument.charAt(1) == ':') {
@@ -60,14 +61,14 @@ class InvitationProvider extends AbstractProvider<CompletableFuture<PlayerMatche
           if (require.isPresent()) {
             ProviderUtil.checkPermissions(ProviderUtil.actor(arguments.getNamespace()), require.get().value());
           }
-          return CompletableFuture.completedFuture(new GroupPlayerMatcher(realArgument));
+          return CompletableFuture.completedFuture(new Invitation(new GroupPlayerMatcher(realArgument), realArgument));
         //unique identifier
         case 'u':
-          return resolver.getByUniqueId(ProviderUtil.parseUuid(realArgument)).thenApply(ProfilePlayerMatcher::new);
+          return resolver.getByUniqueId(ProviderUtil.parseUuid(realArgument)).thenApply(profile -> new Invitation(new UuidPlayerMatcher(profile.getUuid()), profile.getNameOrId()));
         default: //fall-through
       }
     }
 
-    return resolver.getByName(argument).thenApply(ProfilePlayerMatcher::new);
+    return resolver.getByName(argument).thenApply(profile -> new Invitation(new UuidPlayerMatcher(profile.getUuid()), profile.getNameOrId()));
   }
 }
