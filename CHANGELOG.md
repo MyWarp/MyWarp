@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [3.1.2] - 2023-28-10
+None.
+
+## [3.1.2] - 2023-10-28
 
 ### Added
 
