@@ -4,15 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [3.1.2] - 2023-28-10
+
 ### Added
 
 * [[#63](https://github.com/MyWarp/MyWarp/issues/63)] - Add a configuration option to specify which
   warps are shown on Dynmap
+* Add support for all buttons and pressure plates added since 1.13
 
 ### Changed
 
 * Update SLF4j-API to 1.7.36
-* Update SpigotAPI (formerly Bukkit) to 1.19.2
+* Update SpigotAPI (formerly Bukkit) to 1.20.2
+
+### Fixed
+
+* [[#489](https://github.com/MyWarp/MyWarp/issues/489)] Invitations and uninvitations could result in database errors
 
 ## [3.1.1] - 2021-01-12
 
@@ -546,7 +553,9 @@ All notable changes to this project will be documented in this file.
 * Updated for Permissions 2.5.5 or higher (tested with 2.6 and 2.7)
 * Changed update URL where MyWarp downloads sqlite libraries
 
-[Unreleased]: https://github.com/TheE/MyWarp/compare/v3.1.1...HEAD
+[Unreleased]: https://github.com/TheE/MyWarp/compare/v3.1.2...HEAD
+
+[3.1.2]: https://github.com/TheE/MyWarp/compare/v3.1.1...v3.1.2
 
 [3.1.1]: https://github.com/TheE/MyWarp/compare/v3.1...v3.1.1
 
