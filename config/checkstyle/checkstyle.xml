@@ -37,13 +37,14 @@
   <module name="BeforeExecutionExclusionFileFilter">
     <property name="fileNamePattern" value="module\-info\.java$"/>
   </module>
-  <module name="SuppressionFilter">
-    <property name="file" value="config/checkstyle/suppressions.xml"/> <!-- CUSTOMISED -->
+  <module name="SuppressionSingleFilter">  <!-- CUSTOMISED -->
+    <property name="files" value="[\\/]generated[\\/]"/>
+    <property name="checks" value=".*"/>
   </module>
-  <module name="Header">  <!-- CUSTOMISED -->
+  <!-- <module name="Header">
     <property name="headerFile" value="config/checkstyle/header.txt"/>
     <property name="fileExtensions" value="java"/>
-  </module>
+  </module> -->
   <!-- Excludes all 'module-info.java' files              -->
   <!-- See https://checkstyle.org/config_filefilters.html -->
   <module name="FileTabCharacter">

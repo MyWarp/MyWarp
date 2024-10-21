@@ -99,4 +99,3 @@ shadowJar {
     }
 }
 build.finalizedBy(shadowJar)
-

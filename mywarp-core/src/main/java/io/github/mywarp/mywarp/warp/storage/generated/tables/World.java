@@ -28,6 +28,7 @@ import io.github.mywarp.mywarp.warp.storage.generated.Mywarp;
 import org.jooq.*;
 import org.jooq.impl.TableImpl;
 import org.jooq.types.UInteger;
+import org.jooq.Record;
 
 import javax.annotation.Generated;
 import java.util.Arrays;

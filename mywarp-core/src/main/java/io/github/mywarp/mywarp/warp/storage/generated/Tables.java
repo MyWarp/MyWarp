@@ -25,8 +25,9 @@ package io.github.mywarp.mywarp.warp.storage.generated;
 
 import io.github.mywarp.mywarp.warp.storage.generated.tables.*;
 
-import javax.annotation.Generated;
+import org.jooq.Record;
 
+import javax.annotation.Generated;
 
 /**
  * Convenience access to all tables in mywarp

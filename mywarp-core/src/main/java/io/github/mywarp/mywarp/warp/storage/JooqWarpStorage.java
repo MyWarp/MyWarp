@@ -31,6 +31,7 @@ import io.github.mywarp.mywarp.warp.storage.generated.tables.Player;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.types.UInteger;
+import org.jooq.Record;
 
 import javax.annotation.Nullable;
 import java.time.Instant;

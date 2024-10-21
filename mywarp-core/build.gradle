@@ -9,10 +9,11 @@ configurations.create("createSignature")
 
 dependencies {
     implementation "org.jooq:jooq:3.14.11"
-    annotationProcessor "org.jooq:jooq-checker:3.14.11"
+    //annotationProcessor "org.jooq:jooq-checker:3.14.11"
     implementation "org.flywaydb:flyway-core:7.8.1"
     implementation "com.google.guava:guava:21.0"
     implementation "com.github.mywarp.intake:intake:b57bff7cd9"
+    implementation "javax.annotation:javax.annotation-api:1.3.2"
 
     api "org.slf4j:slf4j-api:1.7.36"
     api "com.flowpowered:flow-math:1.0.3"
@@ -24,7 +25,7 @@ dependencies {
 }
 
 // Use JOOQ's annotation processor
-compileJava.options.compilerArgs << "-processor" << "org.jooq.checker.SQLDialectChecker"
+//compileJava.options.compilerArgs << "-processor" << "org.jooq.checker.SQLDialectChecker"
 
 task sig(type: BuildSignatureTask) {
     //build new signature as an extension to the JDK's
@@ -38,5 +39,3 @@ animalsniffer {
     //the cache cannot be used due to incompatibilities with Java 8,
     //see https://github.com/xvik/gradle-animalsniffer-plugin/wiki/Check-task-performance#known-issues
 }
-
-
