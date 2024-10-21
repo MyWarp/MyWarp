@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: gradle
     directory: "/"
     schedule:
-      interval: daily
+      interval: weekly
     open-pull-requests-limit: 10
     assignees:
       - TheE
@@ -13,4 +13,11 @@ updates:
       - dependency-name: com.google.guava:guava
         versions:
           - "> 21.0"
-      - dependency-name: org.bukkit:bukkit
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    assignees:
+      - TheE
+    labels:
+      - dependencies
