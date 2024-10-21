@@ -10,6 +10,12 @@ if (hasProperty('buildScan')) {
     }
 }
 
+tasks.withType(JavaCompile) {
+    options.forkOptions.jvmArgs.addAll([
+        '--add-exports', 'jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED'
+    ])
+}
+
 ext.resolveProperty = { key, defaultValue = "unknown" ->
     return project.findProperty(key) ?: System.getenv(key) ?: defaultValue
 }
