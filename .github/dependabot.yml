@@ -4,7 +4,6 @@ updates:
     directory: "/"
     schedule:
       interval: daily
-    open-pull-requests-limit: 10
     assignees:
       - TheE
     labels:
@@ -13,4 +12,11 @@ updates:
       - dependency-name: com.google.guava:guava
         versions:
           - "> 21.0"
-      - dependency-name: org.bukkit:bukkit
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    assignees:
+      - TheE
+    labels:
+      - dependencies
