@@ -47,7 +47,7 @@ jobs:
           GRGIT_USER: ${{ secrets.GH_TOKEN_REPO_ACCESS }}
 
       - name: Deploy Artifacts to GitHub Releases
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           body_path: CHANGELOG.md
